@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -25,11 +26,16 @@
             -webkit-user-select: none;
         }
 
+        .hidden {
+            display: none !important;
+        }
+
         html, body {
             margin: 0;
             padding: 0;
             width: 100%;
             height: 100%;
+            height: 100dvh;
             overflow: hidden;
             font-family: 'Nunito', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #e0f2fe 0%, #f0fdf4 50%, #fef3c7 100%);
@@ -43,10 +49,16 @@
             display: none;
             width: 100%;
             height: 100%;
+            height: 100dvh;
             position: absolute;
             inset: 0;
             flex-direction: column;
             overflow: hidden;
+        }
+
+        #view-menu {
+            background: linear-gradient(135deg, #e0f2fe 0%, #f0fdf4 50%, #fef3c7 100%);
+            z-index: 10;
         }
 
         .view-section.active-view {
@@ -143,6 +155,7 @@
             align-items: center;
             justify-content: space-between;
             padding: 0.75rem 1rem;
+            padding-top: max(0.6rem, env(safe-area-inset-top));
             z-index: 40;
             width: 100%;
             max-width: 900px;
@@ -251,6 +264,7 @@
             border-top-right-radius: 2.25rem;
             box-shadow: 0 -8px 32px rgba(15, 23, 42, 0.08);
             padding: 0.8rem 0.75rem 1rem 0.75rem;
+            padding-bottom: max(0.85rem, env(safe-area-inset-bottom));
             z-index: 30;
             height: 28vh;
             min-height: 155px;
@@ -337,6 +351,48 @@
             100% { height: 16px; }
         }
 
+        /* iOS-style touch-friendly toggle switches for Parent Options */
+        .toggle-switch {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+        }
+        .toggle-switch input {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .toggle-slider {
+            width: 44px;
+            height: 24px;
+            background-color: #cbd5e1;
+            border-radius: 9999px;
+            transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            flex-shrink: 0;
+        }
+        .toggle-slider:before {
+            content: "";
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            left: 2px;
+            top: 2px;
+            background-color: #ffffff;
+            border-radius: 50%;
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+        }
+        .toggle-switch input:checked + .toggle-slider {
+            background-color: #4f46e5;
+        }
+        .toggle-switch input:checked + .toggle-slider:before {
+            transform: translateX(20px);
+        }
+
         .count-item-btn {
             width: 4.4rem;
             height: 4.4rem;
@@ -385,12 +441,12 @@
             background: #ffffff;
             border: 3px solid #dbeafe;
             border-radius: 1.5rem;
-            padding: 0.75rem 1.1rem;
+            padding: 0.65rem 0.9rem;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-width: 96px;
+            min-width: 88px;
             box-shadow: 0 6px 0 #bfdbfe, 0 8px 16px -3px rgba(30, 64, 175, 0.08);
             cursor: pointer;
             touch-action: manipulation;
@@ -467,7 +523,7 @@
 <body>
 
     <!-- MAIN MENU -->
-    <div id="view-menu" class="view-section active-view">
+    <div id="view-menu" class="view-section active-view" style="background: linear-gradient(135deg, #e0f2fe 0%, #f0fdf4 50%, #fef3c7 100%); z-index: 10;">
         <div class="text-center pt-5 pb-2 px-4 flex-shrink-0">
             <div class="inline-flex items-center gap-2 bg-white px-4 py-1 rounded-full shadow-sm border border-sky-200 mb-1">
                 <span class="text-xl">🌟</span>
@@ -477,8 +533,8 @@
                         <p class="text-slate-600 font-bold text-sm sm:text-base mt-0.5">Tap any card to play, count & sound it out!</p>
             <div class="flex justify-center items-center gap-2 mt-2">
                 <button id="voice-settings-btn" class="inline-flex items-center gap-2 bg-white px-3.5 py-1.5 rounded-full shadow-sm border-2 border-indigo-200 text-xs sm:text-sm font-black text-indigo-700 squish-btn hover:bg-indigo-50">
-                    <span>🎙️</span>
-                    <span>Voice & Audio Settings</span>
+                    <span>⚙️</span>
+                    <span>Options & Voice</span>
                     <span id="voice-status-pill" class="inline-flex items-center gap-1.5 bg-slate-100 text-slate-700 text-[10px] font-black px-2 py-0.5 rounded-full border border-slate-200">
                         <span id="voice-status-dot" class="w-2 h-2 rounded-full bg-blue-500"></span>
                         <span id="voice-status-text">Device Voice</span>
@@ -575,11 +631,14 @@
                 <button id="phonics-mode-studio" class="mode-pill active">🔤 Sound Studio</button>
                 <button id="phonics-mode-bubbles" class="mode-pill">🫧 Pop Bubbles</button>
             </div>
-            <div class="audio-vis-pill" title="Audio Activity"><span class="vis-bar bar-1"></span><span class="vis-bar bar-2"></span><span class="vis-bar bar-3"></span><span class="vis-bar bar-4"></span></div>
+            <div class="flex items-center gap-1.5 flex-shrink-0">
+                <button class="options-quick-btn bg-white hover:bg-slate-100 text-slate-700 font-black px-2.5 py-1.5 rounded-full shadow-sm border-2 border-slate-200 squish-btn text-sm" title="Options & Settings">⚙️</button>
+                <div class="audio-vis-pill" title="Audio Activity"><span class="vis-bar bar-1"></span><span class="vis-bar bar-2"></span><span class="vis-bar bar-3"></span><span class="vis-bar bar-4"></span></div>
+            </div>
         </div>
 
         <div id="phonics-studio-stage" class="main-stage">
-            <div id="phonics-main-card" class="bg-white rounded-3xl p-4 sm:p-6 shadow-lg border-4 border-blue-200 flex flex-col items-center w-full max-w-md cursor-pointer squish-btn">
+            <div id="phonics-main-card" class="bg-white rounded-3xl p-3 sm:p-5 shadow-lg border-4 border-blue-200 flex flex-col items-center w-full max-w-md cursor-pointer squish-btn">
                 <div class="flex items-baseline gap-3">
                     <span id="phonics-big-upper" class="text-7xl sm:text-8xl font-black text-blue-600 leading-none">A</span>
                     <span id="phonics-big-lower" class="text-6xl sm:text-7xl font-black text-sky-500 leading-none">a</span>
@@ -589,7 +648,7 @@
                 </div>
             </div>
             <p class="text-xs sm:text-sm font-extrabold text-slate-500 uppercase tracking-wider mt-3 mb-1.5">Tap a picture to sound it out!</p>
-            <div id="phonics-words-row" class="flex flex-wrap justify-center gap-2.5 sm:gap-4 w-full"></div>
+            <div id="phonics-words-row" class="flex flex-wrap justify-center gap-2 sm:gap-3 w-full"></div>
             <div id="phonics-blend-bar" class="hidden mt-3 bg-blue-100/90 border-2 border-blue-300 px-4 py-2 rounded-2xl flex items-center justify-center gap-2 shadow-sm max-w-md w-full">
                 <span class="text-xs font-black uppercase tracking-wider text-blue-800">Sound it out:</span>
                 <div id="phonics-blend-letters" class="flex items-center gap-1 text-lg sm:text-xl font-black text-blue-900"></div>
@@ -618,20 +677,23 @@
                 <button id="num-mode-touch" class="mode-pill active">👆 Tap to Count</button>
                 <button id="num-mode-show" class="mode-pill">✨ Auto Count</button>
             </div>
-            <div class="audio-vis-pill" title="Audio Activity"><span class="vis-bar bar-1"></span><span class="vis-bar bar-2"></span><span class="vis-bar bar-3"></span><span class="vis-bar bar-4"></span></div>
+            <div class="flex items-center gap-1.5 flex-shrink-0">
+                <button class="options-quick-btn bg-white hover:bg-slate-100 text-slate-700 font-black px-2.5 py-1.5 rounded-full shadow-sm border-2 border-slate-200 squish-btn text-sm" title="Options & Settings">⚙️</button>
+                <div class="audio-vis-pill" title="Audio Activity"><span class="vis-bar bar-1"></span><span class="vis-bar bar-2"></span><span class="vis-bar bar-3"></span><span class="vis-bar bar-4"></span></div>
+            </div>
         </div>
 
-        <div class="main-stage">
-            <div class="flex items-center gap-4 mb-2">
-                <div id="number-big-digit" class="text-6xl sm:text-7xl font-black text-teal-700 leading-none cursor-pointer squish-btn">1</div>
+        <div class="main-stage justify-between py-1.5">
+            <div class="flex items-center gap-3 sm:gap-4 mb-1 flex-shrink-0">
+                <div id="number-big-digit" class="text-5xl sm:text-7xl font-black text-teal-700 leading-none cursor-pointer squish-btn">1</div>
                 <div class="flex flex-col">
-                    <span id="number-word-label" class="text-2xl sm:text-3xl font-black text-slate-800 leading-tight">One</span>
-                    <span id="number-instruction" class="text-xs sm:text-sm font-extrabold text-teal-600 bg-teal-100 px-3 py-0.5 rounded-full">Tap each ☀️ to count! (0/1)</span>
+                    <span id="number-word-label" class="text-xl sm:text-3xl font-black text-slate-800 leading-tight">One</span>
+                    <span id="number-instruction" class="text-[11px] sm:text-sm font-extrabold text-teal-600 bg-teal-100 px-2.5 py-0.5 rounded-full">Tap each ☀️ to count! (0/1)</span>
                 </div>
-                <button id="number-count-all-btn" class="bg-teal-600 text-white font-black px-3.5 py-2 rounded-2xl shadow-md text-sm squish-btn">🔊 Count All</button>
+                <button id="number-count-all-btn" class="bg-teal-600 text-white font-black px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-2xl shadow-md text-xs sm:text-sm squish-btn">🔊 Count All</button>
             </div>
-            <div id="number-items-grid" class="flex flex-wrap justify-center items-center gap-2.5 sm:gap-3 max-w-xl my-2 min-h-[140px] p-2"></div>
-            <div id="number-ten-frame" class="flex gap-1.5 flex-wrap justify-center bg-white px-3.5 py-2 rounded-2xl border-2 border-teal-200 shadow-sm mt-1"></div>
+            <div id="number-items-grid" class="flex-1 min-h-0 w-full max-w-xl flex flex-wrap justify-center items-center content-center gap-1.5 sm:gap-2.5 overflow-hidden px-1 my-1"></div>
+            <div id="number-ten-frame" class="flex-shrink-0 z-10 mt-1 mb-1 flex gap-1.5 flex-wrap justify-center bg-white px-3 py-1.5 rounded-2xl border-2 border-teal-200 shadow-sm"></div>
         </div>
 
         <div class="controls-dock">
@@ -651,7 +713,10 @@
                 <button data-quiz-cat="shapes" class="mode-pill quiz-cat-btn">🔷 Shapes</button>
                 <button data-quiz-cat="solar" class="mode-pill quiz-cat-btn">🪐 Space</button>
             </div>
-            <div class="audio-vis-pill" title="Audio Activity"><span class="vis-bar bar-1"></span><span class="vis-bar bar-2"></span><span class="vis-bar bar-3"></span><span class="vis-bar bar-4"></span></div>
+            <div class="flex items-center gap-1.5 flex-shrink-0">
+                <button class="options-quick-btn bg-white hover:bg-slate-100 text-slate-700 font-black px-2.5 py-1.5 rounded-full shadow-sm border-2 border-slate-200 squish-btn text-sm" title="Options & Settings">⚙️</button>
+                <div class="audio-vis-pill" title="Audio Activity"><span class="vis-bar bar-1"></span><span class="vis-bar bar-2"></span><span class="vis-bar bar-3"></span><span class="vis-bar bar-4"></span></div>
+            </div>
         </div>
 
         <div class="main-stage">
@@ -674,7 +739,10 @@
         <div class="top-bar">
             <button data-action="home" class="home-btn squish-btn"><span>🏠</span><span>Home</span></button>
             <div class="bg-white px-4 py-1.5 rounded-full font-black text-emerald-700 text-sm border-2 border-emerald-100 shadow-sm">Tap the shape to bounce!</div>
-            <div class="audio-vis-pill" title="Audio Activity"><span class="vis-bar bar-1"></span><span class="vis-bar bar-2"></span><span class="vis-bar bar-3"></span><span class="vis-bar bar-4"></span></div>
+            <div class="flex items-center gap-1.5 flex-shrink-0">
+                <button class="options-quick-btn bg-white hover:bg-slate-100 text-slate-700 font-black px-2.5 py-1.5 rounded-full shadow-sm border-2 border-slate-200 squish-btn text-sm" title="Options & Settings">⚙️</button>
+                <div class="audio-vis-pill" title="Audio Activity"><span class="vis-bar bar-1"></span><span class="vis-bar bar-2"></span><span class="vis-bar bar-3"></span><span class="vis-bar bar-4"></span></div>
+            </div>
         </div>
 
         <div class="main-stage">
@@ -695,7 +763,10 @@
         <div class="top-bar">
             <button data-action="home" class="home-btn squish-btn"><span>🏠</span><span>Home</span></button>
             <div class="bg-white px-4 py-1.5 rounded-full font-black text-indigo-700 text-sm border-2 border-indigo-100 shadow-sm">Drag any direction to spin! 🔄</div>
-            <div class="audio-vis-pill" title="Audio Activity"><span class="vis-bar bar-1"></span><span class="vis-bar bar-2"></span><span class="vis-bar bar-3"></span><span class="vis-bar bar-4"></span></div>
+            <div class="flex items-center gap-1.5 flex-shrink-0">
+                <button class="options-quick-btn bg-white hover:bg-slate-100 text-slate-700 font-black px-2.5 py-1.5 rounded-full shadow-sm border-2 border-slate-200 squish-btn text-sm" title="Options & Settings">⚙️</button>
+                <div class="audio-vis-pill" title="Audio Activity"><span class="vis-bar bar-1"></span><span class="vis-bar bar-2"></span><span class="vis-bar bar-3"></span><span class="vis-bar bar-4"></span></div>
+            </div>
         </div>
 
         <div class="main-stage">
@@ -722,7 +793,10 @@
                 <button id="color-mode-explore" class="mode-pill active">🎨 Explore Colors</button>
                 <button id="color-mode-mix" class="mode-pill">🧪 Mix 2 Colors!</button>
             </div>
-            <div class="audio-vis-pill" title="Audio Activity"><span class="vis-bar bar-1"></span><span class="vis-bar bar-2"></span><span class="vis-bar bar-3"></span><span class="vis-bar bar-4"></span></div>
+            <div class="flex items-center gap-1.5 flex-shrink-0">
+                <button class="options-quick-btn bg-white hover:bg-slate-100 text-slate-700 font-black px-2.5 py-1.5 rounded-full shadow-sm border-2 border-slate-200 squish-btn text-sm" title="Options & Settings">⚙️</button>
+                <div class="audio-vis-pill" title="Audio Activity"><span class="vis-bar bar-1"></span><span class="vis-bar bar-2"></span><span class="vis-bar bar-3"></span><span class="vis-bar bar-4"></span></div>
+            </div>
         </div>
 
         <div id="color-bg-target" class="main-stage rounded-3xl my-1 transition-colors duration-300" style="background-color: #ef4444;">
@@ -756,7 +830,10 @@
         <div class="top-bar">
             <button data-action="home" class="home-btn squish-btn"><span>🏠</span><span>Home</span></button>
             <button id="animal-sound-btn" class="bg-orange-500 text-white font-black px-4 py-2 rounded-full shadow-md squish-btn text-sm">🔊 Hear Animal Sound!</button>
-            <div class="audio-vis-pill" title="Audio Activity"><span class="vis-bar bar-1"></span><span class="vis-bar bar-2"></span><span class="vis-bar bar-3"></span><span class="vis-bar bar-4"></span></div>
+            <div class="flex items-center gap-1.5 flex-shrink-0">
+                <button class="options-quick-btn bg-white hover:bg-slate-100 text-slate-700 font-black px-2.5 py-1.5 rounded-full shadow-sm border-2 border-slate-200 squish-btn text-sm" title="Options & Settings">⚙️</button>
+                <div class="audio-vis-pill" title="Audio Activity"><span class="vis-bar bar-1"></span><span class="vis-bar bar-2"></span><span class="vis-bar bar-3"></span><span class="vis-bar bar-4"></span></div>
+            </div>
         </div>
         <div class="main-stage">
             <div id="animal-target" class="text-[7.5rem] sm:text-[9rem] leading-none cursor-pointer squish-btn">🦁</div>
@@ -775,7 +852,10 @@
         <div class="top-bar">
             <button data-action="home" class="home-btn squish-btn"><span>🏠</span><span>Home</span></button>
             <button id="food-chomp-btn" class="bg-pink-500 text-white font-black px-4 py-2 rounded-full shadow-md squish-btn text-sm">😋 Tap Food to Take a Bite!</button>
-            <div class="audio-vis-pill" title="Audio Activity"><span class="vis-bar bar-1"></span><span class="vis-bar bar-2"></span><span class="vis-bar bar-3"></span><span class="vis-bar bar-4"></span></div>
+            <div class="flex items-center gap-1.5 flex-shrink-0">
+                <button class="options-quick-btn bg-white hover:bg-slate-100 text-slate-700 font-black px-2.5 py-1.5 rounded-full shadow-sm border-2 border-slate-200 squish-btn text-sm" title="Options & Settings">⚙️</button>
+                <div class="audio-vis-pill" title="Audio Activity"><span class="vis-bar bar-1"></span><span class="vis-bar bar-2"></span><span class="vis-bar bar-3"></span><span class="vis-bar bar-4"></span></div>
+            </div>
         </div>
         <div class="main-stage">
             <div id="fruits-target" class="relative w-52 h-52 sm:w-60 sm:h-60 flex items-center justify-center cursor-pointer squish-btn">
@@ -796,7 +876,10 @@
         <div class="top-bar">
             <button data-action="home" class="home-btn squish-btn"><span>🏠</span><span>Home</span></button>
             <div class="bg-white px-4 py-1.5 rounded-full font-black text-purple-700 text-sm border-2 border-purple-100 shadow-sm">Tap to hear it go! 🚦</div>
-            <div class="audio-vis-pill" title="Audio Activity"><span class="vis-bar bar-1"></span><span class="vis-bar bar-2"></span><span class="vis-bar bar-3"></span><span class="vis-bar bar-4"></span></div>
+            <div class="flex items-center gap-1.5 flex-shrink-0">
+                <button class="options-quick-btn bg-white hover:bg-slate-100 text-slate-700 font-black px-2.5 py-1.5 rounded-full shadow-sm border-2 border-slate-200 squish-btn text-sm" title="Options & Settings">⚙️</button>
+                <div class="audio-vis-pill" title="Audio Activity"><span class="vis-bar bar-1"></span><span class="vis-bar bar-2"></span><span class="vis-bar bar-3"></span><span class="vis-bar bar-4"></span></div>
+            </div>
         </div>
         <div class="main-stage">
             <div id="things-target" class="text-[7.5rem] sm:text-[9rem] leading-none cursor-pointer squish-btn">🚒</div>
@@ -815,7 +898,10 @@
         <div class="top-bar">
             <button data-action="home" class="home-btn squish-btn"><span>🏠</span><span>Home</span></button>
             <div class="bg-white px-4 py-1.5 rounded-full font-black text-cyan-700 text-sm border-2 border-cyan-100 shadow-sm">Tap each card to compare! 🔄</div>
-            <div class="audio-vis-pill" title="Audio Activity"><span class="vis-bar bar-1"></span><span class="vis-bar bar-2"></span><span class="vis-bar bar-3"></span><span class="vis-bar bar-4"></span></div>
+            <div class="flex items-center gap-1.5 flex-shrink-0">
+                <button class="options-quick-btn bg-white hover:bg-slate-100 text-slate-700 font-black px-2.5 py-1.5 rounded-full shadow-sm border-2 border-slate-200 squish-btn text-sm" title="Options & Settings">⚙️</button>
+                <div class="audio-vis-pill" title="Audio Activity"><span class="vis-bar bar-1"></span><span class="vis-bar bar-2"></span><span class="vis-bar bar-3"></span><span class="vis-bar bar-4"></span></div>
+            </div>
         </div>
         <div class="main-stage">
             <div class="grid grid-cols-2 gap-4 sm:gap-6 w-full max-w-lg px-2">
@@ -844,7 +930,10 @@
                 <button id="solar-mode-planet" class="mode-pill">🪐 3D Spin</button>
                 <button id="solar-mode-orbit" class="mode-pill">☀️ Orbit</button>
             </div>
-            <div class="audio-vis-pill" title="Audio Activity"><span class="vis-bar bar-1"></span><span class="vis-bar bar-2"></span><span class="vis-bar bar-3"></span><span class="vis-bar bar-4"></span></div>
+            <div class="flex items-center gap-1.5 flex-shrink-0">
+                <button class="options-quick-btn bg-white hover:bg-slate-100 text-slate-700 font-black px-2.5 py-1.5 rounded-full shadow-sm border-2 border-slate-200 squish-btn text-sm" title="Options & Settings">⚙️</button>
+                <div class="audio-vis-pill" title="Audio Activity"><span class="vis-bar bar-1"></span><span class="vis-bar bar-2"></span><span class="vis-bar bar-3"></span><span class="vis-bar bar-4"></span></div>
+            </div>
         </div>
 
         <div class="main-stage">
@@ -880,84 +969,253 @@
     </div>
 
     <!-- VOICE & AUDIO SETTINGS MODAL -->
-    <div id="voice-settings-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
-        <div class="bg-white rounded-3xl max-w-lg w-full p-5 sm:p-6 shadow-2xl border-4 border-indigo-200 flex flex-col gap-4 max-h-[92vh] overflow-y-auto">
-            <div class="flex items-center justify-between border-b pb-3">
-                <div class="flex items-center gap-2">
-                    <span class="text-3xl">🎙️</span>
+        <div id="voice-settings-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-4 sm:p-6 shadow-2xl border-4 border-indigo-200 flex flex-col gap-3.5 max-h-[92vh] overflow-y-auto">
+            <div class="flex items-center justify-between border-b pb-3 flex-shrink-0">
+                <div class="flex items-center gap-2.5">
+                    <span class="text-3xl">⚙️</span>
                     <div>
-                        <h2 class="text-xl sm:text-2xl font-black text-slate-800 leading-tight">Parent Voice & Audio Settings</h2>
-                        <p class="text-xs text-slate-500 font-bold">Gemini 3.8 Natural Voices & High-Fidelity Audio</p>
+                        <h2 class="text-xl sm:text-2xl font-black text-slate-800 leading-tight">Options & Voice Settings</h2>
+                        <p class="text-xs text-slate-500 font-bold">App Features, Toddler Controls & Speech Audio</p>
                     </div>
                 </div>
-                <button id="voice-modal-close-x" class="text-slate-400 hover:text-slate-700 text-2xl font-black p-1 squish-btn">✕</button>
+                <button id="voice-modal-close-x" class="text-slate-400 hover:text-slate-700 text-2xl font-black p-1 squish-btn" title="Close">✕</button>
             </div>
 
-            <div class="flex flex-col gap-1.5">
-                <label class="text-xs font-black uppercase tracking-wider text-slate-700 flex items-center justify-between">
-                    <span>Gemini API Key</span>
+            <!-- Game & Audio Options Section -->
+            <div class="flex flex-col gap-2">
+                <div class="flex items-center gap-1.5 mb-0.5">
+                    <span class="text-sm">🎛️</span>
+                    <h3 class="text-xs font-black uppercase tracking-wider text-slate-700">Game & Audio Options</h3>
+                </div>
+
+                <div class="grid grid-cols-1 gap-2">
+                    <!-- 1. Announce Game When Opened -->
+                    <label class="toggle-switch flex items-center justify-between p-2.5 rounded-2xl bg-indigo-50/70 hover:bg-indigo-50 border border-indigo-200 cursor-pointer">
+                        <div class="pr-2">
+                            <div class="text-xs font-black text-indigo-950 flex items-center gap-1.5">
+                                <span>📢</span><span>Announce Game When Opened</span>
+                            </div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Speak the game name & intro when opening a game</div>
+                        </div>
+                        <input id="opt-announce-open" type="checkbox">
+                        <div class="toggle-slider"></div>
+                    </label>
+
+                    <!-- 2. Voice & Speech (TTS) -->
+                    <label class="toggle-switch flex items-center justify-between p-2.5 rounded-2xl bg-slate-50 hover:bg-slate-100 border border-slate-200 cursor-pointer">
+                        <div class="pr-2">
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
+                                <span>🗣️</span><span>Voice & Speech (TTS)</span>
+                            </div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Read words, letters, numbers, and prompts aloud</div>
+                        </div>
+                        <input id="opt-voice-enabled" type="checkbox">
+                        <div class="toggle-slider"></div>
+                    </label>
+
+                    <!-- 3. Sound Effects (SFX) -->
+                    <label class="toggle-switch flex items-center justify-between p-2.5 rounded-2xl bg-slate-50 hover:bg-slate-100 border border-slate-200 cursor-pointer">
+                        <div class="pr-2">
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
+                                <span>🔊</span><span>Sound Effects (SFX)</span>
+                            </div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Play animal sounds, sirens, crunches, and chimes</div>
+                        </div>
+                        <input id="opt-sfx-enabled" type="checkbox">
+                        <div class="toggle-slider"></div>
+                    </label>
+
+                    <!-- 4. Speech Speed -->
+                    <div class="flex items-center justify-between p-2.5 rounded-2xl bg-slate-50 border border-slate-200 gap-2">
+                        <div>
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
+                                <span>🐢</span><span>Speech Speed</span>
+                            </div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Pacing for spoken words and prompts</div>
+                        </div>
+                        <select id="opt-speech-rate" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0">
+                            <option value="slow">🐢 Slow (0.82x)</option>
+                            <option value="normal">🚶 Normal (0.96x)</option>
+                            <option value="fast">🐇 Fast (1.10x)</option>
+                        </select>
+                    </div>
+
+                    <!-- 5. Counting Range -->
+                    <div class="flex items-center justify-between p-2.5 rounded-2xl bg-slate-50 border border-slate-200 gap-2">
+                        <div>
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
+                                <span>🔢</span><span>Counting Range</span>
+                            </div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Numbers tray and quiz counting pool</div>
+                        </div>
+                        <select id="opt-max-number" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0">
+                            <option value="20">1 to 20 (Advanced)</option>
+                            <option value="10">1 to 10 (Beginner)</option>
+                        </select>
+                    </div>
+
+                    <!-- 6. Phonics Style -->
+                    <div class="flex items-center justify-between p-2.5 rounded-2xl bg-slate-50 border border-slate-200 gap-2">
+                        <div>
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
+                                <span>🔤</span><span>Phonics Style</span>
+                            </div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Phonics detail when sounding out letters</div>
+                        </div>
+                        <select id="opt-phonics-detail" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0">
+                            <option value="full">Full Phonics (Sound + Cue + Word)</option>
+                            <option value="simple">Simple (Letter + Word)</option>
+                        </select>
+                    </div>
+
+                    <!-- 7. Confetti & Crumb Effects -->
+                    <label class="toggle-switch flex items-center justify-between p-2.5 rounded-2xl bg-slate-50 hover:bg-slate-100 border border-slate-200 cursor-pointer">
+                        <div class="pr-2">
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
+                                <span>🎉</span><span>Confetti & Crumb Effects</span>
+                            </div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Show celebratory confetti bursts and food crumbs</div>
+                        </div>
+                        <input id="opt-confetti-enabled" type="checkbox">
+                        <div class="toggle-slider"></div>
+                    </label>
+
+                    <!-- 8. Auto-Spin 3D Shapes & Planets -->
+                    <label class="toggle-switch flex items-center justify-between p-2.5 rounded-2xl bg-slate-50 hover:bg-slate-100 border border-slate-200 cursor-pointer">
+                        <div class="pr-2">
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
+                                <span>🌀</span><span>Auto-Spin 3D Shapes & Planets</span>
+                            </div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Gently spin 3D models automatically</div>
+                        </div>
+                        <input id="opt-autospin-3d" type="checkbox">
+                        <div class="toggle-slider"></div>
+                    </label>
+
+                    <!-- 9. Toddler Home-Button Lock -->
+                    <label class="toggle-switch flex items-center justify-between p-2.5 rounded-2xl bg-slate-50 hover:bg-slate-100 border border-slate-200 cursor-pointer">
+                        <div class="pr-2">
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
+                                <span>🔒</span><span>Toddler Home-Button Lock</span>
+                            </div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Require double-tap on Home button to exit a game</div>
+                        </div>
+                        <input id="opt-hold-home" type="checkbox">
+                        <div class="toggle-slider"></div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Gemini Voice / Cloud TTS Section -->
+            <div class="border-t pt-3 mt-0.5 flex flex-col gap-3">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-1.5">
+                        <span class="text-sm">🎙️</span>
+                        <h3 class="text-xs font-black uppercase tracking-wider text-slate-700">Gemini 3.8 Natural Voice & API Key</h3>
+                    </div>
                     <span id="canvas-key-badge" class="text-[11px] font-extrabold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full border border-indigo-100">Canvas Key Auto-Detected</span>
-                </label>
-                <input id="gemini-api-key-input" type="password" placeholder="AIzaSy... (Paste Gemini API Key)"
-                       class="w-full px-3.5 py-2.5 rounded-xl border-2 border-slate-300 font-mono text-sm focus:border-indigo-500 focus:outline-none bg-slate-50">
-                <p class="text-[11px] text-slate-500 font-semibold leading-tight">
-                    💡 If running directly inside Gemini Canvas, your API key is automatically injected! If running standalone on mobile browsers (Safari/Chrome), enter your free Google AI Studio key here.
-                </p>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div class="flex flex-col gap-1">
-                    <label class="text-xs font-black uppercase tracking-wider text-slate-700">TTS Model</label>
-                    <select id="gemini-tts-model-select" class="w-full px-3 py-2 rounded-xl border-2 border-slate-300 font-bold text-sm bg-slate-50 focus:border-indigo-500 focus:outline-none">
-                        <option value="gemini-3.8-flash-tts">gemini-3.8-flash-tts (Expressive Studio)</option>
-                        <option value="gemini-3.8-flash-lite-tts">gemini-3.8-flash-lite-tts (Low Latency)</option>
-                    </select>
                 </div>
 
-                <div class="flex flex-col gap-1">
-                    <label class="text-xs font-black uppercase tracking-wider text-slate-700">Voice Persona</label>
-                    <select id="gemini-tts-voice-select" class="w-full px-3 py-2 rounded-xl border-2 border-slate-300 font-bold text-sm bg-slate-50 focus:border-indigo-500 focus:outline-none">
-                        <option value="Kore">Kore (Warm Storyteller — Default)</option>
-                        <option value="Puck">Puck (Playful & Energetic Buddy)</option>
-                        <option value="Aoede">Aoede (Melodic Educator)</option>
-                        <option value="Leda">Leda (Bright & Cheerful)</option>
-                        <option value="Fenrir">Fenrir (Friendly Deep Voice)</option>
-                    </select>
+                <div class="flex flex-col gap-1.5">
+                    <input id="gemini-api-key-input" type="password" placeholder="AIzaSy... (Paste Gemini API Key)"
+                           class="w-full px-3.5 py-2.5 rounded-xl border-2 border-slate-300 font-mono text-sm focus:border-indigo-500 focus:outline-none bg-slate-50">
+                    <p class="text-[11px] text-slate-500 font-semibold leading-tight">
+                        💡 Optional: Gemini natural voices provide expressive storytelling. If left blank, natural device speech works 100% offline!
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div class="flex flex-col gap-1">
+                        <label class="text-xs font-black uppercase tracking-wider text-slate-700">TTS Model</label>
+                        <select id="gemini-tts-model-select" class="w-full px-3 py-2 rounded-xl border-2 border-slate-300 font-bold text-sm bg-slate-50 focus:border-indigo-500 focus:outline-none">
+                            <option value="gemini-3.8-flash-tts">gemini-3.8-flash-tts (Expressive Studio)</option>
+                            <option value="gemini-3.8-flash-lite-tts">gemini-3.8-flash-lite-tts (Low Latency)</option>
+                        </select>
+                    </div>
+
+                    <div class="flex flex-col gap-1">
+                        <label class="text-xs font-black uppercase tracking-wider text-slate-700">Voice Persona</label>
+                        <select id="gemini-tts-voice-select" class="w-full px-3 py-2 rounded-xl border-2 border-slate-300 font-bold text-sm bg-slate-50 focus:border-indigo-500 focus:outline-none">
+                            <option value="Kore">Kore (Warm Storyteller — Default)</option>
+                            <option value="Puck">Puck (Playful & Energetic Buddy)</option>
+                            <option value="Aoede">Aoede (Melodic Educator)</option>
+                            <option value="Leda">Leda (Bright & Cheerful)</option>
+                            <option value="Fenrir">Fenrir (Friendly Deep Voice)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="voice-test-status" class="hidden text-xs font-bold text-center py-2 px-3 rounded-xl transition-all duration-200"></div>
+                <div class="flex flex-wrap items-center gap-2 pt-1">
+                    <button id="voice-test-btn" class="flex-1 bg-indigo-100 hover:bg-indigo-200 text-indigo-800 font-black px-4 py-2.5 rounded-xl text-sm squish-btn flex items-center justify-center gap-1.5">
+                        <span>🔊</span><span>Test Voice Sample</span>
+                        <div class="audio-vis-pill" title="Audio Activity"><span class="vis-bar bar-1"></span><span class="vis-bar bar-2"></span><span class="vis-bar bar-3"></span><span class="vis-bar bar-4"></span></div>
+                    </button>
+                    <button id="voice-precache-btn" class="flex-1 bg-amber-100 hover:bg-amber-200 text-amber-900 font-black px-4 py-2.5 rounded-xl text-sm squish-btn flex items-center justify-center gap-1.5">
+                        <span>⚡</span><span id="voice-precache-label">Pre-cache Core Words</span>
+                        <div class="audio-vis-pill" title="Audio Activity"><span class="vis-bar bar-1"></span><span class="vis-bar bar-2"></span><span class="vis-bar bar-3"></span><span class="vis-bar bar-4"></span></div>
+                    </button>
+                </div>
+
+                <div id="precache-progress-box" class="hidden flex-col gap-1 bg-amber-50 border border-amber-200 rounded-xl p-2.5 text-xs text-amber-900 font-bold">
+                    <div class="flex justify-between items-center">
+                        <span id="precache-progress-text">Pre-caching audio...</span>
+                        <span id="precache-progress-num">0%</span>
+                    </div>
+                    <div class="w-full bg-amber-200 rounded-full h-2 overflow-hidden">
+                        <div id="precache-progress-bar" class="bg-amber-600 h-full w-0 transition-all duration-150"></div>
+                    </div>
                 </div>
             </div>
 
-            <div id="voice-test-status" class="hidden text-xs font-bold text-center py-2 px-3 rounded-xl transition-all duration-200"></div>
-            <div class="flex flex-wrap items-center gap-2 pt-1">
-                <button id="voice-test-btn" class="flex-1 bg-indigo-100 hover:bg-indigo-200 text-indigo-800 font-black px-4 py-2.5 rounded-xl text-sm squish-btn flex items-center justify-center gap-1.5">
-                    <span>🔊</span><span>Test Voice Sample</span>
-                    <div class="audio-vis-pill" title="Audio Activity"><span class="vis-bar bar-1"></span><span class="vis-bar bar-2"></span><span class="vis-bar bar-3"></span><span class="vis-bar bar-4"></span></div>
+            <!-- Footer: Reset Defaults & Save Buttons -->
+            <div class="flex items-center justify-between gap-3 border-t pt-3 mt-1 flex-shrink-0">
+                <button id="opt-reset-defaults-btn" type="button" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-black px-4 py-2.5 rounded-xl text-sm squish-btn border border-slate-300">
+                    ↺ Reset Defaults
                 </button>
-                <button id="voice-precache-btn" class="flex-1 bg-amber-100 hover:bg-amber-200 text-amber-900 font-black px-4 py-2.5 rounded-xl text-sm squish-btn flex items-center justify-center gap-1.5">
-                    <span>⚡</span><span id="voice-precache-label">Pre-cache Core Words</span>
-                    <div class="audio-vis-pill" title="Audio Activity"><span class="vis-bar bar-1"></span><span class="vis-bar bar-2"></span><span class="vis-bar bar-3"></span><span class="vis-bar bar-4"></span></div>
-                </button>
-            </div>
-
-            <div id="precache-progress-box" class="hidden flex-col gap-1 bg-amber-50 border border-amber-200 rounded-xl p-2.5 text-xs text-amber-900 font-bold">
-                <div class="flex justify-between items-center">
-                    <span id="precache-progress-text">Pre-caching audio...</span>
-                    <span id="precache-progress-num">0%</span>
-                </div>
-                <div class="w-full bg-amber-200 rounded-full h-2 overflow-hidden">
-                    <div id="precache-progress-bar" class="bg-amber-600 h-full w-0 transition-all duration-150"></div>
-                </div>
-            </div>
-
-            <div class="flex justify-end gap-2 border-t pt-3 mt-1">
-                <button id="voice-modal-save-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-black py-2.5 rounded-xl shadow-md squish-btn text-base">
+                <button id="voice-modal-save-btn" type="button" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-black py-2.5 rounded-xl shadow-md squish-btn text-base">
                     Save & Done
                 </button>
             </div>
         </div>
-    </div>
-    <script>
+    </div><script>
 (() => {
 'use strict';
+
+function cleanStrayTextNodes() {
+    const sanitize = (parent) => {
+        if (!parent) return;
+        const nodes = Array.from(parent.childNodes);
+        nodes.forEach(node => {
+            if (node.nodeType === Node.TEXT_NODE) {
+                const val = node.nodeValue || '';
+                if (/<!?DOCTYPE|<html/i.test(val)) {
+                    node.parentNode.removeChild(node);
+                } else if (node.parentNode === document.documentElement && val.trim().length > 0) {
+                    node.parentNode.removeChild(node);
+                } else if (node.parentNode === document.body && /<!?DOCTYPE|<html/i.test(val)) {
+                    node.parentNode.removeChild(node);
+                }
+            }
+        });
+    };
+    try {
+        sanitize(document);
+        sanitize(document.documentElement);
+        sanitize(document.body);
+        const menu = document.getElementById('view-menu');
+        if (menu) {
+            Array.from(menu.childNodes).forEach(node => {
+                if (node.nodeType === Node.TEXT_NODE && /<!?DOCTYPE|<html/i.test(node.nodeValue || '')) {
+                    node.parentNode.removeChild(node);
+                }
+            });
+        }
+    } catch (e) {}
+}
+cleanStrayTextNodes();
+window.addEventListener('DOMContentLoaded', cleanStrayTextNodes);
 
 // scratch/data.js
 const GAMES = {
@@ -1230,11 +1488,11 @@ const GAMES = {
             ]
         },
         {
-            id: 'Cone', color: '#10b981', emoji: '🍦',
+            id: 'Cone', color: '#10b981', emoji: '🚧',
             real: 'Circle base with a pointy top!',
             examples: [
                 { id: 'pure', label: 'Cone', emoji: '🔺' },
-                { id: 'icecream', label: 'Ice Cream', emoji: '🍦' },
+                { id: 'trafficcone', label: 'Traffic Cone', emoji: '🚧' },
                 { id: 'partyhat', label: 'Party Hat', emoji: '🎉' }
             ]
         },
@@ -1418,8 +1676,58 @@ const GAMES = {
         },
         {
             title: 'Heavy vs. Light',
-            a: { label: 'Heavy', emoji: '🪨', scale: 'text-8xl' },
-            b: { label: 'Light', emoji: '🪶', scale: 'text-6xl' }
+            a: { label: 'Heavy', emoji: '🪨', scale: 'text-8xl sm:text-9xl' },
+            b: { label: 'Light', emoji: '🪶', scale: 'text-5xl sm:text-6xl' }
+        },
+        {
+            title: 'Tall vs. Short',
+            a: { label: 'Tall', emoji: '🦒', scale: 'text-8xl sm:text-9xl' },
+            b: { label: 'Short', emoji: '🐶', scale: 'text-5xl sm:text-6xl' }
+        },
+        {
+            title: 'Full vs. Empty',
+            a: { label: 'Full', emoji: '🥛', scale: 'text-7xl sm:text-8xl' },
+            b: { label: 'Empty', emoji: '🫙', scale: 'text-7xl sm:text-8xl' }
+        },
+        {
+            title: 'Wet vs. Dry',
+            a: { label: 'Wet', emoji: '☔', scale: 'text-7xl sm:text-8xl' },
+            b: { label: 'Dry', emoji: '🌵', scale: 'text-7xl sm:text-8xl' }
+        },
+        {
+            title: 'Awake vs. Asleep',
+            a: { label: 'Awake', emoji: '🤩', scale: 'text-7xl sm:text-8xl' },
+            b: { label: 'Asleep', emoji: '😴', scale: 'text-7xl sm:text-8xl' }
+        },
+        {
+            title: 'Hard vs. Soft',
+            a: { label: 'Hard', emoji: '💎', scale: 'text-7xl sm:text-8xl' },
+            b: { label: 'Soft', emoji: '🧸', scale: 'text-7xl sm:text-8xl' }
+        },
+        {
+            title: 'Inside vs. Outside',
+            a: { label: 'Inside', emoji: '🏠', scale: 'text-7xl sm:text-8xl' },
+            b: { label: 'Outside', emoji: '🌳', scale: 'text-7xl sm:text-8xl' }
+        },
+        {
+            title: 'Many vs. Few',
+            a: { label: 'Many', emoji: '🐝🐝', scale: 'text-5xl sm:text-6xl' },
+            b: { label: 'Few', emoji: '🐝', scale: 'text-5xl sm:text-6xl' }
+        },
+        {
+            title: 'Long vs. Short',
+            a: { label: 'Long', emoji: '🐍', scale: 'text-8xl sm:text-9xl' },
+            b: { label: 'Short', emoji: '🐛', scale: 'text-4xl sm:text-5xl' }
+        },
+        {
+            title: 'Sweet vs. Sour',
+            a: { label: 'Sweet', emoji: '🧁', scale: 'text-7xl sm:text-8xl' },
+            b: { label: 'Sour', emoji: '🍋', scale: 'text-7xl sm:text-8xl' }
+        },
+        {
+            title: 'On vs. Off',
+            a: { label: 'On', emoji: '💡', scale: 'text-7xl sm:text-8xl' },
+            b: { label: 'Off', emoji: '🌑', scale: 'text-7xl sm:text-8xl' }
         }
     ],
 
@@ -1860,6 +2168,9 @@ const geminiTTS = {
 
                 const src = soundFX.ctx.createBufferSource();
                 src.buffer = audioBuf;
+                if (typeof app !== 'undefined' && app.getSpeechRateValue) {
+                    src.playbackRate.value = app.getSpeechRateValue();
+                }
                 const gain = soundFX.ctx.createGain();
                 gain.gain.setValueAtTime(1.0, soundFX.ctx.currentTime);
                 src.connect(gain);
@@ -1880,6 +2191,9 @@ const geminiTTS = {
                 const blob = new Blob([wavBuf.slice(0)], { type: 'audio/wav' });
                 const blobUrl = URL.createObjectURL(blob);
                 const audio = new Audio(blobUrl);
+                if (typeof app !== 'undefined' && app.getSpeechRateValue) {
+                    audio.playbackRate = app.getSpeechRateValue();
+                }
                 this.activeAudioEl = audio;
                 audio.onended = () => {
                     URL.revokeObjectURL(blobUrl);
@@ -1907,12 +2221,36 @@ const geminiTTS = {
     }
 };
 
+const ANIMAL_SOUND_URLS = {
+    Lion: 'https://www.google.com/logos/fnbx/animal_sounds/lion.mp3',
+    Dog: 'https://www.google.com/logos/fnbx/animal_sounds/dog.mp3',
+    Cat: 'https://www.google.com/logos/fnbx/animal_sounds/cat.mp3',
+    Cow: 'https://www.google.com/logos/fnbx/animal_sounds/cow.mp3',
+    Duck: 'https://www.google.com/logos/fnbx/animal_sounds/duck.mp3',
+    Pig: 'https://www.google.com/logos/fnbx/animal_sounds/pig.mp3',
+    Sheep: 'https://www.google.com/logos/fnbx/animal_sounds/sheep.mp3',
+    Horse: 'https://www.google.com/logos/fnbx/animal_sounds/horse.mp3',
+    Elephant: 'https://www.google.com/logos/fnbx/animal_sounds/elephant.mp3',
+    Monkey: 'https://www.google.com/logos/fnbx/animal_sounds/ape.mp3',
+    Frog: 'https://www.google.com/logos/fnbx/animal_sounds/frog.mp3',
+    Owl: 'https://www.google.com/logos/fnbx/animal_sounds/owl.mp3',
+    Bee: 'https://www.google.com/logos/fnbx/animal_sounds/bee.mp3',
+    Snake: 'https://www.google.com/logos/fnbx/animal_sounds/rattlesnake.mp3',
+    Dinosaur: 'https://www.google.com/logos/fnbx/animal_sounds/dinosaur.mp3',
+    Bear: 'https://www.google.com/logos/fnbx/animal_sounds/tiger.mp3',
+    Penguin: 'https://www.google.com/logos/fnbx/animal_sounds/penguin.mp3',
+    Whale: 'https://www.google.com/logos/fnbx/animal_sounds/humpback-whale.mp3'
+};
+
 // Procedural Multi-layered WebAudio Sound Effects Engine (100% offline, zero .ogg network files)
 const soundFX = {
     ctx: null,
     noiseBuf: null,
     activeNodes: new Set(),
     activeTimers: new Set(),
+    animalBuffers: new Map(),
+    activeAudioElements: new Set(),
+    munchBuffer: null,
 
     init() {
         if (!this.ctx) {
@@ -1928,6 +2266,61 @@ const soundFX = {
             const data = this.noiseBuf.getChannelData(0);
             for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
         }
+        if (this.ctx && !this.munchBuffer) {
+            this.buildMunchBuffer();
+        }
+        this.preloadAnimalSounds();
+    },
+
+    buildMunchBuffer() {
+        if (!this.ctx) return;
+        const sr = this.ctx.sampleRate;
+        const totalSamples = Math.floor(sr * 0.52);
+        const pcm = new Float32Array(totalSamples);
+        const addGrains = (startTime, endTime, count, f1, f2, peakAmp) => {
+            for (let i = 0; i < count; i++) {
+                const grainStart = startTime + Math.random() * (endTime - startTime - 0.015);
+                const grainDur = 0.003 + Math.random() * 0.007;
+                const startIdx = Math.floor(grainStart * sr);
+                const durSamples = Math.floor(grainDur * sr);
+                for (let s = 0; s < durSamples; s++) {
+                    const idx = startIdx + s;
+                    if (idx >= totalSamples) break;
+                    const t = s / sr;
+                    const progress = s / durSamples;
+                    const env = Math.exp(-progress * 6.0);
+                    const noise = (Math.random() * 2 - 1);
+                    const res = Math.sin(2 * Math.PI * f1 * t) * 0.6 + Math.sin(2 * Math.PI * f2 * t) * 0.4;
+                    pcm[idx] += (noise * 0.6 + res * 0.4) * env * peakAmp;
+                }
+            }
+        };
+        addGrains(0.00, 0.15, 20, 1100, 3800, 0.45);
+        addGrains(0.19, 0.32, 14, 850, 2600, 0.32);
+        addGrains(0.36, 0.48, 10, 700, 2200, 0.24);
+
+        let maxVal = 0;
+        for (let i = 0; i < totalSamples; i++) {
+            if (Math.abs(pcm[i]) > maxVal) maxVal = Math.abs(pcm[i]);
+        }
+        if (maxVal > 0) {
+            for (let i = 0; i < totalSamples; i++) pcm[i] = (pcm[i] / maxVal) * 0.85;
+        }
+        const audioBuf = this.ctx.createBuffer(1, totalSamples, sr);
+        audioBuf.getChannelData(0).set(pcm);
+        this.munchBuffer = audioBuf;
+    },
+
+    preloadAnimalSounds() {
+        if (!this.ctx) return;
+        Object.entries(ANIMAL_SOUND_URLS).forEach(([id, url]) => {
+            if (this.animalBuffers.has(id)) return;
+            fetch(url)
+                .then(r => r.arrayBuffer())
+                .then(ab => this.ctx.decodeAudioData(ab))
+                .then(dec => this.animalBuffers.set(id, dec))
+                .catch(() => {});
+        });
     },
 
     registerTimer(timerId) {
@@ -1962,6 +2355,11 @@ const soundFX = {
         });
         this.activeNodes.clear();
 
+        this.activeAudioElements.forEach(audio => {
+            try { audio.pause(); audio.src = ''; } catch (e) {}
+        });
+        this.activeAudioElements.clear();
+
         if (typeof animalGame !== 'undefined' && animalGame.speechTimer) {
             clearTimeout(animalGame.speechTimer);
             animalGame.speechTimer = null;
@@ -1973,6 +2371,7 @@ const soundFX = {
     },
 
     playNote(freq = 440, duration = 0.14, type = 'sine', vol = 0.22, delay = 0) {
+        if (typeof app !== 'undefined' && app.settings && !app.settings.sfxEnabled) return;
         try {
             this.init();
             if (!this.ctx) return;
@@ -1993,6 +2392,7 @@ const soundFX = {
     },
 
     playSlide(fStart, fEnd, duration = 0.35, type = 'sawtooth', vol = 0.22, delay = 0, filterFreq = 1800) {
+        if (typeof app !== 'undefined' && app.settings && !app.settings.sfxEnabled) return;
         try {
             this.init();
             if (!this.ctx) return;
@@ -2018,6 +2418,7 @@ const soundFX = {
     },
 
     playNoise(duration = 0.25, filterType = 'bandpass', freq = 1000, q = 2.0, vol = 0.25, delay = 0) {
+        if (typeof app !== 'undefined' && app.settings && !app.settings.sfxEnabled) return;
         try {
             this.init();
             if (!this.ctx || !this.noiseBuf) return;
@@ -2041,65 +2442,25 @@ const soundFX = {
         } catch (e) {}
     },
 
-    // Crisp Food Bite Crunch
     playCrunch() {
+        if (typeof app !== 'undefined' && app.settings && !app.settings.sfxEnabled) return;
         try {
             this.init();
-            if (!this.ctx || !this.noiseBuf) return;
-            const t0 = this.ctx.currentTime;
-
-            // Crisp initial snap (filtered high noise burst)
-            const snap = this.ctx.createBufferSource();
-            snap.buffer = this.noiseBuf;
-            const snapFilter = this.ctx.createBiquadFilter();
-            snapFilter.type = 'bandpass';
-            snapFilter.frequency.setValueAtTime(2400, t0);
-            snapFilter.Q.setValueAtTime(1.8, t0);
-            const snapGain = this.ctx.createGain();
-            snapGain.gain.setValueAtTime(0.42, t0);
-            snapGain.gain.exponentialRampToValueAtTime(0.001, t0 + 0.09);
-            snap.connect(snapFilter);
-            snapFilter.connect(snapGain);
-            snapGain.connect(this.ctx.destination);
-            this.trackNode(snap);
-            snap.start(t0);
-            snap.stop(t0 + 0.1);
-
-            // Resonant woody bite body
-            const bodyOsc = this.ctx.createOscillator();
-            const bodyGain = this.ctx.createGain();
-            bodyOsc.type = 'triangle';
-            bodyOsc.frequency.setValueAtTime(280, t0);
-            bodyOsc.frequency.exponentialRampToValueAtTime(95, t0 + 0.14);
-            bodyGain.gain.setValueAtTime(0.35, t0);
-            bodyGain.gain.exponentialRampToValueAtTime(0.001, t0 + 0.15);
-            bodyOsc.connect(bodyGain);
-            bodyGain.connect(this.ctx.destination);
-            this.trackNode(bodyOsc);
-            bodyOsc.start(t0);
-            bodyOsc.stop(t0 + 0.16);
-
-            // Secondary crackle
-            const t1 = t0 + 0.045;
-            const crackle = this.ctx.createBufferSource();
-            crackle.buffer = this.noiseBuf;
-            const crackFilter = this.ctx.createBiquadFilter();
-            crackFilter.type = 'highpass';
-            crackFilter.frequency.setValueAtTime(1600, t1);
-            const crackGain = this.ctx.createGain();
-            crackGain.gain.setValueAtTime(0.28, t1);
-            crackGain.gain.exponentialRampToValueAtTime(0.001, t1 + 0.08);
-            crackle.connect(crackFilter);
-            crackFilter.connect(crackGain);
-            crackGain.connect(this.ctx.destination);
-            this.trackNode(crackle);
-            crackle.start(t1);
-            crackle.stop(t1 + 0.09);
+            if (!this.ctx || !this.munchBuffer) return;
+            const now = this.ctx.currentTime;
+            const src = this.ctx.createBufferSource();
+            src.buffer = this.munchBuffer;
+            const gain = this.ctx.createGain();
+            gain.gain.setValueAtTime(0.9, now);
+            src.connect(gain);
+            gain.connect(this.ctx.destination);
+            this.trackNode(src);
+            src.start(now);
         } catch (e) {}
     },
 
-    // Pitch-swept sine bubble pop (380Hz -> 1150Hz in 65ms)
     playBubblePop() {
+        if (typeof app !== 'undefined' && app.settings && !app.settings.sfxEnabled) return;
         try {
             this.init();
             if (!this.ctx) return;
@@ -2120,11 +2481,12 @@ const soundFX = {
     },
 
     playPop() {
+        if (typeof app !== 'undefined' && app.settings && !app.settings.sfxEnabled) return;
         this.playBubblePop();
     },
 
-    // Warm Kalimba / Marimba harmonic tone for Counting
     playCountStep(stepIndex) {
+        if (typeof app !== 'undefined' && app.settings && !app.settings.sfxEnabled) return;
         try {
             this.init();
             if (!this.ctx) return;
@@ -2158,88 +2520,118 @@ const soundFX = {
         } catch (e) {}
     },
 
-    // Procedural synthesis for all 18 Animals (returns duration in ms)
     playAnimalSound(id) {
+        if (typeof app !== 'undefined' && app.settings && !app.settings.sfxEnabled) return;
         this.init();
+        if (!this.ctx) return 800;
+
+        if (this.animalBuffers.has(id)) {
+            try {
+                const buf = this.animalBuffers.get(id);
+                const src = this.ctx.createBufferSource();
+                src.buffer = buf;
+                const gain = this.ctx.createGain();
+                const now = this.ctx.currentTime;
+                const maxDur = Math.min(buf.duration, 1.8);
+                gain.gain.setValueAtTime(0.95, now);
+                gain.gain.setValueAtTime(0.95, now + maxDur - 0.25);
+                gain.gain.linearRampToValueAtTime(0.001, now + maxDur);
+                src.connect(gain);
+                gain.connect(this.ctx.destination);
+                this.trackNode(src);
+                src.start(now);
+                src.stop(now + maxDur);
+                return Math.round(maxDur * 1000);
+            } catch (e) {}
+        }
+
+        const url = ANIMAL_SOUND_URLS[id];
+        if (url) {
+            try {
+                const audio = new Audio(url);
+                this.activeAudioElements.add(audio);
+                audio.volume = 0.95;
+                audio.play().catch(() => {});
+                const stopTimer = setTimeout(() => {
+                    try { audio.pause(); audio.src = ''; } catch(e){}
+                    this.activeAudioElements.delete(audio);
+                }, 1800);
+                this.registerTimer(stopTimer);
+                audio.onended = () => {
+                    this.activeAudioElements.delete(audio);
+                };
+                fetch(url).then(r => r.arrayBuffer()).then(ab => this.ctx.decodeAudioData(ab)).then(dec => this.animalBuffers.set(id, dec)).catch(()=>{});
+                return 1800;
+            } catch (e) {}
+        }
+
+        return this.playAnimalSynth(id);
+    },
+
+    playAnimalSynth(id) {
         switch (id) {
             case 'Cat':
-                // Melodic double "Meow"
                 this.playSlide(480, 720, 0.28, 'sine', 0.34, 0);
                 this.playSlide(720, 410, 0.42, 'sine', 0.28, 0.27);
                 return 720;
             case 'Dog':
-                // Snappy double "Woof woof!"
                 this.playSlide(190, 340, 0.14, 'triangle', 0.38, 0);
                 this.playSlide(180, 320, 0.15, 'triangle', 0.36, 0.22);
                 return 480;
             case 'Cow':
-                // Deep resonant "Moooo"
                 this.playSlide(120, 160, 0.45, 'triangle', 0.35, 0);
                 this.playSlide(160, 130, 0.48, 'triangle', 0.32, 0.44);
                 return 880;
             case 'Duck':
-                // Quacky double "Quack quack"
                 this.playSlide(380, 260, 0.15, 'sawtooth', 0.32, 0, 1200);
                 this.playSlide(380, 260, 0.15, 'sawtooth', 0.32, 0.22, 1200);
                 return 460;
             case 'Pig':
-                // Playful "Oink oink"
                 this.playSlide(220, 320, 0.12, 'sawtooth', 0.32, 0, 950);
                 this.playSlide(220, 300, 0.14, 'sawtooth', 0.3, 0.2, 950);
                 return 450;
             case 'Sheep':
-                // Warm "Baa baa"
                 this.playSlide(280, 250, 0.62, 'triangle', 0.34, 0);
                 this.playNoise(0.5, 'bandpass', 650, 2.5, 0.12, 0.05);
                 return 680;
             case 'Horse':
-                // Cheerful whinny neigh
                 this.playSlide(680, 920, 0.28, 'sine', 0.34, 0);
                 this.playSlide(920, 480, 0.45, 'sine', 0.28, 0.28);
                 return 780;
             case 'Elephant':
-                // Brassy trumpet call
                 this.playSlide(360, 680, 0.38, 'sawtooth', 0.34, 0, 2400);
                 this.playSlide(680, 520, 0.35, 'sawtooth', 0.3, 0.37, 2200);
                 return 760;
             case 'Monkey':
-                // Bouncy "Ooh ooh aah aah"
                 this.playSlide(520, 780, 0.14, 'sine', 0.35, 0);
                 this.playSlide(520, 780, 0.14, 'sine', 0.35, 0.2);
                 this.playSlide(600, 900, 0.18, 'sine', 0.32, 0.4);
                 return 640;
             case 'Frog':
-                // Groovy "Ribbit ribbit"
                 this.playSlide(140, 260, 0.18, 'sawtooth', 0.35, 0, 800);
                 this.playSlide(140, 240, 0.2, 'sawtooth', 0.33, 0.25, 800);
                 return 520;
             case 'Owl':
-                // Soft warm "Hoo hoo"
                 this.playSlide(380, 420, 0.28, 'sine', 0.35, 0);
                 this.playSlide(370, 340, 0.35, 'sine', 0.35, 0.36);
                 return 760;
             case 'Bee':
-                // Buzzy "Bzzzz"
                 this.playNote(220, 0.65, 'sawtooth', 0.26);
                 return 650;
             case 'Snake':
-                // Crisp gentle "Ssssss"
                 this.playNoise(0.65, 'highpass', 4500, 1.5, 0.3, 0);
                 return 650;
             case 'Lion':
             case 'Bear':
             case 'Dinosaur':
-                // Low mighty roar & rumble
                 this.playSlide(130, 65, 0.72, 'triangle', 0.44, 0);
                 this.playNoise(0.68, 'lowpass', 380, 1.6, 0.35, 0);
                 return 800;
             case 'Penguin':
-                // Cute flappy chirps
                 this.playSlide(880, 1180, 0.12, 'sine', 0.32, 0);
                 this.playSlide(920, 1250, 0.14, 'sine', 0.3, 0.2);
                 return 480;
             case 'Whale':
-                // Majestic deep underwater song
                 this.playSlide(160, 320, 0.45, 'sine', 0.35, 0);
                 this.playSlide(320, 180, 0.45, 'sine', 0.3, 0.44);
                 return 900;
@@ -2249,89 +2641,321 @@ const soundFX = {
         }
     },
 
-    // Procedural synthesis for all 14 Vehicles & Things (returns duration in ms)
     playThingSound(id) {
+        if (typeof app !== 'undefined' && app.settings && !app.settings.sfxEnabled) return;
         this.init();
+        if (!this.ctx) return 800;
+        const t0 = this.ctx.currentTime;
         switch (id) {
-            case 'Fire Truck':
-                // Two-tone emergency siren Wee-woo
-                this.playSlide(540, 880, 0.36, 'triangle', 0.32, 0);
-                this.playSlide(880, 540, 0.36, 'triangle', 0.32, 0.36);
-                return 780;
-            case 'Police Car':
-                // Rapid high-pitch siren
-                [0, 0.16, 0.32, 0.48].forEach((d, i) => {
-                    const up = i % 2 === 0;
-                    this.playSlide(up ? 650 : 1100, up ? 1100 : 650, 0.15, 'triangle', 0.28, d);
+            case 'Fire Truck': {
+                try {
+                    const osc1 = this.ctx.createOscillator();
+                    const osc2 = this.ctx.createOscillator();
+                    const sFilter = this.ctx.createBiquadFilter();
+                    const sGain = this.ctx.createGain();
+
+                    osc1.type = 'sawtooth';
+                    osc2.type = 'triangle';
+                    osc2.detune.setValueAtTime(6, t0);
+
+                    [osc1, osc2].forEach(osc => {
+                        osc.frequency.setValueAtTime(420, t0);
+                        osc.frequency.linearRampToValueAtTime(1180, t0 + 0.45);
+                        osc.frequency.linearRampToValueAtTime(460, t0 + 0.85);
+                        osc.frequency.linearRampToValueAtTime(1180, t0 + 1.30);
+                        osc.frequency.linearRampToValueAtTime(900, t0 + 1.45);
+                        osc.connect(sFilter);
+                        this.trackNode(osc);
+                        osc.start(t0);
+                        osc.stop(t0 + 1.48);
+                    });
+
+                    sFilter.type = 'lowpass';
+                    sFilter.frequency.setValueAtTime(1900, t0);
+                    sFilter.Q.setValueAtTime(2.0, t0);
+
+                    sGain.gain.setValueAtTime(0.001, t0);
+                    sGain.gain.linearRampToValueAtTime(0.24, t0 + 0.05);
+                    sGain.gain.setValueAtTime(0.24, t0 + 1.25);
+                    sGain.gain.exponentialRampToValueAtTime(0.001, t0 + 1.45);
+
+                    sFilter.connect(sGain);
+                    sGain.connect(this.ctx.destination);
+                } catch(e) {}
+
+                [0.02, 0.28].forEach(del => {
+                    [146.8, 185.0, 220.0].forEach(f => {
+                        this.playNote(f, 0.18, 'sawtooth', 0.18, del);
+                        this.playNote(f * 2, 0.18, 'triangle', 0.10, del);
+                    });
                 });
-                return 680;
-            case 'Train':
-                // Dual chord steam whistle + steam chuff
-                this.playNote(440, 0.55, 'triangle', 0.28, 0);
-                this.playNote(554.37, 0.55, 'triangle', 0.28, 0);
-                this.playNoise(0.35, 'bandpass', 600, 1.5, 0.22, 0.5);
-                return 850;
-            case 'Rocket Ship':
-                // Rocket thrust rumble + ascending sci-fi slide
-                this.playSlide(120, 880, 0.75, 'sawtooth', 0.3, 0, 1600);
-                this.playNoise(0.8, 'lowpass', 500, 1.2, 0.32, 0);
-                return 850;
-            case 'Airplane':
-                // Jet engine whoosh
-                this.playNoise(0.75, 'bandpass', 900, 1.0, 0.3, 0);
-                this.playNote(180, 0.7, 'triangle', 0.24, 0);
-                return 800;
-            case 'Helicopter':
-                // Rapid rotor blade chops
-                [0, 0.14, 0.28, 0.42, 0.56].forEach(d => {
-                    this.playNoise(0.08, 'lowpass', 400, 1.5, 0.36, d);
+
+                [0.55, 0.80, 1.05].forEach(del => {
+                    this.playNote(2150, 0.22, 'sine', 0.20, del);
+                    this.playNote(3200, 0.16, 'sine', 0.14, del);
                 });
-                return 750;
-            case 'Tractor':
-                // Rhythmic diesel chug
-                [0, 0.18, 0.36, 0.54].forEach(d => {
-                    this.playSlide(140, 55, 0.12, 'triangle', 0.38, d);
+                return 1450;
+            }
+
+            case 'Police Car': {
+                try {
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = 'sawtooth';
+                    const yelpCycles = 6;
+                    const halfCycle = 1.2 / (yelpCycles * 2);
+                    osc.frequency.setValueAtTime(580, t0);
+                    for (let c = 0; c < yelpCycles; c++) {
+                        const upT = t0 + (c * 2 + 1) * halfCycle;
+                        const downT = t0 + (c * 2 + 2) * halfCycle;
+                        osc.frequency.linearRampToValueAtTime(1350, upT);
+                        osc.frequency.linearRampToValueAtTime(580, downT);
+                    }
+                    gain.gain.setValueAtTime(0.001, t0);
+                    gain.gain.linearRampToValueAtTime(0.25, t0 + 0.04);
+                    gain.gain.setValueAtTime(0.25, t0 + 1.10);
+                    gain.gain.exponentialRampToValueAtTime(0.001, t0 + 1.25);
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    this.trackNode(osc);
+                    osc.start(t0);
+                    osc.stop(t0 + 1.28);
+                } catch(e) {}
+
+                [0.0, 0.18].forEach(del => {
+                    this.playSlide(420, 980, 0.11, 'triangle', 0.28, del, 2400);
                 });
-                return 750;
-            case 'School Bus':
-                // Cheerful classic car horn chord (F4 + A4)
-                this.playNote(349.23, 0.24, 'triangle', 0.3, 0);
-                this.playNote(440.00, 0.24, 'triangle', 0.3, 0);
-                this.playNote(349.23, 0.28, 'triangle', 0.3, 0.3);
-                this.playNote(440.00, 0.28, 'triangle', 0.3, 0.3);
-                return 620;
-            case 'Sailboat':
-                // Wave water splash + gentle ship bell chime
-                this.playNoise(0.65, 'bandpass', 1200, 1.0, 0.25, 0);
-                this.playNote(1046.5, 0.45, 'sine', 0.22, 0.25);
-                return 750;
-            case 'Bicycle':
-                // Double bicycle bell "Ring-ring!"
-                this.playNote(1760, 0.14, 'sine', 0.3, 0);
-                this.playNote(1980, 0.16, 'sine', 0.3, 0.14);
-                return 480;
-            case 'Soccer Ball':
-                // Bouncy kick thump + cheer chord
-                this.playSlide(190, 48, 0.14, 'sine', 0.44, 0);
-                this.playNote(523.25, 0.25, 'triangle', 0.24, 0.15);
-                return 550;
-            case 'Guitar':
-                // Acoustic guitar strum (G chord arpeggio)
-                [196.0, 246.94, 293.66, 392.0, 493.88, 587.33].forEach((f, i) => {
-                    const timer = setTimeout(() => this.playNote(f, 0.42, 'triangle', 0.22), i * 38);
-                    this.registerTimer(timer);
+                return 1250;
+            }
+
+            case 'Train': {
+                [0.05, 0.60].forEach(del => {
+                    [370, 440, 554.4, 740].forEach(f => {
+                        this.playNote(f, 0.46, 'triangle', 0.18, del);
+                    });
+                    this.playNoise(0.46, 'bandpass', 1200, 1.2, 0.15, del);
                 });
-                return 620;
-            case 'Drum':
-                // Punchy drum kit kick + snare
-                this.playSlide(180, 55, 0.15, 'sine', 0.44, 0);
-                this.playNoise(0.12, 'highpass', 1400, 1.5, 0.32, 0);
-                return 450;
-            case 'Clock':
-                // Crisp wooden tick-tock
-                this.playNote(1200, 0.04, 'triangle', 0.28, 0);
-                this.playNote(880, 0.04, 'triangle', 0.28, 0.24);
-                return 550;
+
+                for (let i = 0; i < 8; i++) {
+                    const del = i * 0.14;
+                    this.playNoise(0.06, 'bandpass', 450 + (i % 2) * 120, 2.5, 0.24, del);
+                    this.playSlide(75, 38, 0.06, 'triangle', 0.22, del);
+                }
+
+                [0.10, 0.42, 0.74, 1.06].forEach(del => {
+                    this.playNote(1650, 0.18, 'sine', 0.16, del);
+                });
+                return 1300;
+            }
+
+            case 'Rocket Ship': {
+                this.playSlide(48, 85, 1.4, 'sine', 0.45, 0);
+                this.playSlide(55, 95, 1.4, 'triangle', 0.35, 0);
+                try {
+                    const src = this.ctx.createBufferSource();
+                    src.buffer = this.noiseBuf;
+                    const filter = this.ctx.createBiquadFilter();
+                    filter.type = 'lowpass';
+                    filter.frequency.setValueAtTime(200, t0);
+                    filter.frequency.exponentialRampToValueAtTime(1800, t0 + 1.2);
+                    const gain = this.ctx.createGain();
+                    gain.gain.setValueAtTime(0.01, t0);
+                    gain.gain.linearRampToValueAtTime(0.38, t0 + 0.3);
+                    gain.gain.exponentialRampToValueAtTime(0.001, t0 + 1.4);
+                    src.connect(filter);
+                    filter.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    this.trackNode(src);
+                    src.start(t0);
+                    src.stop(t0 + 1.42);
+                } catch(e) {}
+                this.playSlide(350, 1400, 1.35, 'sawtooth', 0.15, 0.05, 2200);
+                return 1400;
+            }
+
+            case 'Airplane': {
+                this.playSlide(1200, 2100, 0.65, 'sine', 0.16, 0);
+                this.playSlide(2100, 900, 0.70, 'sine', 0.16, 0.65);
+                try {
+                    const src = this.ctx.createBufferSource();
+                    src.buffer = this.noiseBuf;
+                    const bp = this.ctx.createBiquadFilter();
+                    bp.type = 'bandpass';
+                    bp.frequency.setValueAtTime(250, t0);
+                    bp.frequency.linearRampToValueAtTime(2200, t0 + 0.65);
+                    bp.frequency.linearRampToValueAtTime(350, t0 + 1.35);
+                    bp.Q.setValueAtTime(1.0, t0);
+                    const gain = this.ctx.createGain();
+                    gain.gain.setValueAtTime(0.01, t0);
+                    gain.gain.linearRampToValueAtTime(0.35, t0 + 0.65);
+                    gain.gain.exponentialRampToValueAtTime(0.001, t0 + 1.35);
+                    src.connect(bp);
+                    bp.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    this.trackNode(src);
+                    src.start(t0);
+                    src.stop(t0 + 1.38);
+                } catch(e) {}
+                return 1350;
+            }
+
+            case 'Helicopter': {
+                for (let i = 0; i < 10; i++) {
+                    const del = i * 0.115;
+                    this.playSlide(68, 35, 0.07, 'sine', 0.42, del);
+                    this.playNoise(0.045, 'bandpass', 750, 2.0, 0.28, del);
+                }
+                this.playNote(180, 1.20, 'triangle', 0.18, 0);
+                return 1250;
+            }
+
+            case 'Tractor': {
+                for (let i = 0; i < 8; i++) {
+                    const del = i * 0.145;
+                    this.playSlide(75, 42, 0.08, 'triangle', 0.38, del);
+                    this.playNoise(0.035, 'highpass', 1600, 1.2, 0.25, del);
+                }
+                this.playNote(55, 1.25, 'sawtooth', 0.16, 0);
+                return 1300;
+            }
+
+            case 'School Bus': {
+                [0.02, 0.34].forEach(del => {
+                    [415, 523.25, 830, 1046.5].forEach((f, idx) => {
+                        this.playNote(f, 0.20, 'sawtooth', idx < 2 ? 0.22 : 0.10, del);
+                    });
+                });
+                this.playNote(85, 1.1, 'triangle', 0.15, 0);
+                this.playNoise(0.48, 'highpass', 3200, 1.2, 0.22, 0.65);
+                return 1200;
+            }
+
+            case 'Sailboat': {
+                try {
+                    const src = this.ctx.createBufferSource();
+                    src.buffer = this.noiseBuf;
+                    const filter = this.ctx.createBiquadFilter();
+                    filter.type = 'bandpass';
+                    filter.frequency.setValueAtTime(300, t0);
+                    filter.frequency.linearRampToValueAtTime(1200, t0 + 0.6);
+                    filter.frequency.linearRampToValueAtTime(400, t0 + 1.3);
+                    filter.Q.setValueAtTime(1.1, t0);
+                    const gain = this.ctx.createGain();
+                    gain.gain.setValueAtTime(0.01, t0);
+                    gain.gain.linearRampToValueAtTime(0.28, t0 + 0.6);
+                    gain.gain.exponentialRampToValueAtTime(0.001, t0 + 1.3);
+                    src.connect(filter);
+                    filter.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    this.trackNode(src);
+                    src.start(t0);
+                    src.stop(t0 + 1.32);
+                } catch(e) {}
+
+                [0.25, 0.42].forEach(del => {
+                    [1318, 2637, 3820].forEach((f, idx) => {
+                        this.playNote(f, 0.35, 'sine', idx === 0 ? 0.22 : 0.12, del);
+                    });
+                });
+
+                this.playSlide(1850, 2450, 0.18, 'sine', 0.16, 0.72);
+                this.playSlide(2450, 1600, 0.22, 'sine', 0.14, 0.90);
+                return 1300;
+            }
+
+            case 'Bicycle': {
+                [0.0, 0.42].forEach(baseDel => {
+                    for (let i = 0; i < 5; i++) {
+                        const d = baseDel + i * 0.032;
+                        [2480, 3720, 5210].forEach((f, idx) => {
+                            this.playNote(f, 0.08, 'sine', idx === 0 ? 0.22 : 0.12, d);
+                        });
+                    }
+                    this.playNote(2480, 0.55, 'sine', 0.18, baseDel + 0.16);
+                });
+                return 1200;
+            }
+
+            case 'Soccer Ball': {
+                this.playSlide(180, 45, 0.12, 'sine', 0.50, 0);
+                this.playNoise(0.05, 'lowpass', 550, 1.5, 0.32, 0);
+
+                try {
+                    const osc = this.ctx.createOscillator();
+                    const lfo = this.ctx.createOscillator();
+                    const lfoGain = this.ctx.createGain();
+                    const gain = this.ctx.createGain();
+
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(2850, t0 + 0.22);
+
+                    lfo.frequency.setValueAtTime(28, t0 + 0.22);
+                    lfoGain.gain.setValueAtTime(120, t0 + 0.22);
+                    lfo.connect(lfoGain);
+                    lfoGain.connect(osc.frequency);
+
+                    gain.gain.setValueAtTime(0.001, t0 + 0.22);
+                    gain.gain.linearRampToValueAtTime(0.30, t0 + 0.26);
+                    gain.gain.setValueAtTime(0.30, t0 + 0.65);
+                    gain.gain.exponentialRampToValueAtTime(0.001, t0 + 0.75);
+
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    this.trackNode(osc);
+                    this.trackNode(lfo);
+
+                    lfo.start(t0 + 0.22);
+                    osc.start(t0 + 0.22);
+                    lfo.stop(t0 + 0.78);
+                    osc.stop(t0 + 0.78);
+                } catch(e) {}
+
+                this.playNoise(0.70, 'bandpass', 950, 1.4, 0.22, 0.35);
+                return 1250;
+            }
+
+            case 'Guitar': {
+                const gChord = [98, 123.47, 146.83, 196, 246.94, 392];
+                gChord.forEach((f, i) => {
+                    const del = i * 0.022;
+                    this.playNote(f, 0.48, 'triangle', 0.22, del);
+                    this.playNote(f * 2, 0.42, 'sine', 0.12, del);
+                    this.playNote(f * 3, 0.32, 'sine', 0.06, del);
+                });
+                [...gChord].reverse().forEach((f, i) => {
+                    const del = 0.55 + i * 0.018;
+                    this.playNote(f, 0.55, 'triangle', 0.20, del);
+                    this.playNote(f * 2, 0.45, 'sine', 0.10, del);
+                });
+                return 1300;
+            }
+
+            case 'Drum': {
+                [0.0, 0.45, 0.82].forEach(del => {
+                    this.playSlide(150, 42, 0.14, 'sine', 0.50, del);
+                    this.playNoise(0.04, 'lowpass', 400, 1.2, 0.25, del);
+                });
+                [0.15, 0.25, 0.35, 0.60, 0.70].forEach(del => {
+                    this.playNote(210, 0.10, 'triangle', 0.24, del);
+                    this.playNoise(0.09, 'highpass', 1200, 1.5, 0.28, del);
+                });
+                this.playNoise(0.58, 'highpass', 4500, 1.0, 0.30, 0.82);
+                return 1400;
+            }
+
+            case 'Clock': {
+                this.playNote(1650, 0.045, 'triangle', 0.28, 0);
+                this.playNote(1650, 0.045, 'triangle', 0.28, 0.44);
+                this.playNote(1180, 0.045, 'triangle', 0.28, 0.22);
+                this.playNote(1180, 0.045, 'triangle', 0.28, 0.66);
+                for (let i = 0; i < 12; i++) {
+                    const del = 0.85 + i * 0.035;
+                    const f = i % 2 === 0 ? 2600 : 2850;
+                    this.playNote(f, 0.04, 'sine', 0.22, del);
+                }
+                return 1350;
+            }
+
             default:
                 this.playBubblePop();
                 return 300;
@@ -2339,6 +2963,7 @@ const soundFX = {
     },
 
     playCheer() {
+        if (typeof app !== 'undefined' && app.settings && !app.settings.sfxEnabled) return;
         [523.25, 659.25, 783.99, 1046.5].forEach((f, i) => {
             const timer = setTimeout(() => this.playNote(f, 0.2, 'triangle', 0.25), i * 75);
             this.registerTimer(timer);
@@ -2346,6 +2971,7 @@ const soundFX = {
     },
 
     playCosmicChime() {
+        if (typeof app !== 'undefined' && app.settings && !app.settings.sfxEnabled) return;
         [523.25, 659.25, 783.99, 987.77, 1318.5].forEach((f, i) => {
             const timer = setTimeout(() => this.playNote(f, 0.25, 'sine', 0.18), i * 60);
             this.registerTimer(timer);
@@ -2353,10 +2979,94 @@ const soundFX = {
     }
 };
 
+const DEFAULT_SETTINGS = {
+    announceGameOnOpen: true, // Announce game title & intro when opening a game from Home menu
+    voiceEnabled: true,       // Master toggle for spoken voice (TTS)
+    sfxEnabled: true,         // Master toggle for sound effects (animals, vehicles, crunches, pops)
+    confettiEnabled: true,    // Celebratory confetti bursts & food crumbs
+    autoSpin3D: true,         // Auto-rotate 3D shapes & 3D planets when idle
+    requireHoldHome: false,   // Toddler Lock: require double-tap on Home button to exit a game
+    speechRate: 'normal',     // 'slow' (0.82), 'normal' (0.96), 'fast' (1.10)
+    maxNumber: 20,            // 10 (1-10 Beginner) or 20 (1-20 Advanced)
+    phonicsDetail: 'full'     // 'full' ("A! A says ah! ah, Apple!") or 'simple' ("A! Apple!")
+};
+
+const GAME_OPEN_TITLES = {
+    letters: 'ABC Phonics!',
+    numbers: 'Numbers and Counting!',
+    quiz: 'Look and Find!',
+    shapes: '2D Shapes!',
+    shapes3d: '3D Shapes!',
+    colors: 'Colors and Paint!',
+    animals: 'Animal Friends!',
+    fruits: 'Yummy Foods!',
+    things: 'Vehicles and Things!',
+    opposites: 'Opposites!',
+    solar: 'Solar System!'
+};
+
 const app = {
     currentView: 'menu',
     currentUtterance: null,
     speechTimeout: null,
+    cachedVoice: null,
+    settings: (() => {
+        try {
+            const saved = localStorage.getItem('tlh_isolated_v3_settings');
+            if (saved) return Object.assign({}, DEFAULT_SETTINGS, JSON.parse(saved));
+        } catch (e) {}
+        return Object.assign({}, DEFAULT_SETTINGS);
+    })(),
+    isOpeningView: false,
+    pendingGameIntro: null,
+
+    saveSettings() {
+        try {
+            localStorage.setItem('tlh_isolated_v3_settings', JSON.stringify(this.settings));
+        } catch (e) {}
+        if (typeof numberGame !== 'undefined' && numberGame.applyMaxNumberSetting) {
+            numberGame.applyMaxNumberSetting();
+        }
+        if (typeof updateVoiceStatusIndicator === 'function') {
+            updateVoiceStatusIndicator();
+        }
+    },
+
+    getSpeechRateValue() {
+        const rate = (this.settings && this.settings.speechRate) || 'normal';
+        if (rate === 'slow') return 0.82;
+        if (rate === 'fast') return 1.10;
+        return 0.96;
+    },
+
+    initVoices() {
+        if (!('speechSynthesis' in window)) return;
+        const voices = window.speechSynthesis.getVoices();
+        if (!voices || voices.length === 0) return;
+        let bestVoice = null;
+        let bestScore = -1;
+        voices.forEach(v => {
+            let score = 0;
+            const lang = (v.lang || '').toLowerCase();
+            const name = (v.name || '').toLowerCase();
+            if (lang.startsWith('en')) score += 100;
+            if (v.localService === true) score += 60;
+            if (name.includes('natural')) score += 50;
+            if (name.includes('premium')) score += 40;
+            if (name.includes('enhanced')) score += 35;
+            if (['samantha', 'ava', 'allison', 'karen', 'daniel', 'moira', 'tessa'].some(n => name.includes(n))) {
+                score += 30;
+            }
+            if (name.includes('google us english') || name.includes('siri')) score += 20;
+            if (score > bestScore) {
+                bestScore = score;
+                bestVoice = v;
+            }
+        });
+        if (bestVoice) {
+            this.cachedVoice = bestVoice;
+        }
+    },
 
     setSpeakingUI(isSpeaking) {
         document.querySelectorAll('.audio-vis-pill').forEach(el => {
@@ -2366,12 +3076,8 @@ const app = {
     },
 
     switchView(viewName) {
-        // Complete audio silence on view switch
         soundFX.stopAll();
         geminiTTS.stop();
-        if ('speechSynthesis' in window) {
-            try { window.speechSynthesis.cancel(); } catch(e){}
-        }
 
         document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active-view'));
         if (this.currentView === 'letters' && typeof phonicsGame !== 'undefined') phonicsGame.stopBubbles();
@@ -2382,9 +3088,20 @@ const app = {
         const target = document.getElementById(`view-${viewName}`);
         if (target) target.classList.add('active-view');
         this.currentView = viewName;
+
+        if (viewName === 'menu') {
+            this.pendingGameIntro = null;
+            this.isOpeningView = false;
+            soundFX.playPop();
+            return;
+        }
+
         soundFX.playPop();
 
-        // Cheerful spoken introduction for EVERY view (speak = true)
+        const shouldAnnounce = this.settings && this.settings.announceGameOnOpen;
+        this.isOpeningView = true;
+        this.pendingGameIntro = shouldAnnounce ? GAME_OPEN_TITLES[viewName] : null;
+
         if (viewName === 'letters') phonicsGame.open();
         else if (viewName === 'numbers') numberGame.open();
         else if (viewName === 'quiz') quizGame.open();
@@ -2396,9 +3113,30 @@ const app = {
         else if (viewName === 'things') thingsGame.select(GAMES.things[0], true);
         else if (viewName === 'opposites') oppositesGame.select(GAMES.opposites[0], true);
         else if (viewName === 'solar') solarGame.open();
+
+        this.isOpeningView = false;
+        this.pendingGameIntro = null;
     },
 
     speak(text) {
+        if (!this.settings.voiceEnabled) {
+            this.pendingGameIntro = null;
+            return;
+        }
+
+        if (this.isOpeningView && !this.settings.announceGameOnOpen) {
+            this.pendingGameIntro = null;
+            return;
+        }
+
+        if (this.pendingGameIntro) {
+            const intro = this.pendingGameIntro;
+            this.pendingGameIntro = null;
+            if (typeof text === 'string' && !text.trim().startsWith(intro)) {
+                text = `${intro} ${text}`;
+            }
+        }
+
         const clean = cleanSpokenText(text);
         if (!clean) return;
 
@@ -2407,16 +3145,31 @@ const app = {
             clearTimeout(this.speechTimeout);
             this.speechTimeout = null;
         }
-        if ('speechSynthesis' in window) {
-            if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
-                window.speechSynthesis.cancel();
-            }
-        }
 
         const key = getApiKey();
         if (key) {
-            geminiTTS.play(clean).catch(() => {
+            const cacheKey = `${getTtsModel()}:${getTtsVoice()}:${clean}`;
+            if (geminiTTS.memCache.has(cacheKey)) {
+                geminiTTS.play(clean).catch(() => {
+                    this.speakDeviceVoice(clean);
+                });
+                return;
+            }
+
+            let didFallback = false;
+            let timer = setTimeout(() => {
+                didFallback = true;
+                geminiTTS.stop();
                 this.speakDeviceVoice(clean);
+            }, 1200);
+
+            geminiTTS.play(clean).then(() => {
+                if (timer) { clearTimeout(timer); timer = null; }
+            }).catch(() => {
+                if (timer) { clearTimeout(timer); timer = null; }
+                if (!didFallback) {
+                    this.speakDeviceVoice(clean);
+                }
             });
         } else {
             this.speakDeviceVoice(clean);
@@ -2425,61 +3178,39 @@ const app = {
 
     speakDeviceVoice(cleanText) {
         try {
+            if (!this.settings.voiceEnabled) return;
             if (!('speechSynthesis' in window)) return;
 
-            // Workaround for WebKit/Blink bug where cancel() immediately preceding speak() drops utterance
-            this.speechTimeout = setTimeout(() => {
-                try {
-                    const msg = new SpeechSynthesisUtterance(cleanText);
-                    msg.rate = 0.95;
-                    msg.pitch = 1.06;
+            if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
+                try { window.speechSynthesis.cancel(); } catch(e){}
+            }
 
-                    const voices = window.speechSynthesis.getVoices();
-                    if (voices && voices.length > 0) {
-                        let bestVoice = null;
-                        let bestScore = -1;
-                        voices.forEach(v => {
-                            let score = 0;
-                            const lang = (v.lang || '').toLowerCase();
-                            const name = (v.name || '').toLowerCase();
-                            if (lang.startsWith('en')) score += 100;
-                            if (name.includes('natural')) score += 50;
-                            if (name.includes('online')) score += 40;
-                            if (name.includes('premium')) score += 30;
-                            if (name.includes('enhanced')) score += 25;
-                            if (['samantha', 'ava', 'allison', 'google us english', 'daniel', 'karen', 'victoria', 'serena'].some(n => name.includes(n))) {
-                                score += 20;
-                            }
-                            if (score > bestScore) {
-                                bestScore = score;
-                                bestVoice = v;
-                            }
-                        });
-                        if (bestVoice) msg.voice = bestVoice;
-                    }
+            if (!this.cachedVoice) this.initVoices();
 
-                    msg.onstart = () => app.setSpeakingUI(true);
-                    msg.onend = () => {
-                        app.setSpeakingUI(false);
-                        app.currentUtterance = null;
-                    };
-                    msg.onerror = () => {
-                        app.setSpeakingUI(false);
-                        app.currentUtterance = null;
-                    };
+            const msg = new SpeechSynthesisUtterance(cleanText);
+            msg.rate = this.getSpeechRateValue();
+            msg.pitch = 1.05;
+            if (this.cachedVoice) msg.voice = this.cachedVoice;
 
-                    this.currentUtterance = msg;
-                    window.speechSynthesis.speak(msg);
-                } catch (e) {
-                    app.setSpeakingUI(false);
-                }
-            }, 35);
+            msg.onstart = () => app.setSpeakingUI(true);
+            msg.onend = () => {
+                app.setSpeakingUI(false);
+                app.currentUtterance = null;
+            };
+            msg.onerror = () => {
+                app.setSpeakingUI(false);
+                app.currentUtterance = null;
+            };
+
+            this.currentUtterance = msg;
+            window.speechSynthesis.speak(msg);
         } catch (e) {
             app.setSpeakingUI(false);
         }
     },
 
     burstConfetti(x = window.innerWidth / 2, y = window.innerHeight / 2) {
+        if (this.settings && !this.settings.confettiEnabled) return;
         const colors = ['#ef4444', '#3b82f6', '#facc15', '#22c55e', '#ec4899', '#a855f7', '#06b6d4'];
         for (let i = 0; i < 22; i++) {
             const p = document.createElement('div');
@@ -3337,7 +4068,7 @@ const solarGame = {
             holder.appendChild(img);
             document.getElementById('solar-photo-credit').textContent = item.credit;
             app.animatePop(document.getElementById('solar-stage-box'));
-            if (speak) {
+            if (speak && !(app.isOpeningView && !app.settings.announceGameOnOpen)) {
                 soundFX.stopAll();
                 soundFX.playCosmicChime();
                 app.speak(item.speech);
@@ -3360,7 +4091,7 @@ const solarGame = {
         this.scene.add(this.rootGroup);
         app.animatePop(document.getElementById('solar-stage-box'));
 
-        if (speak) {
+        if (speak && !(app.isOpeningView && !app.settings.announceGameOnOpen)) {
             soundFX.playCosmicChime();
             app.speak(item.speech);
         }
@@ -3391,10 +4122,12 @@ const solarGame = {
                 if (this.mode === 'orbit') {
                     this.orbitEntries.forEach(e => { e.pivot.rotation.y += e.speed * this.turboBoost; });
                 } else if (!this.isDragging) {
-                    this.rootGroup.rotateOnWorldAxis(worldY, this.velX);
-                    this.rootGroup.rotateOnWorldAxis(worldX, this.velY);
-                    this.velX = this.velX * 0.95 + 0.011 * 0.05;
-                    this.velY = this.velY * 0.94;
+                    if (typeof app === 'undefined' || !app.settings || app.settings.autoSpin3D) {
+                        this.rootGroup.rotateOnWorldAxis(worldY, this.velX);
+                        this.rootGroup.rotateOnWorldAxis(worldX, this.velY);
+                        this.velX = this.velX * 0.95 + 0.011 * 0.05;
+                        this.velY = this.velY * 0.94;
+                    }
                 }
             }
             if (this.renderer && this.scene && this.camera) {
@@ -3419,8 +4152,21 @@ const phonicsGame = {
     mode: 'studio',
     currentIndex: 0,
     bubbleTimer: null,
+    bubbleSubTimers: [],
 
     open() {
+        this.stopBubbles();
+        this.mode = 'studio';
+        const pStudio = document.getElementById('phonics-mode-studio');
+        const pBubbles = document.getElementById('phonics-mode-bubbles');
+        if (pStudio) pStudio.classList.add('active');
+        if (pBubbles) pBubbles.classList.remove('active');
+        const sStage = document.getElementById('phonics-studio-stage');
+        const bStage = document.getElementById('phonics-bubble-stage');
+        const cDock = document.getElementById('phonics-controls-dock');
+        if (sStage) sStage.classList.remove('hidden');
+        if (bStage) bStage.classList.add('hidden');
+        if (cDock) cDock.classList.remove('hidden');
         this.selectLetter(this.currentIndex, true);
     },
 
@@ -3488,12 +4234,22 @@ const phonicsGame = {
                     app.animatePop(blendBar);
                 }
 
-                app.speak(`${item.soundSpell}, ${item.soundSpell}, ${wObj.w}!`);
+                if (typeof app !== 'undefined' && app.settings && app.settings.phonicsDetail === 'simple') {
+                    app.speak(`${wObj.w}!`);
+                } else {
+                    app.speak(`${item.soundSpell}, ${item.soundSpell}, ${wObj.w}!`);
+                }
             });
             row.appendChild(wCard);
         });
 
-        if (speakIt) app.speak(`${item.letter}! ${item.cue} ${item.soundSpell}, ${item.words[0].w}!`);
+        if (speakIt) {
+            if (typeof app !== 'undefined' && app.settings && app.settings.phonicsDetail === 'simple') {
+                app.speak(`${item.letter}! ${item.words[0].w}!`);
+            } else {
+                app.speak(`${item.letter}! ${item.cue} ${item.soundSpell}, ${item.words[0].w}!`);
+            }
+        }
     },
 
     startBubbles() {
@@ -3506,6 +4262,12 @@ const phonicsGame = {
             clearTimeout(this.bubbleTimer);
             this.bubbleTimer = null;
         }
+        if (this.bubbleSubTimers && this.bubbleSubTimers.length > 0) {
+            this.bubbleSubTimers.forEach(t => clearTimeout(t));
+            this.bubbleSubTimers = [];
+        }
+        const stage = document.getElementById('phonics-bubbles-canvas');
+        if (stage) stage.innerHTML = '';
     },
 
     nextBubbleTarget() {
@@ -3533,12 +4295,12 @@ const phonicsGame = {
             const pData = GAMES.phonics[idx];
             const b = document.createElement('div');
             b.className = 'phonics-bubble float-anim';
-            const size = Math.min(window.innerWidth * 0.27, 128);
+            const size = Math.min(window.innerWidth * 0.25, 112);
             b.style.width = `${size}px`;
             b.style.height = `${size}px`;
             b.style.backgroundColor = palette[(idx + pos) % palette.length];
-            b.style.left = `${10 + pos * 31}%`;
-            b.style.top = `${18 + (pos % 2) * 22}%`;
+            b.style.left = pos === 0 ? '6%' : pos === 1 ? '38%' : '68%';
+            b.style.top = pos === 1 ? '44%' : '16%';
             b.innerHTML = `<span class="text-4xl sm:text-5xl leading-none">${pData.letter}${pData.letter.toLowerCase()}</span><span class="text-xl mt-0.5">${pData.words[0].e}</span>`;
 
             b.addEventListener('click', () => {
@@ -3554,7 +4316,8 @@ const phonicsGame = {
                     soundFX.playBubblePop();
                     b.classList.add('shake-anim');
                     app.speak(`That is ${pData.letter}. Find ${targetData.letter}!`);
-                    setTimeout(() => b.classList.remove('shake-anim'), 350);
+                    const t = setTimeout(() => b.classList.remove('shake-anim'), 350);
+                    this.bubbleSubTimers.push(t);
                 }
             });
             stage.appendChild(b);
@@ -3569,7 +4332,30 @@ const numberGame = {
     autoTimers: [],
 
     open() {
+        this.clearAutoTimers();
+        this.mode = 'touch';
+        document.getElementById('num-mode-touch')?.classList.add('active');
+        document.getElementById('num-mode-show')?.classList.remove('active');
+        this.applyMaxNumberSetting();
         this.select(this.currentData, true);
+    },
+
+    applyMaxNumberSetting() {
+        const max = (typeof app !== 'undefined' && app.settings && app.settings.maxNumber) ? app.settings.maxNumber : 20;
+        document.querySelectorAll('#number-controls .tray-btn').forEach(btn => {
+            const num = parseInt(btn.dataset.num, 10);
+            if (num > max) {
+                btn.style.display = 'none';
+            } else {
+                btn.style.display = '';
+            }
+        });
+        if (this.currentData && this.currentData.num > max) {
+            this.currentData = GAMES.numbers[0];
+            if (typeof app !== 'undefined' && app.currentView === 'numbers') {
+                this.select(this.currentData, false);
+            }
+        }
     },
 
     clearAutoTimers() {
@@ -3607,9 +4393,42 @@ const numberGame = {
         const grid = document.getElementById('number-items-grid');
         grid.innerHTML = '';
 
+        let btnWidth = '4.4rem';
+        let btnHeight = '4.4rem';
+        let btnFont = '2.4rem';
+        let btnRadius = '1.35rem';
+        let isSmallBadge = false;
+
+        if (numData.num <= 5) {
+            btnWidth = '4.4rem';
+            btnHeight = '4.4rem';
+            btnFont = '2.4rem';
+            btnRadius = '1.35rem';
+        } else if (numData.num <= 10) {
+            btnWidth = '3.35rem';
+            btnHeight = '3.35rem';
+            btnFont = '1.85rem';
+            btnRadius = '1.15rem';
+        } else if (numData.num <= 15) {
+            btnWidth = '2.85rem';
+            btnHeight = '2.85rem';
+            btnFont = '1.55rem';
+            btnRadius = '1rem';
+        } else {
+            btnWidth = '2.55rem';
+            btnHeight = '2.55rem';
+            btnFont = '1.35rem';
+            btnRadius = '0.85rem';
+            isSmallBadge = true;
+        }
+
         for (let i = 1; i <= numData.num; i++) {
             const itemBtn = document.createElement('div');
             itemBtn.className = 'count-item-btn';
+            itemBtn.style.width = btnWidth;
+            itemBtn.style.height = btnHeight;
+            itemBtn.style.fontSize = btnFont;
+            itemBtn.style.borderRadius = btnRadius;
             itemBtn.innerHTML = `<span>${numData.emoji}</span>`;
 
             itemBtn.addEventListener('click', () => {
@@ -3624,6 +4443,13 @@ const numberGame = {
                 itemBtn.classList.add('counted');
                 const badge = document.createElement('div');
                 badge.className = 'count-badge';
+                if (isSmallBadge) {
+                    badge.style.width = '1.2rem';
+                    badge.style.height = '1.2rem';
+                    badge.style.fontSize = '0.7rem';
+                    badge.style.top = '-5px';
+                    badge.style.right = '-5px';
+                }
                 badge.textContent = myCount;
                 itemBtn.appendChild(badge);
 
@@ -3668,7 +4494,6 @@ const numberGame = {
         });
     },
 
-    // Authentic Ten-Frame 5-column x 2-row subitizing boxes
     updateTenFrame(activeCount, total) {
         const tf = document.getElementById('number-ten-frame');
         tf.innerHTML = '';
@@ -3703,17 +4528,22 @@ const quizGame = {
     score: 0,
     currentAnswer: null,
     answered: false,
+    nextTimer: null,
 
     open() {
-        this.nextQuestion();
+        this.nextQuestion(true);
     },
 
     setCategory(cat) {
+        if (this.nextTimer) {
+            clearTimeout(this.nextTimer);
+            this.nextTimer = null;
+        }
         this.category = cat;
         document.querySelectorAll('.quiz-cat-btn').forEach(btn => {
             btn.classList.toggle('active', btn.dataset.quizCat === cat);
         });
-        this.nextQuestion();
+        this.nextQuestion(false);
     },
 
     getPool() {
@@ -3721,7 +4551,8 @@ const quizGame = {
             label: `Letter ${p.letter}`, display: `${p.letter}${p.letter.toLowerCase()}`,
             sub: `${p.words[0].e} ${p.words[0].w}`, prompt: `Can you find the letter ${p.letter}?`
         }));
-        const numbersPool = GAMES.numbers.map(n => ({
+        const maxNum = (typeof app !== 'undefined' && app.settings && app.settings.maxNumber) ? app.settings.maxNumber : 20;
+        const numbersPool = GAMES.numbers.filter(n => n.num <= maxNum).map(n => ({
             label: `Number ${n.num}`, display: `${n.num}`,
             sub: `${n.emoji} ${n.word}`, prompt: `Where is the number ${n.num}?`
         }));
@@ -3746,7 +4577,11 @@ const quizGame = {
         return [...lettersPool, ...numbersPool, ...animalsPool, ...shapesPool, ...solarPool];
     },
 
-    nextQuestion() {
+    nextQuestion(isOpening = false) {
+        if (this.nextTimer) {
+            clearTimeout(this.nextTimer);
+            this.nextTimer = null;
+        }
         this.answered = false;
         const pool = this.getPool();
         const choices = [...pool].sort(() => Math.random() - 0.5).slice(0, 3);
@@ -3754,7 +4589,9 @@ const quizGame = {
         this.currentAnswer = winner;
 
         document.getElementById('quiz-question-text').textContent = `Find: ${winner.label}!`;
-        app.speak(winner.prompt);
+        const shouldAnnounce = (typeof app !== 'undefined' && app.settings) ? app.settings.announceGameOnOpen : true;
+        const spoken = (isOpening && shouldAnnounce) ? `Look and Find! ${winner.prompt}` : winner.prompt;
+        app.speak(spoken);
 
         const grid = document.getElementById('quiz-choices-grid');
         grid.innerHTML = '';
@@ -3765,7 +4602,6 @@ const quizGame = {
             card.innerHTML = `<div class="text-5xl sm:text-6xl font-black text-slate-800 mb-2">${item.display}</div><div class="text-xs sm:text-sm font-extrabold text-slate-500 text-center">${item.sub}</div>`;
 
             card.addEventListener('click', () => {
-                // Debounce lock so rapid taps do not double score
                 if (this.answered && item.label === winner.label) return;
 
                 const rect = card.getBoundingClientRect();
@@ -3778,7 +4614,7 @@ const quizGame = {
                     soundFX.playCheer();
                     app.burstConfetti(rect.left + rect.width / 2, rect.top + rect.height / 2);
                     app.speak(`You found it! ${winner.label}!`);
-                    setTimeout(() => this.nextQuestion(), 1150);
+                    this.nextTimer = setTimeout(() => this.nextQuestion(false), 1150);
                 } else {
                     soundFX.playNote(220, 0.15, 'sine');
                     card.classList.add('shake-anim');
@@ -3806,6 +4642,161 @@ const shape2DGame = {
         if (speak) app.speak(`${s.id}!`);
     }
 };
+
+function createTriangularPrismGeometry(width, height, depth) {
+    const shape = new THREE.Shape();
+    const w2 = width / 2;
+    const h2 = height / 2;
+    shape.moveTo(-w2, -h2);
+    shape.lineTo(w2, -h2);
+    shape.lineTo(0, h2);
+    shape.closePath();
+    const geo = new THREE.ExtrudeGeometry(shape, { depth: depth, bevelEnabled: false });
+    geo.center();
+    return geo;
+}
+
+function getEarthTexture() {
+    const canvas = document.createElement('canvas');
+    canvas.width = 512;
+    canvas.height = 256;
+    const ctx = canvas.getContext('2d');
+
+    // Deep ocean blue
+    ctx.fillStyle = '#1d4ed8';
+    ctx.fillRect(0, 0, 512, 256);
+
+    // Subtle ocean gradient
+    const grad = ctx.createLinearGradient(0, 0, 0, 256);
+    grad.addColorStop(0, 'rgba(30, 58, 138, 0.35)');
+    grad.addColorStop(0.5, 'rgba(59, 130, 246, 0.25)');
+    grad.addColorStop(1, 'rgba(30, 58, 138, 0.35)');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, 512, 256);
+
+    const drawLand = (coords, fillColor, strokeColor) => {
+        ctx.beginPath();
+        ctx.moveTo(coords[0][0], coords[0][1]);
+        for (let i = 1; i < coords.length; i++) ctx.lineTo(coords[i][0], coords[i][1]);
+        ctx.closePath();
+        ctx.fillStyle = fillColor;
+        ctx.fill();
+        if (strokeColor) {
+            ctx.strokeStyle = strokeColor;
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+        }
+    };
+
+    // North America
+    drawLand([[40, 50], [90, 42], [140, 48], [150, 75], [130, 95], [115, 115], [95, 135], [75, 125], [60, 100], [35, 75]], '#22c55e', '#15803d');
+    drawLand([[105, 105], [118, 108], [114, 122], [102, 115]], '#15803d');
+    // Greenland
+    drawLand([[175, 30], [210, 28], [205, 52], [178, 48]], '#f8fafc', '#93c5fd');
+    // South America
+    drawLand([[105, 135], [145, 150], [155, 185], [135, 230], [118, 235], [108, 190], [98, 150]], '#15803d', '#166534');
+    drawLand([[115, 155], [140, 160], [135, 185], [115, 175]], '#22c55e');
+
+    // Europe
+    drawLand([[230, 60], [275, 55], [285, 75], [260, 95], [235, 90], [225, 72]], '#22c55e', '#166534');
+    drawLand([[220, 65], [230, 62], [228, 75], [218, 72]], '#22c55e');
+
+    // Africa
+    drawLand([[230, 95], [285, 95], [305, 140], [285, 205], [255, 215], [235, 175], [215, 125]], '#16a34a', '#14532d');
+    // Sahara Desert
+    drawLand([[235, 100], [290, 100], [295, 125], [225, 128]], '#eab308');
+    drawLand([[310, 180], [318, 185], [312, 205], [305, 195]], '#22c55e');
+
+    // Asia
+    drawLand([[280, 55], [420, 50], [450, 75], [440, 115], [380, 120], [350, 150], [330, 130], [315, 145], [295, 120], [285, 80]], '#16a34a', '#14532d');
+    drawLand([[295, 115], [320, 118], [318, 138], [298, 132]], '#eab308');
+    drawLand([[330, 125], [352, 130], [342, 160], [332, 148]], '#22c55e');
+    drawLand([[435, 85], [445, 95], [438, 110]], '#22c55e');
+
+    // Australia
+    drawLand([[390, 175], [445, 170], [450, 205], [425, 225], [385, 210]], '#16a34a', '#14532d');
+    drawLand([[402, 182], [435, 180], [432, 205], [400, 200]], '#eab308');
+    drawLand([[460, 215], [470, 230], [458, 235]], '#22c55e');
+
+    // Antarctica
+    ctx.fillStyle = '#ffffff';
+    ctx.beginPath();
+    ctx.ellipse(256, 252, 260, 16, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // North Polar Ice Cap
+    ctx.beginPath();
+    ctx.ellipse(256, 4, 230, 12, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    const tex = new THREE.CanvasTexture(canvas);
+    tex.wrapS = THREE.RepeatWrapping;
+    tex.wrapT = THREE.ClampToEdgeWrapping;
+    return tex;
+}
+
+function getCloudTexture() {
+    const canvas = document.createElement('canvas');
+    canvas.width = 512;
+    canvas.height = 256;
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, 512, 256);
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.75)';
+
+    const drawCloud = (cx, cy, rx, ry, rot) => {
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate(rot);
+        ctx.beginPath();
+        ctx.ellipse(0, 0, rx, ry, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+    };
+    [[80, 80, 60, 14, 0.1], [160, 95, 75, 16, -0.08], [280, 75, 90, 18, 0.12],
+     [400, 90, 70, 15, -0.1], [120, 170, 80, 16, -0.15], [260, 165, 85, 17, 0.1],
+     [370, 175, 75, 16, -0.05], [50, 210, 55, 12, 0.2], [220, 45, 65, 14, -0.1],
+     [340, 215, 60, 14, 0.15], [460, 60, 50, 12, 0.05]].forEach(([x, y, rx, ry, rot]) => {
+        drawCloud(x, y, rx, ry, rot);
+    });
+
+    return new THREE.CanvasTexture(canvas);
+}
+
+function getIglooTexture() {
+    const canvas = document.createElement('canvas');
+    canvas.width = 512;
+    canvas.height = 256;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#f8fafc';
+    ctx.fillRect(0, 0, 512, 256);
+
+    const rows = 8;
+    const rowH = 256 / rows;
+    ctx.strokeStyle = '#93c5fd';
+    ctx.lineWidth = 3;
+
+    for (let r = 0; r <= rows; r++) {
+        const y = r * rowH;
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(512, y);
+        ctx.stroke();
+
+        if (r < rows) {
+            const cols = 12;
+            const colW = 512 / cols;
+            const offset = (r % 2) * (colW / 2);
+            for (let c = 0; c <= cols; c++) {
+                const x = c * colW + offset;
+                ctx.beginPath();
+                ctx.moveTo(x % 512, y);
+                ctx.lineTo(x % 512, y + rowH);
+                ctx.stroke();
+            }
+        }
+    }
+    return new THREE.CanvasTexture(canvas);
+}
 
 const shapes3DGame = {
     scene: null, camera: null, renderer: null, mesh: null, animId: null,
@@ -3869,10 +4860,8 @@ const shapes3DGame = {
 
         if (exampleId === 'gift') {
             group.add(new THREE.Mesh(new THREE.BoxGeometry(2.2, 2.2, 2.2), mat('#ef4444')));
-            // Ribbon bands
             group.add(new THREE.Mesh(new THREE.BoxGeometry(2.24, 2.24, 0.45), mat('#facc15')));
             group.add(new THREE.Mesh(new THREE.BoxGeometry(0.45, 2.24, 2.24), mat('#facc15')));
-            // Ribbon bow
             const bow = new THREE.Mesh(new THREE.TorusGeometry(0.35, 0.12, 12, 24), mat('#facc15'));
             bow.position.y = 1.35;
             bow.rotation.x = Math.PI / 2;
@@ -3881,41 +4870,55 @@ const shapes3DGame = {
         }
 
         if (exampleId === 'dice') {
-            // White rounded cube
             group.add(new THREE.Mesh(new THREE.BoxGeometry(2.1, 2.1, 2.1), mat('#ffffff', 0.2)));
-            // Accurate Pips (1-6, opposite sides sum to 7)
             const pipMat = mat('#1e293b', 0.1);
             const addPip = (x, y, z) => {
                 const pip = new THREE.Mesh(new THREE.SphereGeometry(0.12, 10, 10), pipMat);
                 pip.position.set(x, y, z);
                 group.add(pip);
             };
-            // Face +Z: 1 pip
             addPip(0, 0, 1.07);
-            // Face -Z: 6 pips
             [-0.45, 0.45].forEach(dx => {
                 [-0.55, 0, 0.55].forEach(dy => addPip(dx, dy, -1.07));
             });
-            // Face +Y: 2 pips
             addPip(-0.45, 1.07, -0.45);
             addPip(0.45, 1.07, 0.45);
-            // Face -Y: 5 pips
             addPip(0, -1.07, 0);
             [-0.45, 0.45].forEach(dx => [-0.45, 0.45].forEach(dz => addPip(dx, -1.07, dz)));
-            // Face +X: 3 pips
             addPip(1.07, -0.45, -0.45);
             addPip(1.07, 0, 0);
             addPip(1.07, 0.45, 0.45);
-            // Face -X: 4 pips
             [-0.45, 0.45].forEach(dy => [-0.45, 0.45].forEach(dz => addPip(-1.07, dy, dz)));
             return group;
         }
 
         if (exampleId === 'earth') {
-            group.add(new THREE.Mesh(new THREE.SphereGeometry(1.65, 30, 30), mat('#3b82f6')));
-            const g1 = new THREE.Mesh(new THREE.SphereGeometry(1.66, 16, 16, 0.5, 1.4, 0.6, 1.2), mat('#22c55e'));
-            const g2 = new THREE.Mesh(new THREE.SphereGeometry(1.66, 16, 16, 2.8, 1.6, 1.1, 1.3), mat('#16a34a'));
-            group.add(g1, g2);
+            const earthMat = new THREE.MeshStandardMaterial({
+                map: getEarthTexture(),
+                roughness: 0.45,
+                metalness: 0.05
+            });
+            const earthMesh = new THREE.Mesh(new THREE.SphereGeometry(1.68, 36, 36), earthMat);
+            group.add(earthMesh);
+
+            const cloudMat = new THREE.MeshStandardMaterial({
+                map: getCloudTexture(),
+                transparent: true,
+                opacity: 0.38,
+                roughness: 0.9,
+                depthWrite: false
+            });
+            const cloudMesh = new THREE.Mesh(new THREE.SphereGeometry(1.72, 32, 32), cloudMat);
+            group.add(cloudMesh);
+
+            const haloMat = new THREE.MeshBasicMaterial({
+                color: 0x60a5fa,
+                transparent: true,
+                opacity: 0.15,
+                side: THREE.BackSide
+            });
+            const haloMesh = new THREE.Mesh(new THREE.SphereGeometry(1.82, 28, 28), haloMat);
+            group.add(haloMesh);
             return group;
         }
 
@@ -3931,57 +4934,95 @@ const shapes3DGame = {
             return group;
         }
 
-        if (exampleId === 'icecream') {
-            const cone = new THREE.Mesh(new THREE.ConeGeometry(1.1, 2.4, 24), mat('#d97706'));
-            cone.rotation.x = Math.PI;
-            cone.position.y = -0.6;
-            const scoop = new THREE.Mesh(new THREE.SphereGeometry(1.12, 24, 24), mat('#f472b6'));
-            scoop.position.y = 0.85;
-            group.add(cone, scoop);
+        if (exampleId === 'trafficcone') {
+            const cone = new THREE.Mesh(new THREE.ConeGeometry(1.2, 2.6, 32), mat('#f97316', 0.3));
+            cone.position.y = 0.1;
+            group.add(cone);
+            const s1 = new THREE.Mesh(new THREE.CylinderGeometry(0.42, 0.62, 0.42, 32), mat('#ffffff', 0.2));
+            s1.position.y = 0.52;
+            const s2 = new THREE.Mesh(new THREE.CylinderGeometry(0.75, 0.95, 0.42, 32), mat('#ffffff', 0.2));
+            s2.position.y = -0.22;
+            group.add(s1, s2);
+            const base = new THREE.Mesh(new THREE.BoxGeometry(2.1, 0.18, 2.1), mat('#ea580c', 0.4));
+            base.position.y = -1.15;
+            group.add(base);
             return group;
         }
 
         if (exampleId === 'partyhat') {
-            const cone = new THREE.Mesh(new THREE.ConeGeometry(1.4, 2.8, 24), mat('#8b5cf6'));
-            const pom = new THREE.Mesh(new THREE.SphereGeometry(0.35, 14, 14), mat('#facc15'));
-            pom.position.y = 1.45;
-            group.add(cone, pom);
+            const canvas = document.createElement('canvas');
+            canvas.width = 256; canvas.height = 256;
+            const pCtx = canvas.getContext('2d');
+            pCtx.fillStyle = '#8b5cf6';
+            pCtx.fillRect(0, 0, 256, 256);
+            pCtx.fillStyle = '#ec4899';
+            for (let i = -256; i < 512; i += 40) {
+                pCtx.beginPath();
+                pCtx.moveTo(i, 0); pCtx.lineTo(i + 24, 0); pCtx.lineTo(i + 24 + 120, 256); pCtx.lineTo(i + 120, 256);
+                pCtx.fill();
+            }
+            const dotColors = ['#fde047', '#38bdf8', '#4ade80', '#ffffff'];
+            for (let y = 20; y < 256; y += 45) {
+                for (let x = 20; x < 256; x += 45) {
+                    pCtx.beginPath();
+                    pCtx.arc(x, y, 7, 0, Math.PI * 2);
+                    pCtx.fillStyle = dotColors[(x + y) % dotColors.length];
+                    pCtx.fill();
+                }
+            }
+            const hatTex = new THREE.CanvasTexture(canvas);
+            const hatMat = new THREE.MeshStandardMaterial({ map: hatTex, roughness: 0.35 });
+            const cone = new THREE.Mesh(new THREE.ConeGeometry(1.35, 2.6, 32), hatMat);
+            group.add(cone);
+
+            const trim = new THREE.Mesh(new THREE.TorusGeometry(1.35, 0.08, 12, 32), mat('#38bdf8', 0.2));
+            trim.rotation.x = Math.PI / 2;
+            trim.position.y = -1.3;
+            group.add(trim);
+
+            const pom = new THREE.Mesh(new THREE.SphereGeometry(0.32, 16, 16), mat('#facc15', 0.6));
+            pom.position.y = 1.38;
+            group.add(pom);
+            [['#ec4899', 0.12, 1.45, 0], ['#38bdf8', -0.1, 1.42, 0.08], ['#22c55e', 0.05, 1.44, -0.1]].forEach(([col, x, y, z]) => {
+                const tuft = new THREE.Mesh(new THREE.SphereGeometry(0.14, 10, 10), mat(col, 0.6));
+                tuft.position.set(x, y, z);
+                group.add(tuft);
+            });
             return group;
         }
 
         if (exampleId === 'drum') {
-            // Red drum body
-            const body = new THREE.Mesh(new THREE.CylinderGeometry(1.4, 1.4, 1.8, 32), mat('#ef4444'));
-            group.add(body);
-            // Cream drumheads (top and bottom)
-            const headTop = new THREE.Mesh(new THREE.CylinderGeometry(1.42, 1.42, 0.08, 32), mat('#fef3c7', 0.5));
-            headTop.position.y = 0.9;
-            const headBot = new THREE.Mesh(new THREE.CylinderGeometry(1.42, 1.42, 0.08, 32), mat('#fef3c7', 0.5));
-            headBot.position.y = -0.9;
-            group.add(headTop, headBot);
-            // Gold rims
-            const rimTop = new THREE.Mesh(new THREE.TorusGeometry(1.43, 0.07, 12, 32), mat('#facc15'));
-            rimTop.rotation.x = Math.PI / 2;
-            rimTop.position.y = 0.9;
-            const rimBot = new THREE.Mesh(new THREE.TorusGeometry(1.43, 0.07, 12, 32), mat('#facc15'));
-            rimBot.rotation.x = Math.PI / 2;
-            rimBot.position.y = -0.9;
-            group.add(rimTop, rimBot);
-            // Crossed wooden drumsticks on top
-            const stick1 = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 2.0, 10), mat('#78350f'));
-            stick1.rotation.z = Math.PI / 4;
-            stick1.rotation.x = Math.PI / 2;
-            stick1.position.set(0, 1.05, 0);
-            const stick2 = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 2.0, 10), mat('#78350f'));
-            stick2.rotation.z = -Math.PI / 4;
-            stick2.rotation.x = Math.PI / 2;
-            stick2.position.set(0, 1.05, 0);
-            group.add(stick1, stick2);
+            const body = new THREE.Mesh(new THREE.CylinderGeometry(1.4, 1.4, 1.7, 24), mat('#ef4444'));
+            const rim1 = new THREE.Mesh(new THREE.TorusGeometry(1.42, 0.08, 10, 24), mat('#facc15'));
+            rim1.rotation.x = Math.PI / 2;
+            rim1.position.y = 0.85;
+            const rim2 = new THREE.Mesh(new THREE.TorusGeometry(1.42, 0.08, 10, 24), mat('#facc15'));
+            rim2.rotation.x = Math.PI / 2;
+            rim2.position.y = -0.85;
+            const skinTop = new THREE.Mesh(new THREE.CircleGeometry(1.4, 24), mat('#fef3c7'));
+            skinTop.rotation.x = -Math.PI / 2;
+            skinTop.position.y = 0.86;
+            const skinBottom = new THREE.Mesh(new THREE.CircleGeometry(1.4, 24), mat('#fef3c7'));
+            skinBottom.rotation.x = Math.PI / 2;
+            skinBottom.position.y = -0.86;
+            const stickGeo = new THREE.CylinderGeometry(0.06, 0.04, 1.9, 12);
+            const tipGeo = new THREE.SphereGeometry(0.11, 12, 12);
+            const s1 = new THREE.Mesh(stickGeo, mat('#d97706'));
+            s1.rotation.set(Math.PI / 2, 0, 0.45);
+            s1.position.set(-0.15, 0.96, 0);
+            const t1 = new THREE.Mesh(tipGeo, mat('#fef3c7'));
+            t1.position.set(0.25, 0.96, 0.82);
+            const s2 = new THREE.Mesh(stickGeo, mat('#d97706'));
+            s2.rotation.set(Math.PI / 2, 0, -0.45);
+            s2.position.set(0.15, 1.04, 0);
+            const t2 = new THREE.Mesh(tipGeo, mat('#fef3c7'));
+            t2.position.set(-0.25, 1.04, 0.82);
+            group.add(body, rim1, rim2, skinTop, skinBottom, s1, t1, s2, t2);
             return group;
         }
 
         if (exampleId === 'cake') {
-            const base = new THREE.Mesh(new THREE.CylinderGeometry(1.5, 1.5, 1.4, 28), mat('#f472b6'));
+            const base = new THREE.Mesh(new THREE.CylinderGeometry(1.6, 1.6, 1.2, 24), mat('#f472b6'));
             base.position.y = -0.4;
             const candle = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.14, 0.9, 12), mat('#ffffff'));
             candle.position.y = 0.65;
@@ -3992,15 +5033,12 @@ const shapes3DGame = {
         }
 
         if (exampleId === 'donut') {
-            // Golden fried dough torus
             const dough = new THREE.Mesh(new THREE.TorusGeometry(1.3, 0.52, 24, 48), mat('#d97706', 0.5));
             group.add(dough);
-            // Pink icing sitting properly on top half
             const icing = new THREE.Mesh(new THREE.TorusGeometry(1.3, 0.54, 18, 48), mat('#ec4899', 0.2));
             icing.position.z = 0.09;
             icing.scale.set(1.0, 1.0, 0.6);
             group.add(icing);
-            // Colorful 3D Sprinkles on top
             const sprinkleColors = ['#fde047', '#38bdf8', '#ffffff', '#a855f7', '#22c55e'];
             for (let i = 0; i < 28; i++) {
                 const angle = (i / 28) * Math.PI * 2;
@@ -4015,10 +5053,8 @@ const shapes3DGame = {
         }
 
         if (exampleId === 'lifering') {
-            // Red swim ring
             const ring = new THREE.Mesh(new THREE.TorusGeometry(1.35, 0.48, 24, 48), mat('#ef4444'));
             group.add(ring);
-            // 4 White safety guard stripes
             [0, Math.PI / 2, Math.PI, (Math.PI * 3) / 2].forEach(angle => {
                 const stripe = new THREE.Mesh(new THREE.TorusGeometry(1.36, 0.49, 12, 8, 0.35), mat('#ffffff'));
                 stripe.rotation.z = angle - 0.17;
@@ -4084,30 +5120,76 @@ const shapes3DGame = {
         }
 
         if (exampleId === 'tent') {
-            // Orange prism body
-            const tent = new THREE.Mesh(new THREE.CylinderGeometry(1.5, 1.5, 2.6, 3), mat('#f97316'));
-            tent.rotation.z = Math.PI / 2;
-            group.add(tent);
-            // Dark doorway flap in front
-            const door = new THREE.Mesh(new THREE.CircleGeometry(0.65, 3), mat('#7c2d12'));
-            door.position.set(1.31, -0.2, 0);
-            door.rotation.y = Math.PI / 2;
+            const canvas = document.createElement('canvas');
+            canvas.width = 256; canvas.height = 256;
+            const tCtx = canvas.getContext('2d');
+            tCtx.fillStyle = '#f97316';
+            tCtx.fillRect(0, 0, 256, 256);
+            tCtx.fillStyle = '#fbbf24';
+            for (let x = 0; x < 256; x += 32) {
+                tCtx.fillRect(x, 0, 16, 256);
+            }
+            const tentTex = new THREE.CanvasTexture(canvas);
+            const tentMat = new THREE.MeshStandardMaterial({ map: tentTex, roughness: 0.45 });
+
+            const tentGeo = createTriangularPrismGeometry(2.5, 2.1, 2.7);
+            const tentBody = new THREE.Mesh(tentGeo, tentMat);
+            group.add(tentBody);
+
+            const matMesh = new THREE.Mesh(new THREE.BoxGeometry(2.9, 0.12, 3.1), mat('#15803d', 0.6));
+            matMesh.position.y = -1.1;
+            group.add(matMesh);
+
+            const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 3.0, 12), mat('#78350f', 0.5));
+            pole.rotation.x = Math.PI / 2;
+            pole.position.y = 1.05;
+            group.add(pole);
+
+            const doorShape = new THREE.Shape();
+            doorShape.moveTo(-0.55, -1.05);
+            doorShape.lineTo(0.55, -1.05);
+            doorShape.lineTo(0, 0.35);
+            doorShape.closePath();
+            const door = new THREE.Mesh(new THREE.ShapeGeometry(doorShape), mat('#451a03'));
+            door.position.set(0, 0, 1.36);
             group.add(door);
-            // Wooden support poles
-            const pole1 = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 2.5, 8), mat('#78350f'));
-            pole1.position.set(1.32, 0, 0);
-            pole1.rotation.z = -Math.PI / 3.8;
-            group.add(pole1);
+
+            const flapL = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 1.2, 10), mat('#ea580c', 0.4));
+            flapL.position.set(-0.62, -0.45, 1.37);
+            flapL.rotation.z = -0.35;
+            const flapR = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 1.2, 10), mat('#ea580c', 0.4));
+            flapR.position.set(0.62, -0.45, 1.37);
+            flapR.rotation.z = 0.35;
+            group.add(flapL, flapR);
+
             return group;
         }
 
         if (exampleId === 'cheese') {
-            const cheese = new THREE.Mesh(new THREE.CylinderGeometry(1.6, 1.6, 1.2, 3), mat('#facc15', 0.4));
-            group.add(cheese);
-            // Swiss cheese dimples/holes
-            const holeMat = mat('#ca8a04', 0.6);
-            [[0.5, 0.2, 0.6], [-0.4, -0.1, 0.5], [0.2, 0.3, -0.5], [0.1, -0.2, 0.7]].forEach(([x, y, z]) => {
-                const hole = new THREE.Mesh(new THREE.SphereGeometry(0.22, 12, 12), holeMat);
+            const cheeseShape = new THREE.Shape();
+            cheeseShape.moveTo(-1.2, -1.0);
+            cheeseShape.lineTo(1.5, -1.0);
+            cheeseShape.lineTo(-1.2, 1.2);
+            cheeseShape.closePath();
+            const cheeseGeo = new THREE.ExtrudeGeometry(cheeseShape, {
+                depth: 1.5,
+                bevelEnabled: true,
+                bevelThickness: 0.06,
+                bevelSize: 0.06,
+                bevelSegments: 3
+            });
+            cheeseGeo.center();
+            const cheeseBody = new THREE.Mesh(cheeseGeo, mat('#facc15', 0.35));
+            group.add(cheeseBody);
+
+            const holeMat = mat('#ca8a04', 0.5);
+            [
+                [0.4, 0.25, 0.77], [-0.5, -0.2, 0.77], [0.1, -0.4, 0.77],
+                [0.4, 0.25, -0.77], [-0.5, -0.2, -0.77],
+                [-1.27, 0.3, 0.2], [-1.27, -0.4, -0.2],
+                [0.2, -1.07, 0.3], [-0.4, -1.07, -0.3]
+            ].forEach(([x, y, z]) => {
+                const hole = new THREE.Mesh(new THREE.SphereGeometry(0.18, 12, 12), holeMat);
                 hole.position.set(x, y, z);
                 group.add(hole);
             });
@@ -4120,44 +5202,80 @@ const shapes3DGame = {
         }
 
         if (exampleId === 'igloo') {
-            // Solid hemisphere dome + flat bottom cap
-            const dome = new THREE.Mesh(new THREE.SphereGeometry(1.65, 24, 16, 0, Math.PI * 2, 0, Math.PI / 2), mat('#f8fafc'));
-            dome.position.y = -0.5;
-            const bottomCap = new THREE.Mesh(new THREE.CircleGeometry(1.65, 24), mat('#e2e8f0'));
-            bottomCap.rotation.x = Math.PI / 2;
-            bottomCap.position.y = -0.5;
-            group.add(dome, bottomCap);
-            // Arched snow entrance tunnel
-            const tunnel = new THREE.Mesh(new THREE.CylinderGeometry(0.65, 0.65, 1.1, 16, 1, false, 0, Math.PI), mat('#f1f5f9'));
-            tunnel.rotation.x = Math.PI / 2;
-            tunnel.position.set(0, -0.4, 1.4);
+            const iglooTex = getIglooTexture();
+            const iglooMat = new THREE.MeshStandardMaterial({ map: iglooTex, roughness: 0.5 });
+            const dome = new THREE.Mesh(new THREE.SphereGeometry(1.65, 32, 20, 0, Math.PI * 2, 0, Math.PI / 2), iglooMat);
+            dome.position.y = -0.55;
+            const base = new THREE.Mesh(new THREE.CylinderGeometry(1.85, 1.95, 0.18, 32), mat('#f1f5f9', 0.6));
+            base.position.y = -0.64;
+            group.add(dome, base);
+
+            const archShape = new THREE.Shape();
+            archShape.moveTo(-0.62, 0);
+            archShape.lineTo(-0.62, 0.08);
+            archShape.absarc(0, 0.08, 0.62, Math.PI, 0, true);
+            archShape.lineTo(0.62, 0);
+            archShape.closePath();
+            const tunnelGeo = new THREE.ExtrudeGeometry(archShape, { depth: 1.15, bevelEnabled: false });
+            const tunnel = new THREE.Mesh(tunnelGeo, iglooMat);
+            tunnel.position.set(0, -0.55, 0.70);
             group.add(tunnel);
+
+            const doorShape = new THREE.Shape();
+            doorShape.moveTo(-0.48, 0);
+            doorShape.lineTo(-0.48, 0.06);
+            doorShape.absarc(0, 0.06, 0.48, Math.PI, 0, true);
+            doorShape.lineTo(0.48, 0);
+            doorShape.closePath();
+            const door = new THREE.Mesh(new THREE.ShapeGeometry(doorShape), mat('#1e3a8a', 0.3));
+            door.position.set(0, -0.55, 1.86);
+            group.add(door);
+
+            const rimShape = new THREE.Shape();
+            rimShape.moveTo(-0.62, 0);
+            rimShape.lineTo(-0.62, 0.08);
+            rimShape.absarc(0, 0.08, 0.62, Math.PI, 0, true);
+            rimShape.lineTo(0.62, 0);
+            rimShape.lineTo(0.48, 0);
+            rimShape.lineTo(0.48, 0.06);
+            rimShape.absarc(0, 0.06, 0.48, 0, Math.PI, false);
+            rimShape.lineTo(-0.48, 0);
+            rimShape.closePath();
+            const rimGeo = new THREE.ExtrudeGeometry(rimShape, { depth: 0.08, bevelEnabled: true, bevelThickness: 0.03, bevelSize: 0.03, bevelSegments: 2 });
+            const rimMesh = new THREE.Mesh(rimGeo, mat('#e2e8f0', 0.4));
+            rimMesh.position.set(0, -0.55, 1.85);
+            group.add(rimMesh);
+
             return group;
         }
 
         if (exampleId === 'mushroom') {
-            // Red cap hemisphere + flat bottom cap
             const cap = new THREE.Mesh(new THREE.SphereGeometry(1.6, 24, 16, 0, Math.PI * 2, 0, Math.PI / 2), mat('#ef4444'));
             cap.position.y = 0.2;
             const capBottom = new THREE.Mesh(new THREE.CircleGeometry(1.6, 24), mat('#fef3c7'));
             capBottom.rotation.x = Math.PI / 2;
             capBottom.position.y = 0.2;
             group.add(cap, capBottom);
-            // White circular spots on mushroom cap
             const spotMat = mat('#ffffff');
             [[0, 1.7, 0], [0.8, 1.2, 0.6], [-0.8, 1.2, 0.6], [0, 1.2, -0.9], [1.1, 0.6, -0.4], [-1.1, 0.6, -0.4]].forEach(([x, y, z]) => {
                 const spot = new THREE.Mesh(new THREE.SphereGeometry(0.22, 10, 10), spotMat);
                 spot.position.set(x, y, z);
                 group.add(spot);
             });
-            // Cream stem
             const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.68, 1.4, 18), mat('#fef3c7'));
             stem.position.y = -0.5;
             group.add(stem);
             return group;
         }
 
-        // Default pure 3D shape (solid shapes with flat bottom caps on hemispheres)
+        if (exampleId === 'pure' && shapeItem.id === 'Prism') {
+            const geo = createTriangularPrismGeometry(2.4, 2.1, 2.6);
+            group.add(new THREE.Mesh(geo, mat('#14b8a6', 0.3)));
+            const edges = new THREE.LineSegments(new THREE.EdgesGeometry(geo), new THREE.LineBasicMaterial({ color: 0x0f766e, linewidth: 2 }));
+            group.add(edges);
+            return group;
+        }
+
         let geo;
         switch (shapeItem.id) {
             case 'Cube': geo = new THREE.BoxGeometry(2.2, 2.2, 2.2); break;
@@ -4166,7 +5284,7 @@ const shapes3DGame = {
             case 'Cylinder': geo = new THREE.CylinderGeometry(1.35, 1.35, 2.7, 28); break;
             case 'Pyramid': geo = new THREE.ConeGeometry(1.9, 2.8, 4); break;
             case 'Cuboid (Box)': geo = new THREE.BoxGeometry(1.7, 2.6, 1.3); break;
-            case 'Prism': geo = new THREE.CylinderGeometry(1.6, 1.6, 2.5, 3); break;
+            case 'Prism': geo = createTriangularPrismGeometry(2.4, 2.1, 2.6); break;
             case 'Diamond (Octahedron)': geo = new THREE.OctahedronGeometry(1.9, 0); break;
             case 'Dome (Hemisphere)': {
                 const domeMesh = new THREE.Mesh(new THREE.SphereGeometry(1.75, 28, 16, 0, Math.PI * 2, 0, Math.PI / 2), mat(shapeItem.color));
@@ -4210,6 +5328,13 @@ const shapes3DGame = {
             exBar.appendChild(pill);
         });
 
+        app.animatePop(document.getElementById('shape3d-target'));
+        if (speak) {
+            const exObj = (item.examples || []).find(e => e.id === exampleId);
+            const speakName = exObj && exObj.id !== 'pure' ? `${exObj.label}! A 3D ${item.id}!` : `${item.id}! ${item.real}`;
+            app.speak(speakName);
+        }
+
         this.init();
         if (typeof THREE === 'undefined') return;
 
@@ -4218,13 +5343,6 @@ const shapes3DGame = {
         this.mesh.rotation.x = 0.45;
         this.mesh.rotation.y = -0.35;
         this.scene.add(this.mesh);
-
-        app.animatePop(document.getElementById('shape3d-target'));
-        if (speak) {
-            const exObj = (item.examples || []).find(e => e.id === exampleId);
-            const speakName = exObj && exObj.id !== 'pure' ? `${exObj.label}! A 3D ${item.id}!` : item.id;
-            app.speak(speakName);
-        }
         this.start();
     },
 
@@ -4237,17 +5355,19 @@ const shapes3DGame = {
             if (document.hidden) return;
             this.time += 0.035;
             if (this.mesh && !this.isDragging) {
-                this.mesh.rotateOnWorldAxis(worldY, this.velX);
-                this.mesh.rotateOnWorldAxis(worldX, this.velY);
-                this.velX = this.velX * 0.95 + 0.011 * 0.05;
-                this.velY = this.velY * 0.94;
-                this.mesh.position.y = Math.sin(this.time) * 0.12;
+                if (typeof app === 'undefined' || !app.settings || app.settings.autoSpin3D) {
+                    this.mesh.rotateOnWorldAxis(worldY, this.velX);
+                    this.mesh.rotateOnWorldAxis(worldX, this.velY);
+                    this.velX = this.velX * 0.95 + 0.011 * 0.05;
+                    this.velY = this.velY * 0.94;
+                    this.mesh.position.y = Math.sin(this.time) * 0.12;
+                }
             }
             if (this.renderer && this.scene && this.camera) {
                 this.renderer.render(this.scene, this.camera);
             }
         };
-        loop();
+        this.animId = requestAnimationFrame(loop);
     },
 
     stop() {
@@ -4265,7 +5385,7 @@ const colorGame = {
     activeSlot: 1,
 
     open() {
-        this.select(GAMES.colors[0], false);
+        this.select(GAMES.colors[0], true);
     },
 
     setMode(newMode) {
@@ -4399,9 +5519,11 @@ const animalGame = {
     select(a, playAudio = true, soundOnly = false) {
         this.current = a;
         soundFX.stopAll();
-        geminiTTS.stop();
-        if ('speechSynthesis' in window && (window.speechSynthesis.speaking || window.speechSynthesis.pending)) {
-            try { window.speechSynthesis.cancel(); } catch (e) {}
+        if (soundOnly || !playAudio) {
+            geminiTTS.stop();
+            if ('speechSynthesis' in window && (window.speechSynthesis.speaking || window.speechSynthesis.pending)) {
+                try { window.speechSynthesis.cancel(); } catch (e) {}
+            }
         }
         const t = document.getElementById('animal-target');
         t.textContent = a.emoji;
@@ -4412,13 +5534,18 @@ const animalGame = {
         });
         app.animatePop(t);
         if (playAudio) {
-            const dur = soundFX.playAnimalSound(a.id);
-            if (!soundOnly) {
-                this.speechTimer = setTimeout(() => {
-                    app.speak(a.id);
-                    this.speechTimer = null;
-                }, dur + 120);
-                soundFX.registerTimer(this.speechTimer);
+            if (app.isOpeningView && !app.settings.announceGameOnOpen) {
+                return;
+            }
+            if (soundOnly) {
+                soundFX.playAnimalSound(a.id);
+            } else {
+                app.speak(a.id);
+                const delay = app.isOpeningView ? 950 : 380;
+                const timer = setTimeout(() => {
+                    soundFX.playAnimalSound(a.id);
+                }, delay);
+                soundFX.registerTimer(timer);
             }
         }
     }
@@ -4488,6 +5615,7 @@ const foodGame = {
     },
 
     burstCrumbs(x, y) {
+        if (typeof app !== 'undefined' && app.settings && !app.settings.confettiEnabled) return;
         const color = this.current.crumbColor || '#ef4444';
         for (let i = 0; i < 9; i++) {
             const p = document.createElement('div');
@@ -4587,13 +5715,25 @@ const thingsGame = {
         });
         app.animatePop(t);
         if (speak) {
-            const dur = soundFX.playThingSound(item.id);
-            if (!soundOnly) {
+            if (app.isOpeningView && !app.settings.announceGameOnOpen) {
+                return;
+            }
+            if (app.isOpeningView) {
+                app.speak(item.id);
                 this.speechTimer = setTimeout(() => {
-                    app.speak(item.id);
+                    soundFX.playThingSound(item.id);
                     this.speechTimer = null;
-                }, dur + 120);
+                }, 950);
                 soundFX.registerTimer(this.speechTimer);
+            } else {
+                soundFX.playThingSound(item.id);
+                if (!soundOnly) {
+                    this.speechTimer = setTimeout(() => {
+                        app.speak(item.id);
+                        this.speechTimer = null;
+                    }, 350);
+                    soundFX.registerTimer(this.speechTimer);
+                }
             }
         }
     }
@@ -4640,7 +5780,17 @@ function updateVoiceStatusIndicator() {
     if (modelSel && document.activeElement !== modelSel) modelSel.value = getTtsModel();
     if (voiceSel && document.activeElement !== voiceSel) voiceSel.value = getTtsVoice();
 
-    if (key) {
+    if (typeof app !== 'undefined' && app.settings && !app.settings.voiceEnabled) {
+        if (dot) dot.className = 'w-2 h-2 rounded-full bg-slate-400';
+        if (txt) {
+            txt.textContent = 'Voice Off';
+            txt.className = 'text-slate-500 font-bold';
+        }
+        if (badge) {
+            badge.textContent = 'Voice Spoken Output Disabled';
+            badge.className = 'text-[11px] font-extrabold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full border border-slate-200';
+        }
+    } else if (key) {
         if (dot) dot.className = 'w-2 h-2 rounded-full bg-emerald-500 animate-pulse';
         if (txt) {
             txt.textContent = 'Gemini 3.8 Voice';
@@ -4664,17 +5814,44 @@ function updateVoiceStatusIndicator() {
 }
 
 window.addEventListener('DOMContentLoaded', () => {
+    app.initVoices();
+    if ('speechSynthesis' in window) {
+        window.speechSynthesis.onvoiceschanged = () => app.initVoices();
+    }
     // 1. Initial Voice Status Indicator
     updateVoiceStatusIndicator();
 
-    // 2. Voice Settings Modal Setup & Live Synchronization
+    // 2. Voice & Options Modal Setup & Live Synchronization
     const voiceModal = document.getElementById('voice-settings-modal');
     const inp = document.getElementById('gemini-api-key-input');
     const modelSel = document.getElementById('gemini-tts-model-select');
     const voiceSel = document.getElementById('gemini-tts-voice-select');
     const testStatus = document.getElementById('voice-test-status');
 
+    const syncSettingsToUI = () => {
+        const s = app.settings;
+        const optAnnounce = document.getElementById('opt-announce-open');
+        if (optAnnounce) optAnnounce.checked = !!s.announceGameOnOpen;
+        const optVoice = document.getElementById('opt-voice-enabled');
+        if (optVoice) optVoice.checked = !!s.voiceEnabled;
+        const optSfx = document.getElementById('opt-sfx-enabled');
+        if (optSfx) optSfx.checked = !!s.sfxEnabled;
+        const optSpeechRate = document.getElementById('opt-speech-rate');
+        if (optSpeechRate) optSpeechRate.value = s.speechRate || 'normal';
+        const optMaxNum = document.getElementById('opt-max-number');
+        if (optMaxNum) optMaxNum.value = String(s.maxNumber || 20);
+        const optPhonics = document.getElementById('opt-phonics-detail');
+        if (optPhonics) optPhonics.value = s.phonicsDetail || 'full';
+        const optConfetti = document.getElementById('opt-confetti-enabled');
+        if (optConfetti) optConfetti.checked = !!s.confettiEnabled;
+        const optAutoSpin = document.getElementById('opt-autospin-3d');
+        if (optAutoSpin) optAutoSpin.checked = !!s.autoSpin3D;
+        const optHoldHome = document.getElementById('opt-hold-home');
+        if (optHoldHome) optHoldHome.checked = !!s.requireHoldHome;
+    };
+
     const openVoiceModal = () => {
+        syncSettingsToUI();
         updateVoiceStatusIndicator();
         if (testStatus) {
             testStatus.classList.add('hidden');
@@ -4687,7 +5864,55 @@ window.addEventListener('DOMContentLoaded', () => {
     };
 
     document.getElementById('voice-settings-btn')?.addEventListener('click', openVoiceModal);
+    document.querySelectorAll('.options-quick-btn').forEach(btn => {
+        btn.addEventListener('click', openVoiceModal);
+    });
     document.getElementById('voice-modal-close-x')?.addEventListener('click', closeVoiceModal);
+
+    // Live option input listeners
+    document.getElementById('opt-announce-open')?.addEventListener('change', (e) => {
+        app.settings.announceGameOnOpen = e.target.checked;
+        app.saveSettings();
+    });
+    document.getElementById('opt-voice-enabled')?.addEventListener('change', (e) => {
+        app.settings.voiceEnabled = e.target.checked;
+        app.saveSettings();
+    });
+    document.getElementById('opt-sfx-enabled')?.addEventListener('change', (e) => {
+        app.settings.sfxEnabled = e.target.checked;
+        app.saveSettings();
+    });
+    document.getElementById('opt-speech-rate')?.addEventListener('change', (e) => {
+        app.settings.speechRate = e.target.value;
+        app.saveSettings();
+    });
+    document.getElementById('opt-max-number')?.addEventListener('change', (e) => {
+        app.settings.maxNumber = parseInt(e.target.value, 10);
+        app.saveSettings();
+    });
+    document.getElementById('opt-phonics-detail')?.addEventListener('change', (e) => {
+        app.settings.phonicsDetail = e.target.value;
+        app.saveSettings();
+    });
+    document.getElementById('opt-confetti-enabled')?.addEventListener('change', (e) => {
+        app.settings.confettiEnabled = e.target.checked;
+        app.saveSettings();
+    });
+    document.getElementById('opt-autospin-3d')?.addEventListener('change', (e) => {
+        app.settings.autoSpin3D = e.target.checked;
+        app.saveSettings();
+    });
+    document.getElementById('opt-hold-home')?.addEventListener('change', (e) => {
+        app.settings.requireHoldHome = e.target.checked;
+        app.saveSettings();
+    });
+
+    document.getElementById('opt-reset-defaults-btn')?.addEventListener('click', () => {
+        app.settings = Object.assign({}, DEFAULT_SETTINGS);
+        app.saveSettings();
+        syncSettingsToUI();
+        soundFX.playPop();
+    });
 
     // Live input listeners so changes take effect immediately
     inp?.addEventListener('input', () => {
@@ -4717,9 +5942,12 @@ window.addEventListener('DOMContentLoaded', () => {
         if (modelSel) localStorage.setItem('tlh_isolated_v3_tts_model', modelSel.value);
         if (voiceSel) localStorage.setItem('tlh_isolated_v3_tts_voice', voiceSel.value);
 
+        app.saveSettings();
         updateVoiceStatusIndicator();
         closeVoiceModal();
-        app.speak("Voice settings saved! Let's explore together!");
+        if (app.settings.voiceEnabled) {
+            app.speak("Options saved! Let's explore together!");
+        }
     });
 
     // Live Test Voice Sample Button (tests live input values directly)
@@ -4813,7 +6041,26 @@ window.addEventListener('DOMContentLoaded', () => {
     });
 
     document.querySelectorAll('[data-action="home"]').forEach(btn => {
-        btn.addEventListener('click', () => app.switchView('menu'));
+        let lockTimer = null;
+        btn.addEventListener('click', () => {
+            if (app.settings && app.settings.requireHoldHome) {
+                if (btn.dataset.confirmHome !== 'true') {
+                    btn.dataset.confirmHome = 'true';
+                    btn.innerHTML = '<span>🔒</span><span>Tap Again</span>';
+                    soundFX.playPop();
+                    clearTimeout(lockTimer);
+                    lockTimer = setTimeout(() => {
+                        btn.dataset.confirmHome = 'false';
+                        btn.innerHTML = '<span>🏠</span><span>Home</span>';
+                    }, 2000);
+                    return;
+                }
+                clearTimeout(lockTimer);
+                btn.dataset.confirmHome = 'false';
+                btn.innerHTML = '<span>🏠</span><span>Home</span>';
+            }
+            app.switchView('menu');
+        });
     });
 
     // 4. Phonics Setup
@@ -4852,6 +6099,7 @@ window.addEventListener('DOMContentLoaded', () => {
         });
         numberTray.appendChild(btn);
     });
+    numberGame.applyMaxNumberSetting();
     document.getElementById('num-mode-touch').addEventListener('click', () => numberGame.setMode('touch'));
     document.getElementById('num-mode-show').addEventListener('click', () => numberGame.setMode('show'));
     document.getElementById('number-big-digit').addEventListener('click', () => {
@@ -4971,7 +6219,7 @@ window.addEventListener('DOMContentLoaded', () => {
         btn.addEventListener('click', () => thingsGame.select(t, true));
         thingsTray.appendChild(btn);
     });
-    const triggerThingSpeak = () => thingsGame.select(thingsGame.current, true);
+    const triggerThingSpeak = () => thingsGame.select(thingsGame.current, true, true);
     document.getElementById('things-target').addEventListener('click', triggerThingSpeak);
     document.getElementById('things-sound').addEventListener('click', triggerThingSpeak);
 
@@ -5059,6 +6307,8 @@ window.ToddlerLearningHub = {
     app,
     soundFX,
     geminiTTS,
+    DEFAULT_SETTINGS,
+    GAME_OPEN_TITLES,
     GAMES,
     phonicsGame,
     numberGame,
