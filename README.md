@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -10,10 +11,13 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌟</text></svg>">
     <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌟</text></svg>">
 
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@700;800;900&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@700;800;900&family=Plus+Jakarta+Sans:wght@700;800&display=swap');
 
         * {
             box-sizing: border-box;
@@ -28,8 +32,12 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
-            font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background-color: #e0f2fe;
+            font-family: 'Nunito', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #e0f2fe 0%, #f0fdf4 50%, #fef3c7 100%);
+        }
+
+        h1, h2, h3, .menu-title, #phonics-big-upper, #phonics-big-lower, #number-big-digit, #solar-title, #shape-text, #shape3d-title, #fruits-text, #animal-text, #things-text, #opp-title {
+            font-family: 'Fredoka', 'Nunito', cursive, sans-serif;
         }
 
         .view-section {
@@ -47,13 +55,13 @@
         }
 
         .squish-btn {
-            transition: transform 0.08s ease;
+            transition: transform 0.1s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.1s ease;
             cursor: pointer;
             touch-action: manipulation;
         }
 
         .squish-btn:active {
-            transform: scale(0.92);
+            transform: translateY(4px) scale(0.96);
         }
 
         .menu-scroll-container {
@@ -83,9 +91,9 @@
 
         .menu-card {
             background: #ffffff;
-            border-radius: 1.75rem;
-            padding: 1rem 0.75rem;
-            box-shadow: 0 8px 16px -4px rgba(15, 23, 42, 0.08);
+            border-radius: 2rem;
+            padding: 1.15rem 0.85rem;
+            box-shadow: 0 8px 0 #cbd5e1, 0 16px 24px -4px rgba(15, 23, 42, 0.08);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -94,20 +102,32 @@
             cursor: pointer;
             touch-action: manipulation;
             position: relative;
-            min-height: 135px;
-            border: 3px solid #ffffff;
+            min-height: 145px;
+            border: 3.5px solid #ffffff;
+            transition: transform 0.12s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.12s ease;
+        }
+
+        .menu-card:active {
+            transform: translateY(5px);
+            box-shadow: 0 3px 0 #cbd5e1, 0 6px 10px -2px rgba(15, 23, 42, 0.1);
         }
 
         .menu-icon {
-            font-size: 3.25rem;
+            font-size: 3.4rem;
             line-height: 1.1;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.08));
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .menu-card:hover .menu-icon {
+            transform: scale(1.08);
         }
 
         .menu-title {
             font-weight: 900;
             color: #1e293b;
             font-size: 1.25rem;
-            letter-spacing: -0.02em;
+            letter-spacing: -0.01em;
             text-align: center;
         }
 
@@ -129,13 +149,14 @@
             max-width: 900px;
             margin: 0 auto;
             flex-shrink: 0;
+            gap: 0.5rem;
         }
 
         .home-btn {
             background: #ffffff;
-            padding: 0.65rem 0.9rem;
+            padding: 0.6rem 1rem;
             border-radius: 9999px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            box-shadow: 0 4px 0 #cbd5e1, 0 8px 16px -2px rgba(15, 23, 42, 0.08);
             border: 2px solid #e2e8f0;
             display: flex;
             align-items: center;
@@ -143,31 +164,39 @@
             font-weight: 900;
             color: #334155;
             font-size: 1rem;
+            transition: transform 0.1s ease, box-shadow 0.1s ease;
+        }
+
+        .home-btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0 #cbd5e1;
         }
 
         .mode-switch {
             display: flex;
             background: #ffffff;
-            padding: 0.25rem;
+            padding: 0.3rem;
             border-radius: 9999px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+            box-shadow: 0 4px 0 #cbd5e1, 0 8px 16px -2px rgba(15, 23, 42, 0.06);
             border: 2px solid #e2e8f0;
-            gap: 0.25rem;
+            gap: 0.3rem;
         }
 
         .mode-pill {
-            padding: 0.4rem 0.85rem;
+            padding: 0.45rem 0.95rem;
             border-radius: 9999px;
             font-weight: 900;
             font-size: 0.85rem;
             color: #475569;
-            transition: background-color 0.15s ease, color 0.15s ease;
+            transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
             cursor: pointer;
         }
 
         .mode-pill.active {
             background: #3b82f6;
             color: #ffffff;
+            box-shadow: 0 3px 0 #1d4ed8;
+            transform: translateY(-1px);
         }
 
         .main-stage {
@@ -215,16 +244,18 @@
 
         .controls-dock {
             width: 100%;
-            background: #ffffff;
-            border-top: 3px solid #e2e8f0;
-            border-top-left-radius: 2rem;
-            border-top-right-radius: 2rem;
-            box-shadow: 0 -6px 20px rgba(15, 23, 42, 0.05);
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-top: 3px solid rgba(255, 255, 255, 0.85);
+            border-top-left-radius: 2.25rem;
+            border-top-right-radius: 2.25rem;
+            box-shadow: 0 -8px 32px rgba(15, 23, 42, 0.08);
             padding: 0.8rem 0.75rem 1rem 0.75rem;
             z-index: 30;
             height: 28vh;
-            min-height: 150px;
-            max-height: 230px;
+            min-height: 155px;
+            max-height: 235px;
             flex-shrink: 0;
         }
 
@@ -247,12 +278,12 @@
         }
 
         .tray-btn {
-            width: 4.1rem;
-            height: 4.1rem;
-            border-radius: 1.1rem;
+            width: 4.4rem;
+            height: 4.4rem;
+            border-radius: 1.35rem;
             background: #ffffff;
-            border: 3px solid #e2e8f0;
-            box-shadow: 0 4px 0 #cbd5e1;
+            border: 3px solid #e0e7ff;
+            box-shadow: 0 5px 0 #cbd5e1, 0 6px 12px -2px rgba(15, 23, 42, 0.06);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -263,19 +294,54 @@
             cursor: pointer;
             touch-action: manipulation;
             flex-shrink: 0;
+            transition: transform 0.1s ease, box-shadow 0.1s ease, border-color 0.1s ease;
         }
 
         .tray-btn:active, .tray-btn.selected {
             transform: translateY(3px);
-            box-shadow: 0 1px 0 #cbd5e1;
-            border-color: #3b82f6;
-            background-color: #eff6ff;
+            box-shadow: 0 2px 0 #94a3b8;
+            border-color: #6366f1;
+            background-color: #eef2ff;
+        }
+
+        .audio-vis-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            height: 22px;
+            padding: 0 7px;
+            background: rgba(99, 102, 241, 0.12);
+            border: 1.5px solid rgba(99, 102, 241, 0.35);
+            border-radius: 9999px;
+            vertical-align: middle;
+            transition: all 0.2s ease;
+        }
+
+        .vis-bar {
+            width: 3px;
+            height: 5px;
+            border-radius: 9999px;
+            background: #6366f1;
+            transition: height 0.12s ease;
+        }
+
+        .audio-vis-pill.speaking .vis-bar {
+            animation: visBounce 0.55s ease-in-out infinite alternate;
+        }
+        .audio-vis-pill.speaking .bar-1 { animation-delay: 0.0s; }
+        .audio-vis-pill.speaking .bar-2 { animation-delay: 0.15s; }
+        .audio-vis-pill.speaking .bar-3 { animation-delay: 0.3s; }
+        .audio-vis-pill.speaking .bar-4 { animation-delay: 0.45s; }
+
+        @keyframes visBounce {
+            0% { height: 4px; }
+            100% { height: 16px; }
         }
 
         .count-item-btn {
-            width: 4.2rem;
-            height: 4.2rem;
-            border-radius: 1.2rem;
+            width: 4.4rem;
+            height: 4.4rem;
+            border-radius: 1.35rem;
             background: #ffffff;
             border: 3px dashed #99f6e4;
             display: flex;
@@ -285,15 +351,18 @@
             position: relative;
             cursor: pointer;
             touch-action: manipulation;
-            opacity: 0.75;
-            transform: scale(0.94);
+            opacity: 0.8;
+            transform: scale(0.95);
+            box-shadow: 0 4px 0 #ccfbf1;
+            transition: all 0.15s ease;
         }
 
         .count-item-btn.counted {
             border: 3px solid #0d9488;
             background: #f0fdfa;
             opacity: 1;
-            transform: scale(1.04);
+            transform: scale(1.05);
+            box-shadow: 0 5px 0 #0f766e;
         }
 
         .count-badge {
@@ -316,16 +385,21 @@
         .phonics-word-card {
             background: #ffffff;
             border: 3px solid #dbeafe;
-            border-radius: 1.4rem;
-            padding: 0.7rem 1rem;
+            border-radius: 1.5rem;
+            padding: 0.75rem 1.1rem;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             min-width: 96px;
-            box-shadow: 0 6px 12px -3px rgba(30, 64, 175, 0.08);
+            box-shadow: 0 6px 0 #bfdbfe, 0 8px 16px -3px rgba(30, 64, 175, 0.08);
             cursor: pointer;
             touch-action: manipulation;
+            transition: transform 0.1s ease, box-shadow 0.1s ease;
+        }
+        .phonics-word-card:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 #bfdbfe;
         }
 
         .phonics-bubble {
@@ -410,6 +484,7 @@
                         <span id="voice-status-dot" class="w-2 h-2 rounded-full bg-blue-500"></span>
                         <span id="voice-status-text">Device Voice</span>
                     </span>
+                    <div class="audio-vis-pill" title="Audio Activity"><span class="vis-bar bar-1"></span><span class="vis-bar bar-2"></span><span class="vis-bar bar-3"></span><span class="vis-bar bar-4"></span></div>
                 </button>
             </div>
         </div>
@@ -501,6 +576,7 @@
                 <button id="phonics-mode-studio" class="mode-pill active">🔤 Sound Studio</button>
                 <button id="phonics-mode-bubbles" class="mode-pill">🫧 Pop Bubbles</button>
             </div>
+            <div class="audio-vis-pill" title="Audio Activity"><span class="vis-bar bar-1"></span><span class="vis-bar bar-2"></span><span class="vis-bar bar-3"></span><span class="vis-bar bar-4"></span></div>
         </div>
 
         <div id="phonics-studio-stage" class="main-stage">
@@ -543,6 +619,7 @@
                 <button id="num-mode-touch" class="mode-pill active">👆 Tap to Count</button>
                 <button id="num-mode-show" class="mode-pill">✨ Auto Count</button>
             </div>
+            <div class="audio-vis-pill" title="Audio Activity"><span class="vis-bar bar-1"></span><span class="vis-bar bar-2"></span><span class="vis-bar bar-3"></span><span class="vis-bar bar-4"></span></div>
         </div>
 
         <div class="main-stage">
@@ -575,6 +652,7 @@
                 <button data-quiz-cat="shapes" class="mode-pill quiz-cat-btn">🔷 Shapes</button>
                 <button data-quiz-cat="solar" class="mode-pill quiz-cat-btn">🪐 Space</button>
             </div>
+            <div class="audio-vis-pill" title="Audio Activity"><span class="vis-bar bar-1"></span><span class="vis-bar bar-2"></span><span class="vis-bar bar-3"></span><span class="vis-bar bar-4"></span></div>
         </div>
 
         <div class="main-stage">
@@ -597,6 +675,7 @@
         <div class="top-bar">
             <button data-action="home" class="home-btn squish-btn"><span>🏠</span><span>Home</span></button>
             <div class="bg-white px-4 py-1.5 rounded-full font-black text-emerald-700 text-sm border-2 border-emerald-100 shadow-sm">Tap the shape to bounce!</div>
+            <div class="audio-vis-pill" title="Audio Activity"><span class="vis-bar bar-1"></span><span class="vis-bar bar-2"></span><span class="vis-bar bar-3"></span><span class="vis-bar bar-4"></span></div>
         </div>
 
         <div class="main-stage">
@@ -617,6 +696,7 @@
         <div class="top-bar">
             <button data-action="home" class="home-btn squish-btn"><span>🏠</span><span>Home</span></button>
             <div class="bg-white px-4 py-1.5 rounded-full font-black text-indigo-700 text-sm border-2 border-indigo-100 shadow-sm">Drag any direction to spin! 🔄</div>
+            <div class="audio-vis-pill" title="Audio Activity"><span class="vis-bar bar-1"></span><span class="vis-bar bar-2"></span><span class="vis-bar bar-3"></span><span class="vis-bar bar-4"></span></div>
         </div>
 
         <div class="main-stage">
@@ -643,6 +723,7 @@
                 <button id="color-mode-explore" class="mode-pill active">🎨 Explore Colors</button>
                 <button id="color-mode-mix" class="mode-pill">🧪 Mix 2 Colors!</button>
             </div>
+            <div class="audio-vis-pill" title="Audio Activity"><span class="vis-bar bar-1"></span><span class="vis-bar bar-2"></span><span class="vis-bar bar-3"></span><span class="vis-bar bar-4"></span></div>
         </div>
 
         <div id="color-bg-target" class="main-stage rounded-3xl my-1 transition-colors duration-300" style="background-color: #ef4444;">
@@ -676,6 +757,7 @@
         <div class="top-bar">
             <button data-action="home" class="home-btn squish-btn"><span>🏠</span><span>Home</span></button>
             <button id="animal-sound-btn" class="bg-orange-500 text-white font-black px-4 py-2 rounded-full shadow-md squish-btn text-sm">🔊 Hear Animal Sound!</button>
+            <div class="audio-vis-pill" title="Audio Activity"><span class="vis-bar bar-1"></span><span class="vis-bar bar-2"></span><span class="vis-bar bar-3"></span><span class="vis-bar bar-4"></span></div>
         </div>
         <div class="main-stage">
             <div id="animal-target" class="text-[7.5rem] sm:text-[9rem] leading-none cursor-pointer squish-btn">🦁</div>
@@ -694,6 +776,7 @@
         <div class="top-bar">
             <button data-action="home" class="home-btn squish-btn"><span>🏠</span><span>Home</span></button>
             <button id="food-chomp-btn" class="bg-pink-500 text-white font-black px-4 py-2 rounded-full shadow-md squish-btn text-sm">😋 Tap Food to Take a Bite!</button>
+            <div class="audio-vis-pill" title="Audio Activity"><span class="vis-bar bar-1"></span><span class="vis-bar bar-2"></span><span class="vis-bar bar-3"></span><span class="vis-bar bar-4"></span></div>
         </div>
         <div class="main-stage">
             <div id="fruits-target" class="relative w-52 h-52 sm:w-60 sm:h-60 flex items-center justify-center cursor-pointer squish-btn">
@@ -714,6 +797,7 @@
         <div class="top-bar">
             <button data-action="home" class="home-btn squish-btn"><span>🏠</span><span>Home</span></button>
             <div class="bg-white px-4 py-1.5 rounded-full font-black text-purple-700 text-sm border-2 border-purple-100 shadow-sm">Tap to hear it go! 🚦</div>
+            <div class="audio-vis-pill" title="Audio Activity"><span class="vis-bar bar-1"></span><span class="vis-bar bar-2"></span><span class="vis-bar bar-3"></span><span class="vis-bar bar-4"></span></div>
         </div>
         <div class="main-stage">
             <div id="things-target" class="text-[7.5rem] sm:text-[9rem] leading-none cursor-pointer squish-btn">🚒</div>
@@ -732,6 +816,7 @@
         <div class="top-bar">
             <button data-action="home" class="home-btn squish-btn"><span>🏠</span><span>Home</span></button>
             <div class="bg-white px-4 py-1.5 rounded-full font-black text-cyan-700 text-sm border-2 border-cyan-100 shadow-sm">Tap each card to compare! 🔄</div>
+            <div class="audio-vis-pill" title="Audio Activity"><span class="vis-bar bar-1"></span><span class="vis-bar bar-2"></span><span class="vis-bar bar-3"></span><span class="vis-bar bar-4"></span></div>
         </div>
         <div class="main-stage">
             <div class="grid grid-cols-2 gap-4 sm:gap-6 w-full max-w-lg px-2">
@@ -760,6 +845,7 @@
                 <button id="solar-mode-planet" class="mode-pill">🪐 3D Spin</button>
                 <button id="solar-mode-orbit" class="mode-pill">☀️ Orbit</button>
             </div>
+            <div class="audio-vis-pill" title="Audio Activity"><span class="vis-bar bar-1"></span><span class="vis-bar bar-2"></span><span class="vis-bar bar-3"></span><span class="vis-bar bar-4"></span></div>
         </div>
 
         <div class="main-stage">
@@ -841,12 +927,15 @@
                 </div>
             </div>
 
+            <div id="voice-test-status" class="hidden text-xs font-bold text-center py-2 px-3 rounded-xl transition-all duration-200"></div>
             <div class="flex flex-wrap items-center gap-2 pt-1">
                 <button id="voice-test-btn" class="flex-1 bg-indigo-100 hover:bg-indigo-200 text-indigo-800 font-black px-4 py-2.5 rounded-xl text-sm squish-btn flex items-center justify-center gap-1.5">
                     <span>🔊</span><span>Test Voice Sample</span>
+                    <div class="audio-vis-pill" title="Audio Activity"><span class="vis-bar bar-1"></span><span class="vis-bar bar-2"></span><span class="vis-bar bar-3"></span><span class="vis-bar bar-4"></span></div>
                 </button>
                 <button id="voice-precache-btn" class="flex-1 bg-amber-100 hover:bg-amber-200 text-amber-900 font-black px-4 py-2.5 rounded-xl text-sm squish-btn flex items-center justify-center gap-1.5">
                     <span>⚡</span><span id="voice-precache-label">Pre-cache Core Words</span>
+                    <div class="audio-vis-pill" title="Audio Activity"><span class="vis-bar bar-1"></span><span class="vis-bar bar-2"></span><span class="vis-bar bar-3"></span><span class="vis-bar bar-4"></span></div>
                 </button>
             </div>
 
@@ -867,8 +956,10 @@
             </div>
         </div>
     </div>
-
     <script>
+(() => {
+'use strict';
+
 // scratch/data.js
 const GAMES = {
     phonics: [
@@ -1338,7 +1429,8 @@ const GAMES = {
             id: 'The Sun', short: 'Sun', emoji: '☀️', color: '#facc15',
             badge: '⭐ Giant Star • Center',
             fact: 'Our giant, glowing star! It keeps Earth warm and bright!',
-            credit: '🔭 Solar Dynamic Observatory',
+            credit: '🔭 NASA Solar Dynamics Observatory',
+            photoUrl: 'https://images-assets.nasa.gov/image/GSFC_20171208_Archive_e001435/GSFC_20171208_Archive_e001435~medium.jpg',
             orbitRadius: 0, orbitSpeed: 0, orbitSize: 1.8,
             speech: 'The Sun! Our giant glowing star that gives light and warmth to everything in our solar system!'
         },
@@ -1346,7 +1438,8 @@ const GAMES = {
             id: 'Mercury', short: 'Merc', emoji: '🪨', color: '#94a3b8',
             badge: '1st Planet • Rocky',
             fact: 'The closest planet to the Sun! It is covered in rocky craters!',
-            credit: '🔭 NASA MESSENGER View',
+            credit: '🔭 NASA MESSENGER Spacecraft',
+            photoUrl: 'https://images-assets.nasa.gov/image/PIA16853/PIA16853~small.jpg',
             orbitRadius: 1.15, orbitSpeed: 0.042, orbitSize: 0.28,
             speech: 'Mercury! The speedy first planet closest to the Sun!'
         },
@@ -1354,7 +1447,8 @@ const GAMES = {
             id: 'Venus', short: 'Venus', emoji: '🟡', color: '#fbbf24',
             badge: '2nd Planet • Golden',
             fact: 'The hottest planet! It is covered in thick golden clouds!',
-            credit: '🔭 Magellan Radar View',
+            credit: '🔭 NASA Magellan Radar View',
+            photoUrl: 'https://images-assets.nasa.gov/image/PIA00271/PIA00271~medium.jpg',
             orbitRadius: 1.6, orbitSpeed: 0.032, orbitSize: 0.38,
             speech: 'Venus! The hottest planet with thick golden swirling clouds!'
         },
@@ -1362,7 +1456,8 @@ const GAMES = {
             id: 'Earth', short: 'Earth', emoji: '🌍', color: '#3b82f6',
             badge: '3rd Planet • Our Home',
             fact: 'Our beautiful blue home! It has green land, blue oceans, and life!',
-            credit: '🔭 Apollo Blue Marble',
+            credit: '🔭 NASA Apollo Blue Marble',
+            photoUrl: 'https://images-assets.nasa.gov/image/PIA18033/PIA18033~medium.jpg',
             orbitRadius: 2.1, orbitSpeed: 0.024, orbitSize: 0.42,
             speech: 'Earth! Our wonderful home planet with blue oceans, green trees, and you!'
         },
@@ -1370,7 +1465,8 @@ const GAMES = {
             id: "Earth's Moon", short: 'Moon', emoji: '🌙', color: '#e2e8f0',
             badge: 'Earth Satellite',
             fact: 'Our friendly Moon! It circles Earth and lights up our night sky!',
-            credit: '🔭 Lunar Reconnaissance',
+            credit: '🔭 NASA Lunar Reconnaissance Orbiter',
+            photoUrl: 'https://images-assets.nasa.gov/image/GSFC_20171208_Archive_e001982/GSFC_20171208_Archive_e001982~small.jpg',
             orbitRadius: 2.3, orbitSpeed: 0.05, orbitSize: 0.22,
             speech: "The Moon! Earth's best friend that glows at night!"
         },
@@ -1378,7 +1474,8 @@ const GAMES = {
             id: 'Mars', short: 'Mars', emoji: '🔴', color: '#ef4444',
             badge: '4th Planet • Red Planet',
             fact: 'The Red Planet! It has giant volcanoes, deep canyons, and polar ice!',
-            credit: '🔭 Viking Mars Orbiter',
+            credit: '🔭 NASA Hubble Space Telescope',
+            photoUrl: 'https://images-assets.nasa.gov/image/GSFC_20171208_Archive_e000332/GSFC_20171208_Archive_e000332~medium.jpg',
             orbitRadius: 2.65, orbitSpeed: 0.018, orbitSize: 0.32,
             speech: 'Mars! The dusty red planet where robot rovers explore!'
         },
@@ -1386,7 +1483,8 @@ const GAMES = {
             id: 'Asteroid Belt', short: 'Asteroids', emoji: '🪨', color: '#78716c',
             badge: 'Rocky Belt',
             fact: 'Millions of tumbling space rocks between Mars and Jupiter!',
-            credit: '🔭 Dawn Spacecraft View',
+            credit: '🔭 NASA Dawn Mission (Vesta)',
+            photoUrl: 'https://images-assets.nasa.gov/image/PIA15678/PIA15678~small.jpg',
             orbitRadius: 3.05, orbitSpeed: 0.014, orbitSize: 0.26,
             speech: 'The Asteroid Belt! A giant ring of tumbling space rocks orbiting between Mars and Jupiter!'
         },
@@ -1394,7 +1492,8 @@ const GAMES = {
             id: 'Jupiter', short: 'Jupiter', emoji: '🪐', color: '#f97316',
             badge: '5th Planet • Giant',
             fact: 'The biggest planet of all! It has colorful stripes and the Great Red Spot storm!',
-            credit: '🔭 Juno Spacecraft View',
+            credit: '🔭 NASA Juno Spacecraft',
+            photoUrl: 'https://images-assets.nasa.gov/image/PIA22946/PIA22946~medium.jpg',
             orbitRadius: 3.55, orbitSpeed: 0.011, orbitSize: 0.72,
             speech: 'Jupiter! The giant king of planets with a huge swirling storm!'
         },
@@ -1402,7 +1501,8 @@ const GAMES = {
             id: 'Saturn', short: 'Saturn', emoji: '🪐', color: '#eab308',
             badge: '6th Planet • Ringed',
             fact: 'The jewel of the solar system! It wears magnificent glowing rings!',
-            credit: '🔭 Cassini Spacecraft View',
+            credit: '🔭 NASA Cassini Spacecraft',
+            photoUrl: 'https://images-assets.nasa.gov/image/PIA06193/PIA06193~medium.jpg',
             orbitRadius: 4.15, orbitSpeed: 0.008, orbitSize: 0.62,
             speech: 'Saturn! The beautiful planet with dazzling rings of ice and rock!'
         },
@@ -1410,7 +1510,8 @@ const GAMES = {
             id: 'Uranus', short: 'Uranus', emoji: '🩵', color: '#38bdf8',
             badge: '7th Planet • Ice Giant',
             fact: 'The sideways ice giant! It rolls on its side like a ball with vertical rings!',
-            credit: '🔭 Voyager 2 Flyby View',
+            credit: '🔭 NASA Voyager 2 / Hubble',
+            photoUrl: 'https://images-assets.nasa.gov/image/PIA18182/PIA18182~medium.jpg',
             orbitRadius: 4.75, orbitSpeed: 0.006, orbitSize: 0.48,
             speech: 'Uranus! The chilly cyan ice giant that spins completely on its side!'
         },
@@ -1418,7 +1519,8 @@ const GAMES = {
             id: 'Neptune', short: 'Neptune', emoji: '🔵', color: '#2563eb',
             badge: '8th Planet • Deep Blue',
             fact: 'The windiest planet! A deep cobalt blue world far away in the dark!',
-            credit: '🔭 Voyager 2 Flyby View',
+            credit: '🔭 NASA Voyager 2',
+            photoUrl: 'https://images-assets.nasa.gov/image/PIA01492/PIA01492~medium.jpg',
             orbitRadius: 5.35, orbitSpeed: 0.0045, orbitSize: 0.46,
             speech: 'Neptune! The deep blue planet with the fastest winds in the solar system!'
         },
@@ -1426,7 +1528,8 @@ const GAMES = {
             id: 'Pluto', short: 'Pluto', emoji: '🤎', color: '#fed7aa',
             badge: 'Dwarf Planet • Kuiper Belt',
             fact: 'The beloved dwarf planet! It has a giant bright heart of frozen nitrogen!',
-            credit: '🔭 New Horizons Flyby',
+            credit: '🔭 NASA New Horizons',
+            photoUrl: 'https://images-assets.nasa.gov/image/PIA19952/PIA19952~medium.jpg',
             orbitRadius: 5.95, orbitSpeed: 0.0035, orbitSize: 0.24,
             speech: 'Pluto! The chilly dwarf planet with a giant heart on its surface!'
         },
@@ -1434,7 +1537,8 @@ const GAMES = {
             id: 'Comet', short: 'Comet', emoji: '☄️', color: '#a5f3fc',
             badge: 'Icy Wanderer',
             fact: 'A cosmic dirty snowball with a glowing coma and dual streaming tails!',
-            credit: '🔭 Rosetta Spacecraft View',
+            credit: '🔭 NASA Hubble Space Telescope',
+            photoUrl: 'https://images-assets.nasa.gov/image/PIA18153/PIA18153~small.jpg',
             orbitRadius: 3.8, orbitSpeed: 0.016, orbitSize: 0.26,
             speech: 'Comet! An icy space explorer with glowing tails speeding through space!'
         },
@@ -1442,27 +1546,36 @@ const GAMES = {
             id: 'Galactic Swirl', short: 'Galaxy', emoji: '🌌', color: '#c084fc',
             badge: 'Spiral Galaxy',
             fact: 'A swirling cosmic spiral made of hundreds of billions of sparkling stars!',
-            credit: '🔭 Hubble Space Telescope',
+            credit: '🔭 NASA Spitzer / GALEX',
+            photoUrl: 'https://images-assets.nasa.gov/image/PIA07904/PIA07904~small.jpg',
             orbitRadius: 6.4, orbitSpeed: 0.002, orbitSize: 0.85,
             speech: 'Galactic Swirl! Hundreds of billions of glittering stars dancing in a spiral!'
         }
     ]
 };
+
+
 // scratch/audio_tts.js
 
 // Canvas automatically injects runtime API key here when loaded in Gemini Canvas
 const apiKey = "";
 
 const getApiKey = () => {
-    return localStorage.getItem('toddler_gemini_api_key') || apiKey || "";
+    return localStorage.getItem('tlh_isolated_v3_api_key') ||
+           localStorage.getItem('toddler_gemini_api_key') ||
+           apiKey || "";
 };
 
 const getTtsModel = () => {
-    return localStorage.getItem('toddler_gemini_tts_model') || 'gemini-3.8-flash-tts';
+    return localStorage.getItem('tlh_isolated_v3_tts_model') ||
+           localStorage.getItem('toddler_gemini_tts_model') ||
+           'gemini-3.8-flash-tts';
 };
 
 const getTtsVoice = () => {
-    return localStorage.getItem('toddler_gemini_tts_voice') || 'Kore';
+    return localStorage.getItem('tlh_isolated_v3_tts_voice') ||
+           localStorage.getItem('toddler_gemini_tts_voice') ||
+           'Kore';
 };
 
 // Strips emojis so TTS and Web Speech don't vocalize raw emoji names
@@ -1474,24 +1587,28 @@ function cleanSpokenText(str) {
         .trim();
 }
 
-// IndexedDB Cache for Gemini TTS Audio
+// IndexedDB Cache for Gemini TTS Audio (isolated with tlh_isolated_v3_ prefix)
 const ttsDB = {
     db: null,
     async init() {
         if (this.db) return this.db;
-        return new Promise((resolve, reject) => {
-            const req = indexedDB.open('toddler_tts_cache_v2', 1);
-            req.onupgradeneeded = (e) => {
-                const db = e.target.result;
-                if (!db.objectStoreNames.contains('audio_cache')) {
-                    db.createObjectStore('audio_cache');
-                }
-            };
-            req.onsuccess = (e) => {
-                this.db = e.target.result;
-                resolve(this.db);
-            };
-            req.onerror = () => resolve(null);
+        return new Promise((resolve) => {
+            try {
+                const req = indexedDB.open('tlh_isolated_v3_tts_db', 1);
+                req.onupgradeneeded = (e) => {
+                    const db = e.target.result;
+                    if (!db.objectStoreNames.contains('audio_cache')) {
+                        db.createObjectStore('audio_cache');
+                    }
+                };
+                req.onsuccess = (e) => {
+                    this.db = e.target.result;
+                    resolve(this.db);
+                };
+                req.onerror = () => resolve(null);
+            } catch (err) {
+                resolve(null);
+            }
         });
     },
     async get(key) {
@@ -1552,11 +1669,15 @@ function pcmToWav(pcmData, sampleRate = 24000, numChannels = 1, bitDepth = 16) {
 const geminiTTS = {
     memCache: new Map(),
     activeSource: null,
+    activeAudioEl: null,
     abortCtrl: null,
+    workingStrategy: null,
+    playReqId: 0,
 
     stop() {
+        this.playReqId++;
         if (this.abortCtrl) {
-            this.abortCtrl.abort();
+            try { this.abortCtrl.abort(); } catch(e) {}
             this.abortCtrl = null;
         }
         if (this.activeSource) {
@@ -1564,10 +1685,20 @@ const geminiTTS = {
             try { this.activeSource.disconnect(); } catch (e) {}
             this.activeSource = null;
         }
+        if (this.activeAudioEl) {
+            try {
+                this.activeAudioEl.pause();
+                this.activeAudioEl.src = '';
+            } catch (e) {}
+            this.activeAudioEl = null;
+        }
+        if (typeof app !== 'undefined' && app.setSpeakingUI) {
+            app.setSpeakingUI(false);
+        }
     },
 
-    async fetchAudio(text, model = getTtsModel(), voice = getTtsVoice()) {
-        const key = getApiKey();
+    async fetchAudio(text, model = getTtsModel(), voice = getTtsVoice(), customKey = null) {
+        const key = customKey || getApiKey();
         if (!key) throw new Error("No API key available");
         const cleanText = cleanSpokenText(text);
         if (!cleanText) return null;
@@ -1586,126 +1717,203 @@ const geminiTTS = {
             return dbCached;
         }
 
-        // 3. Make Gemini 3.8 TTS REST call
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(key)}`;
-        const body = {
-            contents: [{
-                role: "user",
-                parts: [{
-                    text: cleanText,
-                    speech_metadata: {
-                        style: "warm, cheerful, expressive early-childhood educator speaking clearly and naturally to an advanced two-year-old toddler"
+        // 3. Multi-schema fallback chain for Gemini TTS (strictly verbatim text!)
+        const strategies = [
+            {
+                id: 'gemini38-styled',
+                model: model,
+                body: {
+                    contents: [{
+                        role: "user",
+                        parts: [{
+                            text: cleanText,
+                            speech_metadata: {
+                                style: "warm, cheerful, expressive early-childhood educator speaking clearly and naturally to an advanced two-year-old toddler"
+                            }
+                        }]
+                    }],
+                    generationConfig: {
+                        responseModalities: ["AUDIO"],
+                        speechConfig: {
+                            voiceConfig: {
+                                voice: voice
+                            }
+                        }
                     }
-                }]
-            }],
-            generationConfig: {
-                responseModalities: ["AUDIO"],
-                speechConfig: {
-                    voiceConfig: {
-                        voice: voice
+                }
+            },
+            {
+                id: 'gemini38-prebuilt',
+                model: model,
+                body: {
+                    contents: [{
+                        role: "user",
+                        parts: [{ text: cleanText }]
+                    }],
+                    generationConfig: {
+                        responseModalities: ["AUDIO"],
+                        speechConfig: {
+                            voiceConfig: {
+                                prebuiltVoiceConfig: {
+                                    voiceName: voice
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                id: 'gemini25-fallback',
+                model: 'gemini-2.5-flash-preview-tts',
+                body: {
+                    contents: [{ parts: [{ text: cleanText }] }],
+                    generationConfig: {
+                        responseModalities: ["AUDIO"],
+                        speechConfig: {
+                            voiceConfig: {
+                                prebuiltVoiceConfig: {
+                                    voiceName: voice
+                                }
+                            }
+                        }
                     }
                 }
             }
-        };
+        ];
 
-        this.abortCtrl = new AbortController();
-        const resp = await fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(body),
-            signal: this.abortCtrl.signal
-        });
-
-        if (!resp.ok) {
-            const errData = await resp.json().catch(() => ({}));
-            throw new Error(errData?.error?.message || `HTTP ${resp.status}`);
+        // Prioritize previously verified working strategy to minimize latency
+        if (this.workingStrategy) {
+            const idx = strategies.findIndex(s => s.id === this.workingStrategy);
+            if (idx > 0) {
+                const [ws] = strategies.splice(idx, 1);
+                strategies.unshift(ws);
+            }
         }
 
-        const data = await resp.json();
-        const base64Data = data?.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;
-        if (!base64Data) throw new Error("No audio payload returned from Gemini 3.8 TTS");
+        let lastErr = null;
+        for (const strat of strategies) {
+            try {
+                const ctrl = new AbortController();
+                this.abortCtrl = ctrl;
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/${strat.model}:generateContent?key=${encodeURIComponent(key)}`;
+                const resp = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(strat.body),
+                    signal: ctrl.signal
+                });
 
-        const binaryStr = atob(base64Data);
-        const pcmBytes = new Uint8Array(binaryStr.length);
-        for (let i = 0; i < binaryStr.length; i++) {
-            pcmBytes[i] = binaryStr.charCodeAt(i);
+                if (!resp.ok) {
+                    const errData = await resp.json().catch(() => ({}));
+                    throw new Error(errData?.error?.message || `HTTP ${resp.status}`);
+                }
+
+                const data = await resp.json();
+                const base64Data = data?.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;
+                if (!base64Data) throw new Error("No audio payload returned from Gemini TTS");
+
+                const binaryStr = atob(base64Data);
+                const pcmBytes = new Uint8Array(binaryStr.length);
+                for (let i = 0; i < binaryStr.length; i++) {
+                    pcmBytes[i] = binaryStr.charCodeAt(i);
+                }
+
+                const wavBuffer = pcmToWav(pcmBytes, 24000, 1, 16);
+                this.workingStrategy = strat.id;
+
+                // Cache in memory and IndexedDB
+                this.memCache.set(cacheKey, wavBuffer);
+                await ttsDB.set(cacheKey, wavBuffer);
+                return wavBuffer;
+            } catch (err) {
+                lastErr = err;
+                if (err.name === 'AbortError') throw err;
+            }
         }
 
-        const wavBuffer = pcmToWav(pcmBytes, 24000, 1, 16);
-
-        // Store in memory & IndexedDB
-        this.memCache.set(cacheKey, wavBuffer);
-        await ttsDB.set(cacheKey, wavBuffer);
-        return wavBuffer;
+        throw lastErr || new Error("All Gemini TTS strategies failed");
     },
 
-    async play(text) {
+    async play(text, model = getTtsModel(), voice = getTtsVoice(), customKey = null) {
         this.stop();
+        const myReqId = ++this.playReqId;
         soundFX.init();
         if (!soundFX.ctx) throw new Error("WebAudio context not initialized");
 
-        const wavBuf = await this.fetchAudio(text);
-        if (!wavBuf) return;
+        if (typeof app !== 'undefined' && app.setSpeakingUI) {
+            app.setSpeakingUI(true);
+        }
 
-        // Decode audio buffer (slice copy because decodeAudioData detaches buffer)
-        const audioBuf = await soundFX.ctx.decodeAudioData(wavBuf.slice(0));
-        const src = soundFX.ctx.createBufferSource();
-        src.buffer = audioBuf;
-        const gain = soundFX.ctx.createGain();
-        gain.gain.setValueAtTime(1.0, soundFX.ctx.currentTime);
-        src.connect(gain);
-        gain.connect(soundFX.ctx.destination);
-        src.start(0);
-        this.activeSource = src;
+        try {
+            const wavBuf = await this.fetchAudio(text, model, voice, customKey);
+            if (!wavBuf || myReqId !== this.playReqId) {
+                if (myReqId === this.playReqId && typeof app !== 'undefined' && app.setSpeakingUI) app.setSpeakingUI(false);
+                return;
+            }
+
+            if (soundFX.ctx.state !== 'running') {
+                try { await soundFX.ctx.resume(); } catch (e) {}
+            }
+
+            try {
+                const audioBuf = await soundFX.ctx.decodeAudioData(wavBuf.slice(0));
+                if (myReqId !== this.playReqId) return;
+
+                const src = soundFX.ctx.createBufferSource();
+                src.buffer = audioBuf;
+                const gain = soundFX.ctx.createGain();
+                gain.gain.setValueAtTime(1.0, soundFX.ctx.currentTime);
+                src.connect(gain);
+                gain.connect(soundFX.ctx.destination);
+
+                src.onended = () => {
+                    if (this.activeSource === src) {
+                        this.activeSource = null;
+                        if (typeof app !== 'undefined' && app.setSpeakingUI) app.setSpeakingUI(false);
+                    }
+                };
+
+                src.start(0);
+                this.activeSource = src;
+            } catch (decodeErr) {
+                // Fallback to HTMLAudioElement with WAV Blob
+                if (myReqId !== this.playReqId) return;
+                const blob = new Blob([wavBuf.slice(0)], { type: 'audio/wav' });
+                const blobUrl = URL.createObjectURL(blob);
+                const audio = new Audio(blobUrl);
+                this.activeAudioEl = audio;
+                audio.onended = () => {
+                    URL.revokeObjectURL(blobUrl);
+                    if (this.activeAudioEl === audio) {
+                        this.activeAudioEl = null;
+                        if (typeof app !== 'undefined' && app.setSpeakingUI) app.setSpeakingUI(false);
+                    }
+                };
+                audio.onerror = () => {
+                    URL.revokeObjectURL(blobUrl);
+                    if (this.activeAudioEl === audio) {
+                        this.activeAudioEl = null;
+                        if (typeof app !== 'undefined' && app.setSpeakingUI) app.setSpeakingUI(false);
+                    }
+                };
+                await audio.play();
+            }
+        } catch (e) {
+            if (myReqId === this.playReqId && typeof app !== 'undefined' && app.setSpeakingUI) {
+                app.setSpeakingUI(false);
+            }
+            if (e.name === 'AbortError') return;
+            throw e;
+        }
     }
 };
 
-const SOUND_URLS = {
-    // Animals (Google Actions Sound Library)
-    'Lion': 'https://actions.google.com/sounds/v1/animals/animal_bark_and_growl.ogg',
-    'Dog': 'https://actions.google.com/sounds/v1/animals/dog_barking.ogg',
-    'Cat': 'https://actions.google.com/sounds/v1/animals/cat_purr_close.ogg',
-    'Cow': 'https://actions.google.com/sounds/v1/cartoon/cartoon_cowbell.ogg',
-    'Duck': 'https://actions.google.com/sounds/v1/cartoon/rubber_duck_squeak_series.ogg',
-    'Pig': 'https://actions.google.com/sounds/v1/animals/animal_squealing.ogg',
-    'Sheep': 'https://actions.google.com/sounds/v1/ambiences/barnyard_with_animals.ogg',
-    'Horse': 'https://actions.google.com/sounds/v1/transportation/horse_and_carriage.ogg',
-    'Elephant': 'https://actions.google.com/sounds/v1/cartoon/concussive_guitar_hit.ogg',
-    'Monkey': 'https://actions.google.com/sounds/v1/animals/animal_squealing.ogg',
-    'Frog': 'https://actions.google.com/sounds/v1/cartoon/slide_whistle.ogg',
-    'Owl': 'https://actions.google.com/sounds/v1/animals/owl_hooting.ogg',
-    'Bee': 'https://actions.google.com/sounds/v1/animals/bee_buzz.ogg',
-    'Snake': 'https://actions.google.com/sounds/v1/animals/animal_hiss_and_rattle.ogg',
-    'Dinosaur': 'https://actions.google.com/sounds/v1/animals/animal_bark_and_growl.ogg',
-    'Bear': 'https://actions.google.com/sounds/v1/animals/animal_bark_and_growl.ogg',
-    'Penguin': 'https://actions.google.com/sounds/v1/animals/june_songbirds.ogg',
-    'Whale': 'https://actions.google.com/sounds/v1/water/large_bubbles_surfacing.ogg',
-
-    // Vehicles & Things
-    'Fire Truck': 'https://actions.google.com/sounds/v1/emergency/ambulance_drive_siren.ogg',
-    'Police Car': 'https://actions.google.com/sounds/v1/emergency/ambulance_drive_siren.ogg',
-    'Train': 'https://actions.google.com/sounds/v1/cartoon/wooden_train_whistle.ogg',
-    'Rocket Ship': 'https://actions.google.com/sounds/v1/science_fiction/alien_beam.ogg',
-    'Airplane': 'https://actions.google.com/sounds/v1/transportation/airplane_in_flight.ogg',
-    'Helicopter': 'https://actions.google.com/sounds/v1/transportation/aggressive_motorcycle.ogg',
-    'Tractor': 'https://actions.google.com/sounds/v1/transportation/large_truck_driving.ogg',
-    'School Bus': 'https://actions.google.com/sounds/v1/transportation/car_horn.ogg',
-    'Sailboat': 'https://actions.google.com/sounds/v1/water/ocean_waves.ogg',
-    'Bicycle': 'https://actions.google.com/sounds/v1/alarms/medium_bell_ringing_near.ogg',
-    'Soccer Ball': 'https://actions.google.com/sounds/v1/sports/basketball_bounce_and_roll.ogg',
-    'Guitar': 'https://actions.google.com/sounds/v1/cartoon/concussive_guitar_hit.ogg',
-    'Drum': 'https://actions.google.com/sounds/v1/cartoon/crash_layer_drumset.ogg',
-    'Clock': 'https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg',
-
-    // UI FX
-    'pop': 'https://actions.google.com/sounds/v1/cartoon/pop.ogg',
-    'cheer': 'https://actions.google.com/sounds/v1/crowds/team_cheer.ogg'
-};
-
+// Procedural Multi-layered WebAudio Sound Effects Engine (100% offline, zero .ogg network files)
 const soundFX = {
     ctx: null,
     noiseBuf: null,
-    audioBufferCache: new Map(),
+    activeNodes: new Set(),
+    activeTimers: new Set(),
 
     init() {
         if (!this.ctx) {
@@ -1717,83 +1925,71 @@ const soundFX = {
         }
         if (this.ctx && !this.noiseBuf) {
             const sr = this.ctx.sampleRate;
-            this.noiseBuf = this.ctx.createBuffer(1, sr * 1.5, sr);
+            this.noiseBuf = this.ctx.createBuffer(1, sr * 2.0, sr);
             const data = this.noiseBuf.getChannelData(0);
             for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
         }
     },
 
-    async preloadSound(id, url = SOUND_URLS[id]) {
-        if (!url || this.audioBufferCache.has(id)) return this.audioBufferCache.get(id);
-        try {
-            const resp = await fetch(url);
-            if (!resp.ok) return null;
-            const ab = await resp.arrayBuffer();
-            this.init();
-            if (!this.ctx) return null;
-            const audioBuf = await this.ctx.decodeAudioData(ab);
-            this.audioBufferCache.set(id, audioBuf);
-            return audioBuf;
-        } catch (e) {
-            return null;
+    registerTimer(timerId) {
+        this.activeTimers.add(timerId);
+        return timerId;
+    },
+
+    clearTrackedTimer(timerId) {
+        clearTimeout(timerId);
+        this.activeTimers.delete(timerId);
+    },
+
+    trackNode(node) {
+        this.activeNodes.add(node);
+        const onEnd = () => {
+            this.activeNodes.delete(node);
+        };
+        if (node.addEventListener) {
+            node.addEventListener('ended', onEnd);
+        } else {
+            node.onended = onEnd;
         }
     },
 
-    playBuffer(audioBuf, maxDur = 1.9, vol = 0.45) {
-        if (!audioBuf || !this.ctx) return false;
-        try {
-            const src = this.ctx.createBufferSource();
-            src.buffer = audioBuf;
-            const gain = this.ctx.createGain();
-            const t0 = this.ctx.currentTime;
-            const dur = Math.min(audioBuf.duration, maxDur);
-            gain.gain.setValueAtTime(vol, t0);
-            gain.gain.setValueAtTime(vol, t0 + dur * 0.75);
-            gain.gain.exponentialRampToValueAtTime(0.001, t0 + dur);
-            src.connect(gain);
-            gain.connect(this.ctx.destination);
-            src.start(t0);
-            src.stop(t0 + dur + 0.05);
-            return true;
-        } catch (e) {
-            return false;
+    stopAll() {
+        this.activeTimers.forEach(t => clearTimeout(t));
+        this.activeTimers.clear();
+
+        this.activeNodes.forEach(node => {
+            try { node.stop(); } catch (e) {}
+            try { node.disconnect(); } catch (e) {}
+        });
+        this.activeNodes.clear();
+
+        if (typeof animalGame !== 'undefined' && animalGame.speechTimer) {
+            clearTimeout(animalGame.speechTimer);
+            animalGame.speechTimer = null;
+        }
+        if (typeof thingsGame !== 'undefined' && thingsGame.speechTimer) {
+            clearTimeout(thingsGame.speechTimer);
+            thingsGame.speechTimer = null;
         }
     },
 
-    // Tier 1: Real Recorded Sound with fallback to Tier 2 Physical Synthesis
-    async playRecordedOrFallback(id, fallbackFn, maxDur = 2.0) {
-        this.init();
-        const cached = this.audioBufferCache.get(id);
-        if (cached && this.playBuffer(cached, maxDur)) return;
-
-        const url = SOUND_URLS[id];
-        if (url) {
-            this.preloadSound(id, url).then(buf => {
-                if (buf) this.playBuffer(buf, maxDur);
-                else if (fallbackFn) fallbackFn();
-            }).catch(() => {
-                if (fallbackFn) fallbackFn();
-            });
-        } else if (fallbackFn) {
-            fallbackFn();
-        }
-    },
-
-    playNote(freq = 440, duration = 0.14, type = 'sine', vol = 0.22) {
+    playNote(freq = 440, duration = 0.14, type = 'sine', vol = 0.22, delay = 0) {
         try {
             this.init();
             if (!this.ctx) return;
-            const t = this.ctx.currentTime;
+            const t = this.ctx.currentTime + delay;
             const osc = this.ctx.createOscillator();
             const gain = this.ctx.createGain();
             osc.type = type;
             osc.frequency.setValueAtTime(freq, t);
-            gain.gain.setValueAtTime(vol, t);
+            gain.gain.setValueAtTime(0.001, t);
+            gain.gain.linearRampToValueAtTime(vol, t + 0.015);
             gain.gain.exponentialRampToValueAtTime(0.001, t + duration);
             osc.connect(gain);
             gain.connect(this.ctx.destination);
+            this.trackNode(osc);
             osc.start(t);
-            osc.stop(t + duration);
+            osc.stop(t + duration + 0.03);
         } catch (e) {}
     },
 
@@ -1806,18 +2002,19 @@ const soundFX = {
             const filter = this.ctx.createBiquadFilter();
             const gain = this.ctx.createGain();
             osc.type = type;
-            osc.frequency.setValueAtTime(fStart, t);
-            osc.frequency.exponentialRampToValueAtTime(Math.max(25, fEnd), t + duration);
+            osc.frequency.setValueAtTime(Math.max(20, fStart), t);
+            osc.frequency.exponentialRampToValueAtTime(Math.max(20, fEnd), t + duration);
             filter.type = 'lowpass';
             filter.frequency.setValueAtTime(filterFreq, t);
             gain.gain.setValueAtTime(0.001, t);
-            gain.gain.linearRampToValueAtTime(vol, t + 0.03);
+            gain.gain.linearRampToValueAtTime(vol, t + 0.02);
             gain.gain.exponentialRampToValueAtTime(0.001, t + duration);
             osc.connect(filter);
             filter.connect(gain);
             gain.connect(this.ctx.destination);
+            this.trackNode(osc);
             osc.start(t);
-            osc.stop(t + duration + 0.02);
+            osc.stop(t + duration + 0.03);
         } catch (e) {}
     },
 
@@ -1839,12 +2036,13 @@ const soundFX = {
             src.connect(filter);
             filter.connect(gain);
             gain.connect(this.ctx.destination);
+            this.trackNode(src);
             src.start(t);
-            src.stop(t + duration + 0.02);
+            src.stop(t + duration + 0.03);
         } catch (e) {}
     },
 
-    // Tier 2: Crisp Food Bite Crunch (played on EVERY bite in Yummy Foods!)
+    // Crisp Food Bite Crunch
     playCrunch() {
         try {
             this.init();
@@ -1864,10 +2062,11 @@ const soundFX = {
             snap.connect(snapFilter);
             snapFilter.connect(snapGain);
             snapGain.connect(this.ctx.destination);
+            this.trackNode(snap);
             snap.start(t0);
             snap.stop(t0 + 0.1);
 
-            // Resonant woody bite body (low-mid woody resonance)
+            // Resonant woody bite body
             const bodyOsc = this.ctx.createOscillator();
             const bodyGain = this.ctx.createGain();
             bodyOsc.type = 'triangle';
@@ -1877,6 +2076,7 @@ const soundFX = {
             bodyGain.gain.exponentialRampToValueAtTime(0.001, t0 + 0.15);
             bodyOsc.connect(bodyGain);
             bodyGain.connect(this.ctx.destination);
+            this.trackNode(bodyOsc);
             bodyOsc.start(t0);
             bodyOsc.stop(t0 + 0.16);
 
@@ -1893,12 +2093,13 @@ const soundFX = {
             crackle.connect(crackFilter);
             crackFilter.connect(crackGain);
             crackGain.connect(this.ctx.destination);
+            this.trackNode(crackle);
             crackle.start(t1);
             crackle.stop(t1 + 0.09);
         } catch (e) {}
     },
 
-    // Tier 2: Pitch-swept sine bubble pop (380Hz -> 1150Hz in 65ms)
+    // Pitch-swept sine bubble pop (380Hz -> 1150Hz in 65ms)
     playBubblePop() {
         try {
             this.init();
@@ -1913,22 +2114,25 @@ const soundFX = {
             gain.gain.exponentialRampToValueAtTime(0.001, t0 + 0.075);
             osc.connect(gain);
             gain.connect(this.ctx.destination);
+            this.trackNode(osc);
             osc.start(t0);
             osc.stop(t0 + 0.08);
         } catch (e) {}
     },
 
-    // Tier 2: Warm Kalimba / Marimba harmonic tone for Counting
+    playPop() {
+        this.playBubblePop();
+    },
+
+    // Warm Kalimba / Marimba harmonic tone for Counting
     playCountStep(stepIndex) {
         try {
             this.init();
             if (!this.ctx) return;
             const t0 = this.ctx.currentTime;
-            // Pentatonic scale in C Major: C4, D4, E4, G4, A4, C5, D5, E5, G5, A5
             const scale = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 587.33, 659.25, 783.99, 880.00, 1046.50];
             const baseFreq = scale[(stepIndex - 1) % scale.length];
 
-            // Fundamental sine
             const osc1 = this.ctx.createOscillator();
             const gain1 = this.ctx.createGain();
             osc1.type = 'sine';
@@ -1937,10 +2141,10 @@ const soundFX = {
             gain1.gain.exponentialRampToValueAtTime(0.001, t0 + 0.28);
             osc1.connect(gain1);
             gain1.connect(this.ctx.destination);
+            this.trackNode(osc1);
             osc1.start(t0);
             osc1.stop(t0 + 0.3);
 
-            // 4x Overtone harmonic for warm woody chime
             const osc2 = this.ctx.createOscillator();
             const gain2 = this.ctx.createGain();
             osc2.type = 'sine';
@@ -1949,130 +2153,227 @@ const soundFX = {
             gain2.gain.exponentialRampToValueAtTime(0.001, t0 + 0.09);
             osc2.connect(gain2);
             gain2.connect(this.ctx.destination);
+            this.trackNode(osc2);
             osc2.start(t0);
             osc2.stop(t0 + 0.1);
         } catch (e) {}
     },
 
+    // Procedural synthesis for all 18 Animals (returns duration in ms)
     playAnimalSound(id) {
-        this.playRecordedOrFallback(id, () => {
-            // Clean physical/musical synthesis fallback
-            switch (id) {
-                case 'Cat':
-                    this.playSlide(480, 680, 0.25, 'sine', 0.32, 0);
-                    this.playSlide(680, 420, 0.45, 'sine', 0.28, 0.24);
-                    break;
-                case 'Dog':
-                    this.playSlide(180, 320, 0.12, 'triangle', 0.38, 0);
-                    this.playSlide(180, 340, 0.14, 'triangle', 0.36, 0.22);
-                    break;
-                case 'Cow':
-                    this.playSlide(120, 160, 0.45, 'triangle', 0.35, 0);
-                    this.playSlide(160, 130, 0.65, 'triangle', 0.32, 0.45);
-                    break;
-                case 'Duck':
-                    this.playSlide(320, 240, 0.14, 'triangle', 0.35, 0);
-                    this.playSlide(320, 240, 0.14, 'triangle', 0.35, 0.2);
-                    break;
-                case 'Sheep':
-                    this.playSlide(260, 240, 0.65, 'triangle', 0.34, 0);
-                    break;
-                case 'Horse':
-                    this.playSlide(720, 880, 0.3, 'sine', 0.32, 0);
-                    this.playSlide(880, 440, 0.5, 'sine', 0.28, 0.3);
-                    break;
-                case 'Lion':
-                case 'Bear':
-                case 'Dinosaur':
-                    this.playSlide(120, 75, 0.7, 'triangle', 0.42, 0);
-                    this.playNoise(0.65, 'lowpass', 350, 1.5, 0.35, 0);
-                    break;
-                case 'Owl':
-                    this.playSlide(380, 410, 0.28, 'sine', 0.35, 0);
-                    this.playSlide(370, 350, 0.35, 'sine', 0.35, 0.38);
-                    break;
-                case 'Bee':
-                    this.playNote(210, 0.7, 'triangle', 0.32);
-                    break;
-                case 'Snake':
-                    this.playNoise(0.65, 'highpass', 4500, 1.5, 0.32, 0);
-                    break;
-                default:
-                    this.playPop();
-            }
-        });
-        return 1200;
+        this.init();
+        switch (id) {
+            case 'Cat':
+                // Melodic double "Meow"
+                this.playSlide(480, 720, 0.28, 'sine', 0.34, 0);
+                this.playSlide(720, 410, 0.42, 'sine', 0.28, 0.27);
+                return 720;
+            case 'Dog':
+                // Snappy double "Woof woof!"
+                this.playSlide(190, 340, 0.14, 'triangle', 0.38, 0);
+                this.playSlide(180, 320, 0.15, 'triangle', 0.36, 0.22);
+                return 480;
+            case 'Cow':
+                // Deep resonant "Moooo"
+                this.playSlide(120, 160, 0.45, 'triangle', 0.35, 0);
+                this.playSlide(160, 130, 0.48, 'triangle', 0.32, 0.44);
+                return 880;
+            case 'Duck':
+                // Quacky double "Quack quack"
+                this.playSlide(380, 260, 0.15, 'sawtooth', 0.32, 0, 1200);
+                this.playSlide(380, 260, 0.15, 'sawtooth', 0.32, 0.22, 1200);
+                return 460;
+            case 'Pig':
+                // Playful "Oink oink"
+                this.playSlide(220, 320, 0.12, 'sawtooth', 0.32, 0, 950);
+                this.playSlide(220, 300, 0.14, 'sawtooth', 0.3, 0.2, 950);
+                return 450;
+            case 'Sheep':
+                // Warm "Baa baa"
+                this.playSlide(280, 250, 0.62, 'triangle', 0.34, 0);
+                this.playNoise(0.5, 'bandpass', 650, 2.5, 0.12, 0.05);
+                return 680;
+            case 'Horse':
+                // Cheerful whinny neigh
+                this.playSlide(680, 920, 0.28, 'sine', 0.34, 0);
+                this.playSlide(920, 480, 0.45, 'sine', 0.28, 0.28);
+                return 780;
+            case 'Elephant':
+                // Brassy trumpet call
+                this.playSlide(360, 680, 0.38, 'sawtooth', 0.34, 0, 2400);
+                this.playSlide(680, 520, 0.35, 'sawtooth', 0.3, 0.37, 2200);
+                return 760;
+            case 'Monkey':
+                // Bouncy "Ooh ooh aah aah"
+                this.playSlide(520, 780, 0.14, 'sine', 0.35, 0);
+                this.playSlide(520, 780, 0.14, 'sine', 0.35, 0.2);
+                this.playSlide(600, 900, 0.18, 'sine', 0.32, 0.4);
+                return 640;
+            case 'Frog':
+                // Groovy "Ribbit ribbit"
+                this.playSlide(140, 260, 0.18, 'sawtooth', 0.35, 0, 800);
+                this.playSlide(140, 240, 0.2, 'sawtooth', 0.33, 0.25, 800);
+                return 520;
+            case 'Owl':
+                // Soft warm "Hoo hoo"
+                this.playSlide(380, 420, 0.28, 'sine', 0.35, 0);
+                this.playSlide(370, 340, 0.35, 'sine', 0.35, 0.36);
+                return 760;
+            case 'Bee':
+                // Buzzy "Bzzzz"
+                this.playNote(220, 0.65, 'sawtooth', 0.26);
+                return 650;
+            case 'Snake':
+                // Crisp gentle "Ssssss"
+                this.playNoise(0.65, 'highpass', 4500, 1.5, 0.3, 0);
+                return 650;
+            case 'Lion':
+            case 'Bear':
+            case 'Dinosaur':
+                // Low mighty roar & rumble
+                this.playSlide(130, 65, 0.72, 'triangle', 0.44, 0);
+                this.playNoise(0.68, 'lowpass', 380, 1.6, 0.35, 0);
+                return 800;
+            case 'Penguin':
+                // Cute flappy chirps
+                this.playSlide(880, 1180, 0.12, 'sine', 0.32, 0);
+                this.playSlide(920, 1250, 0.14, 'sine', 0.3, 0.2);
+                return 480;
+            case 'Whale':
+                // Majestic deep underwater song
+                this.playSlide(160, 320, 0.45, 'sine', 0.35, 0);
+                this.playSlide(320, 180, 0.45, 'sine', 0.3, 0.44);
+                return 900;
+            default:
+                this.playBubblePop();
+                return 300;
+        }
     },
 
+    // Procedural synthesis for all 14 Vehicles & Things (returns duration in ms)
     playThingSound(id) {
-        this.playRecordedOrFallback(id, () => {
-            switch (id) {
-                case 'Train':
-                    // Dual tone train whistle chord (440Hz + 554Hz)
-                    this.playNote(440, 0.55, 'triangle', 0.28);
-                    this.playNote(554.37, 0.55, 'triangle', 0.28);
-                    this.playNoise(0.35, 'bandpass', 600, 1.5, 0.2, 0.55);
-                    break;
-                case 'Fire Truck':
-                    this.playSlide(520, 880, 0.35, 'triangle', 0.32, 0);
-                    this.playSlide(880, 520, 0.35, 'triangle', 0.32, 0.35);
-                    break;
-                case 'Police Car':
-                    [0, 0.18, 0.36, 0.54].forEach((d, i) => {
-                        const up = i % 2 === 0;
-                        this.playSlide(up ? 620 : 1080, up ? 1080 : 620, 0.16, 'triangle', 0.26, d);
-                    });
-                    break;
-                case 'Bicycle':
-                    this.playNote(1760, 0.15, 'sine', 0.3);
-                    setTimeout(() => this.playNote(1760, 0.18, 'sine', 0.3), 110);
-                    break;
-                case 'Guitar':
-                    [196.0, 246.94, 293.66, 392.0, 493.88, 587.33].forEach((f, i) => {
-                        setTimeout(() => this.playNote(f, 0.45, 'triangle', 0.2), i * 40);
-                    });
-                    break;
-                case 'Drum':
-                    this.playSlide(180, 60, 0.15, 'sine', 0.42, 0);
-                    this.playNoise(0.12, 'highpass', 1200, 1.5, 0.3, 0);
-                    break;
-                case 'Clock':
-                    this.playNote(1200, 0.04, 'triangle', 0.28);
-                    setTimeout(() => this.playNote(880, 0.04, 'triangle', 0.28), 240);
-                    break;
-                case 'Soccer Ball':
-                    this.playSlide(180, 50, 0.12, 'sine', 0.45, 0);
-                    this.playCheer();
-                    break;
-                default:
-                    this.playPop();
-            }
-        });
-    },
-
-    playPop() {
-        this.playBubblePop();
+        this.init();
+        switch (id) {
+            case 'Fire Truck':
+                // Two-tone emergency siren Wee-woo
+                this.playSlide(540, 880, 0.36, 'triangle', 0.32, 0);
+                this.playSlide(880, 540, 0.36, 'triangle', 0.32, 0.36);
+                return 780;
+            case 'Police Car':
+                // Rapid high-pitch siren
+                [0, 0.16, 0.32, 0.48].forEach((d, i) => {
+                    const up = i % 2 === 0;
+                    this.playSlide(up ? 650 : 1100, up ? 1100 : 650, 0.15, 'triangle', 0.28, d);
+                });
+                return 680;
+            case 'Train':
+                // Dual chord steam whistle + steam chuff
+                this.playNote(440, 0.55, 'triangle', 0.28, 0);
+                this.playNote(554.37, 0.55, 'triangle', 0.28, 0);
+                this.playNoise(0.35, 'bandpass', 600, 1.5, 0.22, 0.5);
+                return 850;
+            case 'Rocket Ship':
+                // Rocket thrust rumble + ascending sci-fi slide
+                this.playSlide(120, 880, 0.75, 'sawtooth', 0.3, 0, 1600);
+                this.playNoise(0.8, 'lowpass', 500, 1.2, 0.32, 0);
+                return 850;
+            case 'Airplane':
+                // Jet engine whoosh
+                this.playNoise(0.75, 'bandpass', 900, 1.0, 0.3, 0);
+                this.playNote(180, 0.7, 'triangle', 0.24, 0);
+                return 800;
+            case 'Helicopter':
+                // Rapid rotor blade chops
+                [0, 0.14, 0.28, 0.42, 0.56].forEach(d => {
+                    this.playNoise(0.08, 'lowpass', 400, 1.5, 0.36, d);
+                });
+                return 750;
+            case 'Tractor':
+                // Rhythmic diesel chug
+                [0, 0.18, 0.36, 0.54].forEach(d => {
+                    this.playSlide(140, 55, 0.12, 'triangle', 0.38, d);
+                });
+                return 750;
+            case 'School Bus':
+                // Cheerful classic car horn chord (F4 + A4)
+                this.playNote(349.23, 0.24, 'triangle', 0.3, 0);
+                this.playNote(440.00, 0.24, 'triangle', 0.3, 0);
+                this.playNote(349.23, 0.28, 'triangle', 0.3, 0.3);
+                this.playNote(440.00, 0.28, 'triangle', 0.3, 0.3);
+                return 620;
+            case 'Sailboat':
+                // Wave water splash + gentle ship bell chime
+                this.playNoise(0.65, 'bandpass', 1200, 1.0, 0.25, 0);
+                this.playNote(1046.5, 0.45, 'sine', 0.22, 0.25);
+                return 750;
+            case 'Bicycle':
+                // Double bicycle bell "Ring-ring!"
+                this.playNote(1760, 0.14, 'sine', 0.3, 0);
+                this.playNote(1980, 0.16, 'sine', 0.3, 0.14);
+                return 480;
+            case 'Soccer Ball':
+                // Bouncy kick thump + cheer chord
+                this.playSlide(190, 48, 0.14, 'sine', 0.44, 0);
+                this.playNote(523.25, 0.25, 'triangle', 0.24, 0.15);
+                return 550;
+            case 'Guitar':
+                // Acoustic guitar strum (G chord arpeggio)
+                [196.0, 246.94, 293.66, 392.0, 493.88, 587.33].forEach((f, i) => {
+                    const timer = setTimeout(() => this.playNote(f, 0.42, 'triangle', 0.22), i * 38);
+                    this.registerTimer(timer);
+                });
+                return 620;
+            case 'Drum':
+                // Punchy drum kit kick + snare
+                this.playSlide(180, 55, 0.15, 'sine', 0.44, 0);
+                this.playNoise(0.12, 'highpass', 1400, 1.5, 0.32, 0);
+                return 450;
+            case 'Clock':
+                // Crisp wooden tick-tock
+                this.playNote(1200, 0.04, 'triangle', 0.28, 0);
+                this.playNote(880, 0.04, 'triangle', 0.28, 0.24);
+                return 550;
+            default:
+                this.playBubblePop();
+                return 300;
+        }
     },
 
     playCheer() {
-        const cached = this.audioBufferCache.get('cheer');
-        if (cached && this.playBuffer(cached, 2.0)) return;
         [523.25, 659.25, 783.99, 1046.5].forEach((f, i) => {
-            setTimeout(() => this.playNote(f, 0.18, 'triangle', 0.25), i * 75);
+            const timer = setTimeout(() => this.playNote(f, 0.2, 'triangle', 0.25), i * 75);
+            this.registerTimer(timer);
         });
     },
 
     playCosmicChime() {
         [523.25, 659.25, 783.99, 987.77, 1318.5].forEach((f, i) => {
-            setTimeout(() => this.playNote(f, 0.25, 'sine', 0.16), i * 60);
+            const timer = setTimeout(() => this.playNote(f, 0.25, 'sine', 0.18), i * 60);
+            this.registerTimer(timer);
         });
     }
 };
 
 const app = {
     currentView: 'menu',
+    currentUtterance: null,
+    speechTimeout: null,
+
+    setSpeakingUI(isSpeaking) {
+        document.querySelectorAll('.audio-vis-pill').forEach(el => {
+            if (isSpeaking) el.classList.add('speaking');
+            else el.classList.remove('speaking');
+        });
+    },
 
     switchView(viewName) {
+        // Complete audio silence on view switch
+        soundFX.stopAll();
+        geminiTTS.stop();
+        if ('speechSynthesis' in window) {
+            try { window.speechSynthesis.cancel(); } catch(e){}
+        }
+
         document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active-view'));
         if (this.currentView === 'letters' && typeof phonicsGame !== 'undefined') phonicsGame.stopBubbles();
         if (this.currentView === 'shapes3d' && typeof shapes3DGame !== 'undefined') shapes3DGame.stop();
@@ -2084,16 +2385,17 @@ const app = {
         this.currentView = viewName;
         soundFX.playPop();
 
+        // Cheerful spoken introduction for EVERY view (speak = true)
         if (viewName === 'letters') phonicsGame.open();
         else if (viewName === 'numbers') numberGame.open();
         else if (viewName === 'quiz') quizGame.open();
-        else if (viewName === 'shapes') shape2DGame.select(GAMES.shapes[0], false);
-        else if (viewName === 'shapes3d') shapes3DGame.select(GAMES.shapes3d[0], false);
+        else if (viewName === 'shapes') shape2DGame.select(GAMES.shapes[0], true);
+        else if (viewName === 'shapes3d') shapes3DGame.select(GAMES.shapes3d[0], true);
         else if (viewName === 'colors') colorGame.open();
-        else if (viewName === 'animals') animalGame.select(GAMES.animals[0], false, false);
-        else if (viewName === 'fruits') foodGame.select(GAMES.fruits[0], false);
-        else if (viewName === 'things') thingsGame.select(GAMES.things[0], false);
-        else if (viewName === 'opposites') oppositesGame.select(GAMES.opposites[0], false);
+        else if (viewName === 'animals') animalGame.select(GAMES.animals[0], true, false);
+        else if (viewName === 'fruits') foodGame.select(GAMES.fruits[0], true);
+        else if (viewName === 'things') thingsGame.select(GAMES.things[0], true);
+        else if (viewName === 'opposites') oppositesGame.select(GAMES.opposites[0], true);
         else if (viewName === 'solar') solarGame.open();
     },
 
@@ -2101,17 +2403,20 @@ const app = {
         const clean = cleanSpokenText(text);
         if (!clean) return;
 
-        // Cancel previous speech immediately
         geminiTTS.stop();
+        if (this.speechTimeout) {
+            clearTimeout(this.speechTimeout);
+            this.speechTimeout = null;
+        }
         if ('speechSynthesis' in window) {
-            window.speechSynthesis.cancel();
+            if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
+                window.speechSynthesis.cancel();
+            }
         }
 
         const key = getApiKey();
         if (key) {
-            // High-fidelity natural Gemini 3.8 voice
             geminiTTS.play(clean).catch(() => {
-                // Seamless fallback to natural device voice
                 this.speakDeviceVoice(clean);
             });
         } else {
@@ -2122,36 +2427,57 @@ const app = {
     speakDeviceVoice(cleanText) {
         try {
             if (!('speechSynthesis' in window)) return;
-            const msg = new SpeechSynthesisUtterance(cleanText);
-            msg.rate = 0.95;
-            msg.pitch = 1.06;
 
-            const voices = window.speechSynthesis.getVoices();
-            if (voices && voices.length > 0) {
-                // Rank best natural English voice
-                let bestVoice = null;
-                let bestScore = -1;
-                voices.forEach(v => {
-                    let score = 0;
-                    const lang = v.lang ? v.lang.toLowerCase() : '';
-                    const name = v.name ? v.name.toLowerCase() : '';
-                    if (lang.startsWith('en')) score += 100;
-                    if (name.includes('natural')) score += 50;
-                    if (name.includes('online')) score += 40;
-                    if (name.includes('premium')) score += 30;
-                    if (name.includes('enhanced')) score += 25;
-                    if (['samantha', 'ava', 'allison', 'google us english', 'daniel', 'karen'].some(n => name.includes(n))) {
-                        score += 20;
+            // Workaround for WebKit/Blink bug where cancel() immediately preceding speak() drops utterance
+            this.speechTimeout = setTimeout(() => {
+                try {
+                    const msg = new SpeechSynthesisUtterance(cleanText);
+                    msg.rate = 0.95;
+                    msg.pitch = 1.06;
+
+                    const voices = window.speechSynthesis.getVoices();
+                    if (voices && voices.length > 0) {
+                        let bestVoice = null;
+                        let bestScore = -1;
+                        voices.forEach(v => {
+                            let score = 0;
+                            const lang = (v.lang || '').toLowerCase();
+                            const name = (v.name || '').toLowerCase();
+                            if (lang.startsWith('en')) score += 100;
+                            if (name.includes('natural')) score += 50;
+                            if (name.includes('online')) score += 40;
+                            if (name.includes('premium')) score += 30;
+                            if (name.includes('enhanced')) score += 25;
+                            if (['samantha', 'ava', 'allison', 'google us english', 'daniel', 'karen', 'victoria', 'serena'].some(n => name.includes(n))) {
+                                score += 20;
+                            }
+                            if (score > bestScore) {
+                                bestScore = score;
+                                bestVoice = v;
+                            }
+                        });
+                        if (bestVoice) msg.voice = bestVoice;
                     }
-                    if (score > bestScore) {
-                        bestScore = score;
-                        bestVoice = v;
-                    }
-                });
-                if (bestVoice) msg.voice = bestVoice;
-            }
-            window.speechSynthesis.speak(msg);
-        } catch (e) {}
+
+                    msg.onstart = () => app.setSpeakingUI(true);
+                    msg.onend = () => {
+                        app.setSpeakingUI(false);
+                        app.currentUtterance = null;
+                    };
+                    msg.onerror = () => {
+                        app.setSpeakingUI(false);
+                        app.currentUtterance = null;
+                    };
+
+                    this.currentUtterance = msg;
+                    window.speechSynthesis.speak(msg);
+                } catch (e) {
+                    app.setSpeakingUI(false);
+                }
+            }, 35);
+        } catch (e) {
+            app.setSpeakingUI(false);
+        }
     },
 
     burstConfetti(x = window.innerWidth / 2, y = window.innerHeight / 2) {
@@ -2180,7 +2506,7 @@ const app = {
     }
 };
 
-window.app = app;
+
 // scratch/solar.js
 
 function getSolarSVG(id, uidPrefix) {
@@ -2999,10 +3325,21 @@ const solarGame = {
             this.stop();
             photoContainer.classList.remove('hidden');
             canvasContainer.classList.add('hidden');
-            document.getElementById('solar-svg-holder').innerHTML = getSolarSVG(item.id, 'main_stage');
+            const fitClass = (item.id === 'Saturn' || item.id === 'Comet') ? 'object-contain' : 'object-cover';
+            const holder = document.getElementById('solar-svg-holder');
+            holder.innerHTML = '';
+            const img = document.createElement('img');
+            img.src = item.photoUrl;
+            img.alt = item.id;
+            img.className = `w-full h-full ${fitClass} rounded-2xl drop-shadow-xl transition-all duration-300`;
+            img.addEventListener('error', () => {
+                holder.innerHTML = getSolarSVG(item.id, 'fallback_stage');
+            }, { once: true });
+            holder.appendChild(img);
             document.getElementById('solar-photo-credit').textContent = item.credit;
             app.animatePop(document.getElementById('solar-stage-box'));
             if (speak) {
+                soundFX.stopAll();
                 soundFX.playCosmicChime();
                 app.speak(item.speech);
             }
@@ -3075,6 +3412,8 @@ const solarGame = {
         }
     }
 };
+
+
 // scratch/games.js
 
 const phonicsGame = {
@@ -4060,7 +4399,11 @@ const animalGame = {
     speechTimer: null,
     select(a, playAudio = true, soundOnly = false) {
         this.current = a;
-        if (this.speechTimer) clearTimeout(this.speechTimer);
+        soundFX.stopAll();
+        geminiTTS.stop();
+        if ('speechSynthesis' in window && (window.speechSynthesis.speaking || window.speechSynthesis.pending)) {
+            try { window.speechSynthesis.cancel(); } catch (e) {}
+        }
         const t = document.getElementById('animal-target');
         t.textContent = a.emoji;
         document.getElementById('animal-text').textContent = a.id;
@@ -4072,7 +4415,11 @@ const animalGame = {
         if (playAudio) {
             const dur = soundFX.playAnimalSound(a.id);
             if (!soundOnly) {
-                this.speechTimer = setTimeout(() => app.speak(a.id), dur + 80);
+                this.speechTimer = setTimeout(() => {
+                    app.speak(a.id);
+                    this.speechTimer = null;
+                }, dur + 120);
+                soundFX.registerTimer(this.speechTimer);
             }
         }
     }
@@ -4224,8 +4571,14 @@ const foodGame = {
 
 const thingsGame = {
     current: GAMES.things[0],
-    select(item, speak = true) {
+    speechTimer: null,
+    select(item, speak = true, soundOnly = false) {
         this.current = item;
+        soundFX.stopAll();
+        geminiTTS.stop();
+        if ('speechSynthesis' in window && (window.speechSynthesis.speaking || window.speechSynthesis.pending)) {
+            try { window.speechSynthesis.cancel(); } catch (e) {}
+        }
         const t = document.getElementById('things-target');
         t.textContent = item.emoji;
         document.getElementById('things-text').textContent = item.id;
@@ -4235,8 +4588,14 @@ const thingsGame = {
         });
         app.animatePop(t);
         if (speak) {
-            soundFX.playThingSound(item.id);
-            setTimeout(() => app.speak(item.id), 550);
+            const dur = soundFX.playThingSound(item.id);
+            if (!soundOnly) {
+                this.speechTimer = setTimeout(() => {
+                    app.speak(item.id);
+                    this.speechTimer = null;
+                }, dur + 120);
+                soundFX.registerTimer(this.speechTimer);
+            }
         }
     }
 };
@@ -4262,6 +4621,8 @@ const oppositesGame = {
         if (speak) app.speak(`${pair.a.label}, and ${pair.b.label}!`);
     }
 };
+
+
 // scratch/init.js
 
 function updateVoiceStatusIndicator() {
@@ -4273,26 +4634,25 @@ function updateVoiceStatusIndicator() {
     const modelSel = document.getElementById('gemini-tts-model-select');
     const voiceSel = document.getElementById('gemini-tts-voice-select');
 
-    if (input) input.value = localStorage.getItem('toddler_gemini_api_key') || (apiKey ? "●●●●●●●● (Canvas Injected)" : "");
-    if (modelSel) modelSel.value = getTtsModel();
-    if (voiceSel) voiceSel.value = getTtsVoice();
+    const storedKey = localStorage.getItem('tlh_isolated_v3_api_key') || localStorage.getItem('toddler_gemini_api_key');
+    if (input && document.activeElement !== input) {
+        input.value = storedKey || (apiKey ? "●●●●●●●● (Canvas Injected)" : "");
+    }
+    if (modelSel && document.activeElement !== modelSel) modelSel.value = getTtsModel();
+    if (voiceSel && document.activeElement !== voiceSel) voiceSel.value = getTtsVoice();
 
     if (key) {
-        if (dot) {
-            dot.className = 'w-2 h-2 rounded-full bg-emerald-500 animate-pulse';
-        }
+        if (dot) dot.className = 'w-2 h-2 rounded-full bg-emerald-500 animate-pulse';
         if (txt) {
             txt.textContent = 'Gemini 3.8 Voice';
             txt.className = 'text-emerald-700 font-black';
         }
         if (badge) {
-            badge.textContent = apiKey ? 'Canvas Key Active' : 'API Key Active';
+            badge.textContent = apiKey && !storedKey ? 'Canvas Key Active' : 'API Key Active';
             badge.className = 'text-[11px] font-extrabold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200';
         }
     } else {
-        if (dot) {
-            dot.className = 'w-2 h-2 rounded-full bg-blue-500';
-        }
+        if (dot) dot.className = 'w-2 h-2 rounded-full bg-blue-500';
         if (txt) {
             txt.textContent = 'Device Voice';
             txt.className = 'text-slate-600 font-bold';
@@ -4308,10 +4668,19 @@ window.addEventListener('DOMContentLoaded', () => {
     // 1. Initial Voice Status Indicator
     updateVoiceStatusIndicator();
 
-    // 2. Voice Settings Modal Setup
+    // 2. Voice Settings Modal Setup & Live Synchronization
     const voiceModal = document.getElementById('voice-settings-modal');
+    const inp = document.getElementById('gemini-api-key-input');
+    const modelSel = document.getElementById('gemini-tts-model-select');
+    const voiceSel = document.getElementById('gemini-tts-voice-select');
+    const testStatus = document.getElementById('voice-test-status');
+
     const openVoiceModal = () => {
         updateVoiceStatusIndicator();
+        if (testStatus) {
+            testStatus.classList.add('hidden');
+            testStatus.textContent = '';
+        }
         if (voiceModal) voiceModal.classList.remove('hidden');
     };
     const closeVoiceModal = () => {
@@ -4320,47 +4689,90 @@ window.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('voice-settings-btn')?.addEventListener('click', openVoiceModal);
     document.getElementById('voice-modal-close-x')?.addEventListener('click', closeVoiceModal);
-    document.getElementById('voice-modal-save-btn')?.addEventListener('click', () => {
-        const inp = document.getElementById('gemini-api-key-input');
-        const modelSel = document.getElementById('gemini-tts-model-select');
-        const voiceSel = document.getElementById('gemini-tts-voice-select');
 
+    // Live input listeners so changes take effect immediately
+    inp?.addEventListener('input', () => {
+        const val = inp.value.trim();
+        if (!val.includes('●●●●●●●●')) {
+            if (val) localStorage.setItem('tlh_isolated_v3_api_key', val);
+            else localStorage.removeItem('tlh_isolated_v3_api_key');
+            updateVoiceStatusIndicator();
+        }
+    });
+    modelSel?.addEventListener('change', () => {
+        localStorage.setItem('tlh_isolated_v3_tts_model', modelSel.value);
+    });
+    voiceSel?.addEventListener('change', () => {
+        localStorage.setItem('tlh_isolated_v3_tts_voice', voiceSel.value);
+    });
+
+    // Save & Done button
+    document.getElementById('voice-modal-save-btn')?.addEventListener('click', () => {
         if (inp) {
             const val = inp.value.trim();
             if (!val.includes('●●●●●●●●')) {
-                if (val) localStorage.setItem('toddler_gemini_api_key', val);
-                else localStorage.removeItem('toddler_gemini_api_key');
+                if (val) localStorage.setItem('tlh_isolated_v3_api_key', val);
+                else localStorage.removeItem('tlh_isolated_v3_api_key');
             }
         }
-        if (modelSel) localStorage.setItem('toddler_gemini_tts_model', modelSel.value);
-        if (voiceSel) localStorage.setItem('toddler_gemini_tts_voice', voiceSel.value);
+        if (modelSel) localStorage.setItem('tlh_isolated_v3_tts_model', modelSel.value);
+        if (voiceSel) localStorage.setItem('tlh_isolated_v3_tts_voice', voiceSel.value);
 
         updateVoiceStatusIndicator();
         closeVoiceModal();
         app.speak("Voice settings saved! Let's explore together!");
     });
 
-    // Test Voice Sample Button
-    document.getElementById('voice-test-btn')?.addEventListener('click', () => {
-        app.speak("Hello little explorer! Let's count and play together!");
+    // Live Test Voice Sample Button (tests live input values directly)
+    document.getElementById('voice-test-btn')?.addEventListener('click', async () => {
+        const testText = "Hello little explorer! Let's count and play together!";
+        const curModel = modelSel?.value || getTtsModel();
+        const curVoice = voiceSel?.value || getTtsVoice();
+        const liveKeyVal = inp?.value.trim();
+        const testKey = (!liveKeyVal || liveKeyVal.includes('●●●●●●●●')) ? getApiKey() : liveKeyVal;
+
+        if (testStatus) {
+            testStatus.classList.remove('hidden');
+            testStatus.className = 'text-xs font-bold text-center py-1.5 px-3 rounded-xl bg-indigo-50 text-indigo-700 border border-indigo-200';
+            testStatus.textContent = 'Connecting to Gemini Voice...';
+        }
+
+        if (testKey) {
+            try {
+                await geminiTTS.play(testText, curModel, curVoice, testKey);
+                if (testStatus) {
+                    testStatus.className = 'text-xs font-bold text-center py-1.5 px-3 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-200';
+                    testStatus.textContent = `✨ Gemini 3.8 voice (${curVoice}) playing successfully!`;
+                }
+            } catch (err) {
+                if (testStatus) {
+                    testStatus.className = 'text-xs font-bold text-center py-1.5 px-3 rounded-xl bg-amber-50 text-amber-800 border border-amber-200';
+                    testStatus.textContent = `⚠️ Gemini API error (${err.message}). Using Device Voice fallback.`;
+                }
+                app.speakDeviceVoice(testText);
+            }
+        } else {
+            if (testStatus) {
+                testStatus.className = 'text-xs font-bold text-center py-1.5 px-3 rounded-xl bg-blue-50 text-blue-800 border border-blue-200';
+                testStatus.textContent = '🔊 Playing with natural Device Voice (No Gemini API key set).';
+            }
+            app.speakDeviceVoice(testText);
+        }
     });
 
     // Pre-cache Core Words into IndexedDB
     document.getElementById('voice-precache-btn')?.addEventListener('click', async () => {
         const key = getApiKey();
         if (!key) {
-            alert("Please paste your Gemini API Key first to pre-cache Gemini 3.8 natural voices!");
+            alert("Please paste your Gemini API Key first to pre-cache Gemini natural voices!");
             return;
         }
 
         const wordsToCache = [
-            // Numbers 1-20
             "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten",
             "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen", "Twenty",
-            // Core encouragement
             "Great job!", "You found it!", "Yay!", "Yum yum!", "Crunch! Delicious!",
             "Choo choo!", "Blast off!", "Roar!", "Splish splash!", "Ring ring!",
-            // Letters A-Z
             "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
             "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
         ];
@@ -4588,14 +5000,27 @@ window.addEventListener('DOMContentLoaded', () => {
         app.speak(oppositesGame.current.b.label);
     });
 
-    // 14. Solar System Setup
+    // 14. Solar System Setup with Real Official NASA Photos in Tray
     const solarTray = document.getElementById('solar-controls');
     GAMES.solar.forEach((s, idx) => {
         const btn = document.createElement('button');
         btn.className = 'tray-btn p-1';
         btn.dataset.solarId = s.id;
-        // Unique prefix so SVG definitions in tray NEVER collide with each other or main stage
-        btn.innerHTML = `<div class="w-9 h-9 rounded-full overflow-hidden border border-slate-400 bg-slate-950">${getSolarSVG(s.id, 'tray_' + idx)}</div><span class="text-[10px] font-black text-slate-200 mt-0.5 leading-none">${s.short}</span>`;
+        const thumbWrap = document.createElement('div');
+        thumbWrap.className = 'w-9 h-9 rounded-full overflow-hidden border border-slate-400 bg-slate-950 flex items-center justify-center';
+        const thumbImg = document.createElement('img');
+        thumbImg.src = s.photoUrl;
+        thumbImg.alt = s.short;
+        thumbImg.className = 'w-full h-full object-cover';
+        thumbImg.addEventListener('error', () => {
+            thumbWrap.innerHTML = getSolarSVG(s.id, 'tray_' + idx);
+        }, { once: true });
+        thumbWrap.appendChild(thumbImg);
+        const labelSpan = document.createElement('span');
+        labelSpan.className = 'text-[10px] font-black text-slate-700 mt-0.5 leading-none';
+        labelSpan.textContent = s.short;
+        btn.appendChild(thumbWrap);
+        btn.appendChild(labelSpan);
         btn.addEventListener('click', () => solarGame.select(s, true));
         solarTray.appendChild(btn);
     });
@@ -4606,7 +5031,21 @@ window.addEventListener('DOMContentLoaded', () => {
     document.getElementById('solar-action-btn').addEventListener('click', () => solarGame.triggerAction());
     document.getElementById('solar-fact').addEventListener('click', () => solarGame.triggerAction());
 
-    // Pre-warm audio and unlock WebAudio on initial touch
+    // 15. Cross-tab & Multi-app Audio Isolation (clean shutdown on visibilitychange / pagehide)
+    const pauseAllAudio = () => {
+        soundFX.stopAll();
+        geminiTTS.stop();
+        if ('speechSynthesis' in window) {
+            try { window.speechSynthesis.cancel(); } catch (e) {}
+        }
+    };
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) pauseAllAudio();
+    });
+    window.addEventListener('pagehide', pauseAllAudio);
+    window.addEventListener('beforeunload', pauseAllAudio);
+
+    // Pre-warm audio and unlock WebAudio on initial touch/pointer
     const unlockAudio = () => {
         soundFX.init();
         document.removeEventListener('pointerdown', unlockAudio);
@@ -4616,7 +5055,26 @@ window.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('touchstart', unlockAudio, { once: true });
 });
 
+
+window.ToddlerLearningHub = {
+    app,
+    soundFX,
+    geminiTTS,
+    GAMES,
+    phonicsGame,
+    numberGame,
+    quizGame,
+    shape2DGame,
+    shapes3DGame,
+    colorGame,
+    animalGame,
+    foodGame,
+    thingsGame,
+    oppositesGame,
+    solarGame
+};
+})();
+
     </script>
 </body>
 </html>
-
