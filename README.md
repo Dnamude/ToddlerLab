@@ -213,16 +213,19 @@
 
         .main-stage {
             flex: 1;
+            min-height: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: safe center;
             width: 100%;
             max-width: 860px;
             margin: 0 auto;
-            padding: 0.5rem 1rem;
+            padding: 0.35rem 0.75rem;
             position: relative;
-            overflow: hidden;
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
         }
 
         @keyframes popBounce {
@@ -256,20 +259,142 @@
 
         .controls-dock {
             width: 100%;
-            background: rgba(255, 255, 255, 0.88);
+            background: rgba(255, 255, 255, 0.92);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            border-top: 3px solid rgba(255, 255, 255, 0.85);
-            border-top-left-radius: 2.25rem;
-            border-top-right-radius: 2.25rem;
-            box-shadow: 0 -8px 32px rgba(15, 23, 42, 0.08);
-            padding: 0.8rem 0.75rem 1rem 0.75rem;
-            padding-bottom: max(0.85rem, env(safe-area-inset-bottom));
+            border-top: 3px solid rgba(255, 255, 255, 0.9);
+            border-top-left-radius: 2rem;
+            border-top-right-radius: 2rem;
+            box-shadow: 0 -8px 28px rgba(15, 23, 42, 0.08);
+            padding: 0.35rem 0.65rem 0.75rem 0.65rem;
+            padding-bottom: max(0.65rem, env(safe-area-inset-bottom));
             z-index: 30;
-            height: 28vh;
-            min-height: 155px;
-            max-height: 235px;
+            height: 22vh;
+            min-height: 118px;
+            max-height: 185px;
             flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            transition: height 0.22s ease, min-height 0.22s ease, padding 0.22s ease;
+        }
+
+        .controls-dock.dock-collapsed {
+            height: auto !important;
+            min-height: 0 !important;
+            max-height: 44px !important;
+            padding-top: 0.25rem;
+            padding-bottom: max(0.25rem, env(safe-area-inset-bottom));
+        }
+
+        .controls-dock.dock-collapsed .control-scroll {
+            display: none !important;
+        }
+
+        .dock-toggle-bar {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding-bottom: 0.2rem;
+            flex-shrink: 0;
+        }
+
+        .dock-toggle-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            background: rgba(241, 245, 249, 0.92);
+            border: 1.5px solid rgba(203, 213, 225, 0.9);
+            color: #475569;
+            font-size: 0.68rem;
+            font-weight: 800;
+            padding: 0.15rem 0.65rem;
+            border-radius: 9999px;
+            cursor: pointer;
+            touch-action: manipulation;
+            transition: all 0.15s ease;
+            user-select: none;
+        }
+
+        .dock-toggle-btn:hover {
+            background: #e2e8f0;
+            color: #1e293b;
+        }
+
+        .dock-toggle-btn:active {
+            transform: scale(0.96);
+        }
+
+        .controls-dock[style*="0f172a"] .dock-toggle-btn {
+            background: rgba(30, 41, 59, 0.9);
+            border-color: rgba(71, 85, 105, 0.8);
+            color: #cbd5e1;
+        }
+
+        .controls-dock[style*="0f172a"] .dock-toggle-btn:hover {
+            background: #334155;
+            color: #f8fafc;
+        }
+
+        .zoom-hud-pill {
+            position: sticky;
+            bottom: 0.4rem;
+            align-self: flex-end;
+            margin-top: auto;
+            margin-right: 0.25rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            background: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1.5px solid rgba(203, 213, 225, 0.9);
+            border-radius: 9999px;
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.1);
+            padding: 0.15rem 0.45rem;
+            font-size: 0.72rem;
+            font-weight: 900;
+            color: #475569;
+            z-index: 35;
+            user-select: none;
+            touch-action: manipulation;
+            pointer-events: auto;
+        }
+
+        .zoom-hud-pill button {
+            background: none;
+            border: none;
+            padding: 0.15rem 0.35rem;
+            font-size: 0.75rem;
+            font-weight: 900;
+            color: #334155;
+            cursor: pointer;
+            border-radius: 0.5rem;
+            transition: background 0.1s ease;
+        }
+
+        .zoom-hud-pill button:active {
+            background: #e2e8f0;
+        }
+
+        .zoom-hud-pill .zoom-reset-btn {
+            font-variant-numeric: tabular-nums;
+            min-width: 38px;
+            text-align: center;
+        }
+
+        #view-solar .zoom-hud-pill {
+            background: rgba(15, 23, 42, 0.94);
+            border-color: rgba(51, 65, 85, 0.9);
+            color: #cbd5e1;
+        }
+
+        #view-solar .zoom-hud-pill button {
+            color: #e2e8f0;
+        }
+
+        #view-solar .zoom-hud-pill button:active {
+            background: #334155;
         }
 
         .control-scroll {
@@ -291,23 +416,33 @@
         }
 
         .tray-btn {
-            width: 4.4rem;
-            height: 4.4rem;
-            border-radius: 1.35rem;
+            width: 3.85rem;
+            height: 3.85rem;
+            border-radius: 1.15rem;
             background: #ffffff;
             border: 3px solid #e0e7ff;
-            box-shadow: 0 5px 0 #cbd5e1, 0 6px 12px -2px rgba(15, 23, 42, 0.06);
+            box-shadow: 0 4px 0 #cbd5e1, 0 6px 12px -2px rgba(15, 23, 42, 0.06);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            font-size: 1.9rem;
+            font-size: 1.65rem;
             font-weight: 900;
             color: #1e293b;
             cursor: pointer;
             touch-action: manipulation;
             flex-shrink: 0;
             transition: transform 0.1s ease, box-shadow 0.1s ease, border-color 0.1s ease;
+        }
+
+        @media (min-width: 640px) {
+            .tray-btn {
+                width: 4.4rem;
+                height: 4.4rem;
+                border-radius: 1.35rem;
+                font-size: 1.9rem;
+                box-shadow: 0 5px 0 #cbd5e1, 0 6px 12px -2px rgba(15, 23, 42, 0.06);
+            }
         }
 
         .tray-btn:active, .tray-btn.selected {
@@ -440,14 +575,15 @@
         .phonics-word-card {
             background: #ffffff;
             border: 3px solid #dbeafe;
-            border-radius: 1.5rem;
-            padding: 0.65rem 0.9rem;
+            border-radius: 1.35rem;
+            padding: 0.5rem 0.35rem;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-width: 88px;
-            box-shadow: 0 6px 0 #bfdbfe, 0 8px 16px -3px rgba(30, 64, 175, 0.08);
+            min-width: 0;
+            width: 100%;
+            box-shadow: 0 5px 0 #bfdbfe, 0 8px 16px -3px rgba(30, 64, 175, 0.08);
             cursor: pointer;
             touch-action: manipulation;
             transition: transform 0.1s ease, box-shadow 0.1s ease;
@@ -524,13 +660,15 @@
 
     <!-- MAIN MENU -->
     <div id="view-menu" class="view-section active-view" style="background: linear-gradient(135deg, #e0f2fe 0%, #f0fdf4 50%, #fef3c7 100%); z-index: 10;">
-        <div class="text-center pt-5 pb-2 px-4 flex-shrink-0">
-            <div class="inline-flex items-center gap-2 bg-white px-4 py-1 rounded-full shadow-sm border border-sky-200 mb-1">
-                <span class="text-xl">🌟</span>
-                <span class="text-xs font-black uppercase tracking-wider text-sky-700">Toddler Explorer • Level 2</span>
+        <div id="menu-top-container" class="text-center pt-4 pb-2 px-4 flex-shrink-0 transition-all duration-200">
+            <div id="menu-header-banner" class="transition-all duration-200 overflow-hidden">
+                <div class="inline-flex items-center gap-2 bg-white px-4 py-1 rounded-full shadow-sm border border-sky-200 mb-1">
+                    <span class="text-xl">🌟</span>
+                    <span class="text-xs font-black uppercase tracking-wider text-sky-700">Toddler Explorer • Level 2</span>
+                </div>
+                <h1 class="text-4xl sm:text-5xl font-black text-slate-800 tracking-tight">Toddler Learning Hub</h1>
+                <p class="text-slate-600 font-bold text-sm sm:text-base mt-0.5">Tap any card to play, count & sound it out!</p>
             </div>
-            <h1 class="text-4xl sm:text-5xl font-black text-slate-800 tracking-tight">Toddler Learning Hub</h1>
-                        <p class="text-slate-600 font-bold text-sm sm:text-base mt-0.5">Tap any card to play, count & sound it out!</p>
             <div class="flex justify-center items-center gap-2 mt-2">
                 <button id="voice-settings-btn" class="inline-flex items-center gap-2 bg-white px-3.5 py-1.5 rounded-full shadow-sm border-2 border-indigo-200 text-xs sm:text-sm font-black text-indigo-700 squish-btn hover:bg-indigo-50">
                     <span>⚙️</span>
@@ -540,6 +678,10 @@
                         <span id="voice-status-text">Device Voice</span>
                     </span>
                     <div class="audio-vis-pill" title="Audio Activity"><span class="vis-bar bar-1"></span><span class="vis-bar bar-2"></span><span class="vis-bar bar-3"></span><span class="vis-bar bar-4"></span></div>
+                </button>
+                <button id="menu-minimize-btn" class="inline-flex items-center gap-1.5 bg-white px-3.5 py-1.5 rounded-full shadow-sm border-2 border-sky-200 text-xs sm:text-sm font-black text-sky-700 squish-btn hover:bg-sky-50" title="Minimize or Expand Header">
+                    <span id="menu-minimize-icon">🔼</span>
+                    <span id="menu-minimize-label">Minimize</span>
                 </button>
             </div>
         </div>
@@ -638,20 +780,22 @@
         </div>
 
         <div id="phonics-studio-stage" class="main-stage">
-            <div id="phonics-main-card" class="bg-white rounded-3xl p-3 sm:p-5 shadow-lg border-4 border-blue-200 flex flex-col items-center w-full max-w-md cursor-pointer squish-btn">
-                <div class="flex items-baseline gap-3">
-                    <span id="phonics-big-upper" class="text-7xl sm:text-8xl font-black text-blue-600 leading-none">A</span>
-                    <span id="phonics-big-lower" class="text-6xl sm:text-7xl font-black text-sky-500 leading-none">a</span>
+            <div id="phonics-zoom-target" class="flex flex-col items-center w-full max-w-md origin-center">
+                <div id="phonics-main-card" class="bg-white rounded-3xl p-2.5 sm:p-4 shadow-lg border-4 border-blue-200 flex flex-col items-center w-full max-w-md cursor-pointer squish-btn">
+                    <div class="flex items-baseline gap-3">
+                        <span id="phonics-big-upper" class="text-7xl sm:text-8xl font-black text-blue-600 leading-none">A</span>
+                        <span id="phonics-big-lower" class="text-6xl sm:text-7xl font-black text-sky-500 leading-none">a</span>
+                    </div>
+                    <div id="phonics-sound-pill" class="mt-1.5 bg-amber-100 text-amber-900 font-black px-4 py-0.5 rounded-full text-sm sm:text-base border-2 border-amber-300">
+                        🔊 Sound: "ah" (like Apple)
+                    </div>
                 </div>
-                <div id="phonics-sound-pill" class="mt-2 bg-amber-100 text-amber-900 font-black px-4 py-1 rounded-full text-base sm:text-lg border-2 border-amber-300">
-                    🔊 Sound: "ah" (like Apple)
+                <p class="text-[11px] sm:text-xs font-extrabold text-slate-500 uppercase tracking-wider mt-1.5 mb-1">Tap a picture to sound it out!</p>
+                <div id="phonics-words-row" class="grid grid-cols-3 gap-2 sm:gap-3 w-full max-w-md px-1"></div>
+                <div id="phonics-blend-bar" class="hidden mt-1.5 bg-blue-100/90 border-2 border-blue-300 px-3 py-1 rounded-2xl flex items-center justify-center gap-1.5 shadow-sm max-w-md w-full">
+                    <span class="text-xs font-black uppercase tracking-wider text-blue-800">Sound it out:</span>
+                    <div id="phonics-blend-letters" class="flex items-center gap-1 text-xs sm:text-sm font-black text-blue-900"></div>
                 </div>
-            </div>
-            <p class="text-xs sm:text-sm font-extrabold text-slate-500 uppercase tracking-wider mt-3 mb-1.5">Tap a picture to sound it out!</p>
-            <div id="phonics-words-row" class="flex flex-wrap justify-center gap-2 sm:gap-3 w-full"></div>
-            <div id="phonics-blend-bar" class="hidden mt-3 bg-blue-100/90 border-2 border-blue-300 px-4 py-2 rounded-2xl flex items-center justify-center gap-2 shadow-sm max-w-md w-full">
-                <span class="text-xs font-black uppercase tracking-wider text-blue-800">Sound it out:</span>
-                <div id="phonics-blend-letters" class="flex items-center gap-1 text-lg sm:text-xl font-black text-blue-900"></div>
             </div>
         </div>
 
@@ -683,7 +827,7 @@
             </div>
         </div>
 
-        <div class="main-stage justify-between py-1.5">
+        <div class="main-stage justify-between py-1">
             <div class="flex items-center gap-3 sm:gap-4 mb-1 flex-shrink-0">
                 <div id="number-big-digit" class="text-5xl sm:text-7xl font-black text-teal-700 leading-none cursor-pointer squish-btn">1</div>
                 <div class="flex flex-col">
@@ -692,7 +836,7 @@
                 </div>
                 <button id="number-count-all-btn" class="bg-teal-600 text-white font-black px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-2xl shadow-md text-xs sm:text-sm squish-btn">🔊 Count All</button>
             </div>
-            <div id="number-items-grid" class="flex-1 min-h-0 w-full max-w-xl flex flex-wrap justify-center items-center content-center gap-1.5 sm:gap-2.5 overflow-hidden px-1 my-1"></div>
+            <div id="number-items-grid" class="flex-1 min-h-0 w-full max-w-xl flex flex-wrap justify-center items-center content-center gap-1.5 sm:gap-2.5 px-1 my-1"></div>
             <div id="number-ten-frame" class="flex-shrink-0 z-10 mt-1 mb-1 flex gap-1.5 flex-wrap justify-center bg-white px-3 py-1.5 rounded-2xl border-2 border-teal-200 shadow-sm"></div>
         </div>
 
@@ -720,16 +864,16 @@
         </div>
 
         <div class="main-stage">
-            <div id="quiz-prompt-box" class="bg-white px-6 py-4 rounded-3xl shadow-md border-4 border-amber-300 text-center max-w-md w-full mb-5 cursor-pointer squish-btn">
-                <p class="text-xs font-black uppercase tracking-wider text-amber-600 mb-1">Tap to hear again 🔊</p>
-                <h2 id="quiz-question-text" class="text-2xl sm:text-3xl font-black text-slate-800">Can you find the Lion?</h2>
+            <div id="quiz-prompt-box" class="bg-white px-5 py-3 rounded-3xl shadow-md border-4 border-amber-300 text-center max-w-md w-full mb-3 cursor-pointer squish-btn">
+                <p class="text-[11px] sm:text-xs font-black uppercase tracking-wider text-amber-600 mb-0.5">Tap to hear again 🔊</p>
+                <h2 id="quiz-question-text" class="text-xl sm:text-2xl font-black text-slate-800">Can you find the Lion?</h2>
             </div>
-            <div id="quiz-choices-grid" class="grid grid-cols-3 gap-3 sm:gap-5 w-full max-w-xl px-2"></div>
-            <div class="mt-6 flex items-center gap-3">
+            <div id="quiz-choices-grid" class="grid grid-cols-3 gap-2.5 sm:gap-4 w-full max-w-xl px-2"></div>
+            <div class="mt-3 flex items-center gap-3">
                 <div class="bg-white px-4 py-1.5 rounded-full font-black text-amber-700 border-2 border-amber-200 shadow-sm">
                     ⭐ Stars: <span id="quiz-score">0</span>
                 </div>
-                <button id="quiz-next-btn" class="bg-amber-500 text-white font-black px-5 py-2 rounded-full shadow-md squish-btn">Next Question ➡️</button>
+                <button id="quiz-next-btn" class="bg-amber-500 text-white font-black px-4 py-1.5 rounded-full shadow-md squish-btn text-sm">Next Question ➡️</button>
             </div>
         </div>
     </div>
@@ -746,9 +890,9 @@
         </div>
 
         <div class="main-stage">
-            <div id="shape-target" class="w-48 h-48 sm:w-56 sm:h-56 flex items-center justify-center cursor-pointer squish-btn"></div>
-            <h1 id="shape-text" class="text-4xl sm:text-5xl font-black text-slate-800 mt-2">Circle</h1>
-            <div id="shape-realworld" class="mt-2 bg-white px-4 py-1.5 rounded-full border-2 border-emerald-200 font-extrabold text-slate-700 text-sm sm:text-base shadow-sm">
+            <div id="shape-target" class="w-52 h-52 sm:w-64 sm:h-64 p-2 flex items-center justify-center cursor-pointer squish-btn"></div>
+            <h1 id="shape-text" class="text-4xl sm:text-5xl font-black text-slate-800 mt-1">Circle</h1>
+            <div id="shape-realworld" class="mt-1.5 bg-white px-4 py-1 rounded-full border-2 border-emerald-200 font-extrabold text-slate-700 text-xs sm:text-sm shadow-sm">
                 Looks like: 🍕 Pizza • ⏰ Clock • 🛞 Wheel
             </div>
         </div>
@@ -771,7 +915,7 @@
 
         <div class="main-stage">
             <div id="shape3d-examples-bar" class="flex flex-wrap justify-center gap-1.5 sm:gap-2 mb-1 z-20 px-2"></div>
-            <div id="shape3d-target" class="w-56 h-56 sm:w-64 sm:h-64 flex items-center justify-center relative">
+            <div id="shape3d-target" class="w-60 h-60 sm:w-72 sm:h-72 flex items-center justify-center relative">
                 <div id="shape3d-canvas-container" class="w-full h-full flex items-center justify-center cursor-grab active:cursor-grabbing"></div>
             </div>
             <h1 id="shape3d-text" class="text-3xl sm:text-4xl font-black text-slate-800 mt-0.5">Cube</h1>
@@ -836,9 +980,9 @@
             </div>
         </div>
         <div class="main-stage">
-            <div id="animal-target" class="text-[7.5rem] sm:text-[9rem] leading-none cursor-pointer squish-btn">🦁</div>
-            <h1 id="animal-text" class="text-4xl sm:text-5xl font-black text-slate-800 mt-2">Lion</h1>
-            <div id="animal-sound-pill" class="mt-2 bg-white px-5 py-1.5 rounded-full border-2 border-orange-300 font-black text-orange-700 text-lg shadow-sm cursor-pointer squish-btn">
+            <div id="animal-target" class="text-[8rem] sm:text-[9.5rem] p-2 leading-none cursor-pointer squish-btn">🦁</div>
+            <h1 id="animal-text" class="text-4xl sm:text-5xl font-black text-slate-800 mt-1">Lion</h1>
+            <div id="animal-sound-pill" class="mt-1.5 bg-white px-5 py-1.5 rounded-full border-2 border-orange-300 font-black text-orange-700 text-base sm:text-lg shadow-sm cursor-pointer squish-btn">
                 🗣️ "ROAR!"
             </div>
         </div>
@@ -858,11 +1002,11 @@
             </div>
         </div>
         <div class="main-stage">
-            <div id="fruits-target" class="relative w-52 h-52 sm:w-60 sm:h-60 flex items-center justify-center cursor-pointer squish-btn">
+            <div id="fruits-target" class="relative w-56 h-56 sm:w-64 sm:h-64 flex items-center justify-center cursor-pointer squish-btn">
                 <canvas id="fruits-canvas" width="240" height="240" class="w-full h-full"></canvas>
             </div>
             <h1 id="fruits-text" class="text-4xl sm:text-5xl font-black text-slate-800 mt-1">Strawberry</h1>
-            <div id="fruits-desc" class="mt-1.5 bg-white px-4 py-1 rounded-full border-2 border-pink-200 font-extrabold text-pink-700 text-sm shadow-sm">
+            <div id="fruits-desc" class="mt-1 bg-white px-4 py-1 rounded-full border-2 border-pink-200 font-extrabold text-pink-700 text-xs sm:text-sm shadow-sm">
                 Sweet Red Berry! Tap anywhere on it to take a bite!
             </div>
         </div>
@@ -882,8 +1026,8 @@
             </div>
         </div>
         <div class="main-stage">
-            <div id="things-target" class="text-[7.5rem] sm:text-[9rem] leading-none cursor-pointer squish-btn">🚒</div>
-            <h1 id="things-text" class="text-4xl sm:text-5xl font-black text-slate-800 mt-2">Fire Truck</h1>
+            <div id="things-target" class="text-[8rem] sm:text-[9.5rem] p-2 leading-none cursor-pointer squish-btn">🚒</div>
+            <h1 id="things-text" class="text-4xl sm:text-5xl font-black text-slate-800 mt-1">Fire Truck</h1>
             <div id="things-sound" class="mt-1.5 bg-white px-5 py-1 rounded-full border-2 border-purple-200 font-black text-purple-700 text-base shadow-sm cursor-pointer squish-btn">
                 🔊 "Weee-oooo! Weee-oooo!"
             </div>
@@ -904,17 +1048,17 @@
             </div>
         </div>
         <div class="main-stage">
-            <div class="grid grid-cols-2 gap-4 sm:gap-6 w-full max-w-lg px-2">
-                <div id="opp-card-a" class="bg-white rounded-3xl p-5 shadow-md border-4 border-cyan-300 flex flex-col items-center justify-center min-h-[200px] cursor-pointer squish-btn">
-                    <div id="opp-emoji-a" class="text-7xl sm:text-8xl mb-2">🐘</div>
-                    <span id="opp-label-a" class="text-2xl sm:text-3xl font-black text-slate-800">Big</span>
+            <div id="opposites-cards-grid" class="grid grid-cols-2 gap-3 sm:gap-5 w-full max-w-lg px-2">
+                <div id="opp-card-a" class="bg-white rounded-3xl p-4 sm:p-5 shadow-md border-4 border-cyan-300 flex flex-col items-center justify-center min-h-[180px] sm:min-h-[210px] cursor-pointer squish-btn">
+                    <div id="opp-emoji-a" class="text-7xl sm:text-8xl mb-1 sm:mb-2">🐘</div>
+                    <span id="opp-label-a" class="text-xl sm:text-3xl font-black text-slate-800">Big</span>
                 </div>
-                <div id="opp-card-b" class="bg-white rounded-3xl p-5 shadow-md border-4 border-amber-300 flex flex-col items-center justify-center min-h-[200px] cursor-pointer squish-btn">
-                    <div id="opp-emoji-b" class="text-4xl sm:text-5xl mb-2">🐁</div>
-                    <span id="opp-label-b" class="text-2xl sm:text-3xl font-black text-slate-800">Small</span>
+                <div id="opp-card-b" class="bg-white rounded-3xl p-4 sm:p-5 shadow-md border-4 border-amber-300 flex flex-col items-center justify-center min-h-[180px] sm:min-h-[210px] cursor-pointer squish-btn">
+                    <div id="opp-emoji-b" class="text-4xl sm:text-5xl mb-1 sm:mb-2">🐁</div>
+                    <span id="opp-label-b" class="text-xl sm:text-3xl font-black text-slate-800">Small</span>
                 </div>
             </div>
-            <h2 id="opp-title" class="text-2xl sm:text-3xl font-black text-slate-700 mt-4">Big vs. Small</h2>
+            <h2 id="opp-title" class="text-xl sm:text-2xl font-black text-slate-700 mt-2">Big vs. Small</h2>
         </div>
         <div class="controls-dock">
             <div class="control-scroll"><div class="control-grid" id="opposites-controls"></div></div>
@@ -946,9 +1090,9 @@
                 </button>
             </div>
 
-            <div id="solar-stage-box" class="w-60 h-60 sm:w-68 sm:h-68 flex items-center justify-center relative">
+            <div id="solar-stage-box" class="w-60 h-60 sm:w-72 sm:h-72 flex items-center justify-center relative">
                 <div id="solar-photo-container" class="w-full h-full flex flex-col items-center justify-center relative cursor-pointer squish-btn">
-                    <div id="solar-svg-holder" class="w-52 h-52 sm:w-60 sm:h-60 rounded-full overflow-hidden border-4 border-indigo-300/40 shadow-xl bg-slate-950 flex items-center justify-center"></div>
+                    <div id="solar-svg-holder" class="w-56 h-56 sm:w-64 sm:h-64 rounded-3xl overflow-hidden border-4 border-indigo-300/40 shadow-xl bg-slate-950 flex items-center justify-center p-1.5"></div>
                     <span id="solar-photo-credit" class="mt-1.5 text-[11px] font-extrabold uppercase tracking-wider text-indigo-200 bg-slate-900 px-3 py-0.5 rounded-full border border-indigo-400/30">
                         🔭 Space Telescope View
                     </span>
@@ -1102,6 +1246,18 @@
                             <div class="text-[11px] font-bold text-slate-500 leading-tight">Require double-tap on Home button to exit a game</div>
                         </div>
                         <input id="opt-hold-home" type="checkbox">
+                        <div class="toggle-slider"></div>
+                    </label>
+
+                    <!-- 10. Minimize Home Screen Title Banner -->
+                    <label class="toggle-switch flex items-center justify-between p-2.5 rounded-2xl bg-slate-50 hover:bg-slate-100 border border-slate-200 cursor-pointer">
+                        <div class="pr-2">
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
+                                <span>🏠</span><span>Minimize Home Screen Title Banner</span>
+                            </div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Hide the top title banner to maximize card space</div>
+                        </div>
+                        <input id="opt-minimize-header" type="checkbox">
                         <div class="toggle-slider"></div>
                     </label>
                 </div>
@@ -1867,21 +2023,51 @@ const GAMES = {
 // Canvas automatically injects runtime API key here when loaded in Gemini Canvas
 const apiKey = "";
 
+const runtimeVoiceConfig = {
+    apiKey: "",
+    model: "",
+    voice: ""
+};
+
+const safeGetStorage = (k) => {
+    try { return localStorage.getItem(k) || ""; } catch (e) { return ""; }
+};
+
+const safeSetStorage = (k, v) => {
+    try {
+        if (v === null || v === undefined || v === "") localStorage.removeItem(k);
+        else localStorage.setItem(k, v);
+    } catch (e) {}
+};
+
 const getApiKey = () => {
-    return localStorage.getItem('tlh_isolated_v3_api_key') ||
-           localStorage.getItem('toddler_gemini_api_key') ||
+    if (runtimeVoiceConfig.apiKey) return runtimeVoiceConfig.apiKey;
+    const domInp = typeof document !== 'undefined' ? document.getElementById('gemini-api-key-input') : null;
+    const domVal = domInp && domInp.value ? domInp.value.trim() : "";
+    if (domVal && !domVal.includes('●●●●●●●●')) {
+        runtimeVoiceConfig.apiKey = domVal;
+        return domVal;
+    }
+    return safeGetStorage('tlh_isolated_v3_api_key') ||
+           safeGetStorage('toddler_gemini_api_key') ||
            apiKey || "";
 };
 
 const getTtsModel = () => {
-    return localStorage.getItem('tlh_isolated_v3_tts_model') ||
-           localStorage.getItem('toddler_gemini_tts_model') ||
+    if (runtimeVoiceConfig.model) return runtimeVoiceConfig.model;
+    const domSel = typeof document !== 'undefined' ? document.getElementById('gemini-tts-model-select') : null;
+    if (domSel && domSel.value) return domSel.value;
+    return safeGetStorage('tlh_isolated_v3_tts_model') ||
+           safeGetStorage('toddler_gemini_tts_model') ||
            'gemini-3.8-flash-tts';
 };
 
 const getTtsVoice = () => {
-    return localStorage.getItem('tlh_isolated_v3_tts_voice') ||
-           localStorage.getItem('toddler_gemini_tts_voice') ||
+    if (runtimeVoiceConfig.voice) return runtimeVoiceConfig.voice;
+    const domSel = typeof document !== 'undefined' ? document.getElementById('gemini-tts-voice-select') : null;
+    if (domSel && domSel.value) return domSel.value;
+    return safeGetStorage('tlh_isolated_v3_tts_voice') ||
+           safeGetStorage('toddler_gemini_tts_voice') ||
            'Kore';
 };
 
@@ -1975,18 +2161,16 @@ function pcmToWav(pcmData, sampleRate = 24000, numChannels = 1, bitDepth = 16) {
 
 const geminiTTS = {
     memCache: new Map(),
+    decodedCache: new Map(),
+    inFlight: new Map(),
     activeSource: null,
     activeAudioEl: null,
-    abortCtrl: null,
-    workingStrategy: null,
+    workingStrategy: safeGetStorage('tlh_isolated_v3_working_strat') || null,
     playReqId: 0,
+    warmUpTimer: null,
 
     stop() {
         this.playReqId++;
-        if (this.abortCtrl) {
-            try { this.abortCtrl.abort(); } catch(e) {}
-            this.abortCtrl = null;
-        }
         if (this.activeSource) {
             try { this.activeSource.stop(); } catch (e) {}
             try { this.activeSource.disconnect(); } catch (e) {}
@@ -2021,202 +2205,290 @@ const geminiTTS = {
         const dbCached = await ttsDB.get(cacheKey);
         if (dbCached) {
             this.memCache.set(cacheKey, dbCached);
+            if (soundFX.ctx && !this.decodedCache.has(cacheKey)) {
+                soundFX.ctx.decodeAudioData(dbCached.slice(0))
+                    .then(ab => this.decodedCache.set(cacheKey, ab))
+                    .catch(() => {});
+            }
             return dbCached;
         }
 
-        // 3. Multi-schema fallback chain for Gemini TTS (strictly verbatim text!)
-        const strategies = [
-            {
-                id: 'gemini38-styled',
-                model: model,
-                body: {
-                    contents: [{
-                        role: "user",
-                        parts: [{
-                            text: cleanText,
-                            speech_metadata: {
-                                style: "warm, cheerful, expressive early-childhood educator speaking clearly and naturally to an advanced two-year-old toddler"
-                            }
-                        }]
-                    }],
-                    generationConfig: {
-                        responseModalities: ["AUDIO"],
-                        speechConfig: {
-                            voiceConfig: {
-                                voice: voice
-                            }
-                        }
-                    }
-                }
-            },
-            {
-                id: 'gemini38-prebuilt',
-                model: model,
-                body: {
-                    contents: [{
-                        role: "user",
-                        parts: [{ text: cleanText }]
-                    }],
-                    generationConfig: {
-                        responseModalities: ["AUDIO"],
-                        speechConfig: {
-                            voiceConfig: {
-                                prebuiltVoiceConfig: {
-                                    voiceName: voice
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            {
-                id: 'gemini25-fallback',
-                model: 'gemini-2.5-flash-preview-tts',
-                body: {
-                    contents: [{ parts: [{ text: cleanText }] }],
-                    generationConfig: {
-                        responseModalities: ["AUDIO"],
-                        speechConfig: {
-                            voiceConfig: {
-                                prebuiltVoiceConfig: {
-                                    voiceName: voice
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        ];
-
-        // Prioritize previously verified working strategy to minimize latency
-        if (this.workingStrategy) {
-            const idx = strategies.findIndex(s => s.id === this.workingStrategy);
-            if (idx > 0) {
-                const [ws] = strategies.splice(idx, 1);
-                strategies.unshift(ws);
-            }
+        // 3. De-duplicate identical in-flight network requests
+        if (this.inFlight.has(cacheKey)) {
+            return this.inFlight.get(cacheKey);
         }
 
-        let lastErr = null;
-        for (const strat of strategies) {
-            try {
+        const fetchPromise = (async () => {
+            // Multi-schema fallback chain for Gemini TTS (strictly verbatim text!)
+            const strategies = [
+                {
+                    id: 'gemini38-prebuilt',
+                    model: model,
+                    body: {
+                        contents: [{
+                            role: "user",
+                            parts: [{ text: cleanText }]
+                        }],
+                        generationConfig: {
+                            responseModalities: ["AUDIO"],
+                            speechConfig: {
+                                voiceConfig: {
+                                    prebuiltVoiceConfig: {
+                                        voiceName: voice
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    id: 'gemini25-fallback',
+                    model: 'gemini-2.5-flash-preview-tts',
+                    body: {
+                        contents: [{ parts: [{ text: cleanText }] }],
+                        generationConfig: {
+                            responseModalities: ["AUDIO"],
+                            speechConfig: {
+                                voiceConfig: {
+                                    prebuiltVoiceConfig: {
+                                        voiceName: voice
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    id: 'gemini38-styled',
+                    model: model,
+                    body: {
+                        contents: [{
+                            role: "user",
+                            parts: [{
+                                text: cleanText,
+                                speech_metadata: {
+                                    style: "warm, cheerful, expressive early-childhood educator speaking clearly and naturally to an advanced two-year-old toddler"
+                                }
+                            }]
+                        }],
+                        generationConfig: {
+                            responseModalities: ["AUDIO"],
+                            speechConfig: {
+                                voiceConfig: {
+                                    voice: voice
+                                }
+                            }
+                        }
+                    }
+                }
+            ];
+
+            // Prioritize previously verified working strategy to minimize latency
+            if (this.workingStrategy) {
+                const idx = strategies.findIndex(s => s.id === this.workingStrategy);
+                if (idx > 0) {
+                    const [ws] = strategies.splice(idx, 1);
+                    strategies.unshift(ws);
+                }
+            }
+
+            let lastErr = null;
+            for (const strat of strategies) {
                 const ctrl = new AbortController();
-                this.abortCtrl = ctrl;
-                const url = `https://generativelanguage.googleapis.com/v1beta/models/${strat.model}:generateContent?key=${encodeURIComponent(key)}`;
-                const resp = await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(strat.body),
-                    signal: ctrl.signal
-                });
+                const timeoutId = setTimeout(() => {
+                    try { ctrl.abort(); } catch (e) {}
+                }, 9000);
 
-                if (!resp.ok) {
-                    const errData = await resp.json().catch(() => ({}));
-                    throw new Error(errData?.error?.message || `HTTP ${resp.status}`);
+                try {
+                    const url = `https://generativelanguage.googleapis.com/v1beta/models/${strat.model}:generateContent?key=${encodeURIComponent(key)}`;
+                    const resp = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(strat.body),
+                        signal: ctrl.signal
+                    });
+                    clearTimeout(timeoutId);
+
+                    if (!resp.ok) {
+                        const errData = await resp.json().catch(() => ({}));
+                        throw new Error(errData?.error?.message || `HTTP ${resp.status}`);
+                    }
+
+                    const data = await resp.json();
+                    const base64Data = data?.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;
+                    if (!base64Data) throw new Error("No audio payload returned from Gemini TTS");
+
+                    const binaryStr = atob(base64Data);
+                    const pcmBytes = new Uint8Array(binaryStr.length);
+                    for (let i = 0; i < binaryStr.length; i++) {
+                        pcmBytes[i] = binaryStr.charCodeAt(i);
+                    }
+
+                    const wavBuffer = pcmToWav(pcmBytes, 24000, 1, 16);
+                    this.workingStrategy = strat.id;
+                    try {
+                        localStorage.setItem('tlh_isolated_v3_working_strat', strat.id);
+                    } catch (e) {}
+
+                    // Cache in memory and IndexedDB
+                    this.memCache.set(cacheKey, wavBuffer);
+                    await ttsDB.set(cacheKey, wavBuffer);
+
+                    // Pre-decode into AudioBuffer
+                    if (soundFX.ctx) {
+                        soundFX.ctx.decodeAudioData(wavBuffer.slice(0))
+                            .then(ab => this.decodedCache.set(cacheKey, ab))
+                            .catch(() => {});
+                    }
+
+                    return wavBuffer;
+                } catch (err) {
+                    clearTimeout(timeoutId);
+                    lastErr = err;
                 }
-
-                const data = await resp.json();
-                const base64Data = data?.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;
-                if (!base64Data) throw new Error("No audio payload returned from Gemini TTS");
-
-                const binaryStr = atob(base64Data);
-                const pcmBytes = new Uint8Array(binaryStr.length);
-                for (let i = 0; i < binaryStr.length; i++) {
-                    pcmBytes[i] = binaryStr.charCodeAt(i);
-                }
-
-                const wavBuffer = pcmToWav(pcmBytes, 24000, 1, 16);
-                this.workingStrategy = strat.id;
-
-                // Cache in memory and IndexedDB
-                this.memCache.set(cacheKey, wavBuffer);
-                await ttsDB.set(cacheKey, wavBuffer);
-                return wavBuffer;
-            } catch (err) {
-                lastErr = err;
-                if (err.name === 'AbortError') throw err;
             }
-        }
 
-        throw lastErr || new Error("All Gemini TTS strategies failed");
+            throw lastErr || new Error("All Gemini TTS strategies failed");
+        })();
+
+        this.inFlight.set(cacheKey, fetchPromise);
+        try {
+            return await fetchPromise;
+        } finally {
+            this.inFlight.delete(cacheKey);
+        }
     },
 
-    async play(text, model = getTtsModel(), voice = getTtsVoice(), customKey = null) {
+    async play(text, model = getTtsModel(), voice = getTtsVoice(), customKey = null, onPlayStart = null) {
         this.stop();
         const myReqId = ++this.playReqId;
+
+        // CRITICAL FOR iOS SAFARI: synchronously initialize AudioContext and resume inside user gesture token BEFORE any await
         soundFX.init();
-        if (!soundFX.ctx) throw new Error("WebAudio context not initialized");
+        if (soundFX.ctx && soundFX.ctx.state !== 'running') {
+            try { soundFX.ctx.resume(); } catch (e) {}
+        }
+
+        // Cancel any active speechSynthesis so Device Voice and Gemini Voice never clash
+        if ('speechSynthesis' in window && (window.speechSynthesis.speaking || window.speechSynthesis.pending)) {
+            try { window.speechSynthesis.cancel(); } catch (e) {}
+        }
+
+        const cleanText = cleanSpokenText(text);
+        if (!cleanText) return;
 
         if (typeof app !== 'undefined' && app.setSpeakingUI) {
             app.setSpeakingUI(true);
         }
 
+        const cacheKey = `${model}:${voice}:${cleanText}`;
+
+        const playAudioBuffer = async (audioBuf) => {
+            if (myReqId !== this.playReqId) return;
+            if (soundFX.ctx.state !== 'running') {
+                try { await soundFX.ctx.resume(); } catch (e) {}
+            }
+            if (myReqId !== this.playReqId) return;
+
+            const src = soundFX.ctx.createBufferSource();
+            src.buffer = audioBuf;
+            if (typeof app !== 'undefined' && app.getSpeechRateValue) {
+                src.playbackRate.value = app.getSpeechRateValue();
+            }
+            const gain = soundFX.ctx.createGain();
+            gain.gain.setValueAtTime(1.0, soundFX.ctx.currentTime);
+            src.connect(gain);
+            gain.connect(soundFX.ctx.destination);
+
+            src.onended = () => {
+                if (this.activeSource === src) {
+                    this.activeSource = null;
+                    if (typeof app !== 'undefined' && app.setSpeakingUI) app.setSpeakingUI(false);
+                }
+            };
+
+            this.activeSource = src;
+            if (typeof onPlayStart === 'function') {
+                try { onPlayStart(); } catch (e) {}
+            }
+            src.start(0);
+        };
+
+        let wavBuf = null;
         try {
-            const wavBuf = await this.fetchAudio(text, model, voice, customKey);
-            if (!wavBuf || myReqId !== this.playReqId) {
-                if (myReqId === this.playReqId && typeof app !== 'undefined' && app.setSpeakingUI) app.setSpeakingUI(false);
+            // Fast-path: Pre-decoded AudioBuffer already available
+            if (soundFX.ctx && this.decodedCache.has(cacheKey)) {
+                await playAudioBuffer(this.decodedCache.get(cacheKey));
                 return;
+            }
+
+            wavBuf = await this.fetchAudio(cleanText, model, voice, customKey);
+            if (!wavBuf || myReqId !== this.playReqId) {
+                if (myReqId === this.playReqId && typeof app !== 'undefined' && app.setSpeakingUI) {
+                    app.setSpeakingUI(false);
+                }
+                return;
+            }
+
+            if (!soundFX.ctx) {
+                throw new Error("No WebAudio context");
             }
 
             if (soundFX.ctx.state !== 'running') {
                 try { await soundFX.ctx.resume(); } catch (e) {}
             }
 
-            try {
-                const audioBuf = await soundFX.ctx.decodeAudioData(wavBuf.slice(0));
-                if (myReqId !== this.playReqId) return;
-
-                const src = soundFX.ctx.createBufferSource();
-                src.buffer = audioBuf;
-                if (typeof app !== 'undefined' && app.getSpeechRateValue) {
-                    src.playbackRate.value = app.getSpeechRateValue();
-                }
-                const gain = soundFX.ctx.createGain();
-                gain.gain.setValueAtTime(1.0, soundFX.ctx.currentTime);
-                src.connect(gain);
-                gain.connect(soundFX.ctx.destination);
-
-                src.onended = () => {
-                    if (this.activeSource === src) {
-                        this.activeSource = null;
-                        if (typeof app !== 'undefined' && app.setSpeakingUI) app.setSpeakingUI(false);
-                    }
-                };
-
-                src.start(0);
-                this.activeSource = src;
-            } catch (decodeErr) {
-                // Fallback to HTMLAudioElement with WAV Blob
-                if (myReqId !== this.playReqId) return;
-                const blob = new Blob([wavBuf.slice(0)], { type: 'audio/wav' });
-                const blobUrl = URL.createObjectURL(blob);
-                const audio = new Audio(blobUrl);
-                if (typeof app !== 'undefined' && app.getSpeechRateValue) {
-                    audio.playbackRate = app.getSpeechRateValue();
-                }
-                this.activeAudioEl = audio;
-                audio.onended = () => {
-                    URL.revokeObjectURL(blobUrl);
-                    if (this.activeAudioEl === audio) {
-                        this.activeAudioEl = null;
-                        if (typeof app !== 'undefined' && app.setSpeakingUI) app.setSpeakingUI(false);
-                    }
-                };
-                audio.onerror = () => {
-                    URL.revokeObjectURL(blobUrl);
-                    if (this.activeAudioEl === audio) {
-                        this.activeAudioEl = null;
-                        if (typeof app !== 'undefined' && app.setSpeakingUI) app.setSpeakingUI(false);
-                    }
-                };
-                await audio.play();
+            let audioBuf = this.decodedCache.get(cacheKey);
+            if (!audioBuf) {
+                audioBuf = await soundFX.ctx.decodeAudioData(wavBuf.slice(0));
+                this.decodedCache.set(cacheKey, audioBuf);
             }
-        } catch (e) {
+            await playAudioBuffer(audioBuf);
+        } catch (decodeErr) {
+            if (myReqId !== this.playReqId) return;
+            if (wavBuf) {
+                // Fallback to HTMLAudioElement with WAV Blob
+                try {
+                    const blob = new Blob([wavBuf.slice(0)], { type: 'audio/wav' });
+                    const blobUrl = URL.createObjectURL(blob);
+                    const audio = new Audio(blobUrl);
+                    if (typeof app !== 'undefined' && app.getSpeechRateValue) {
+                        audio.playbackRate = app.getSpeechRateValue();
+                    }
+                    this.activeAudioEl = audio;
+                    audio.onended = () => {
+                        URL.revokeObjectURL(blobUrl);
+                        if (this.activeAudioEl === audio) {
+                            this.activeAudioEl = null;
+                            if (typeof app !== 'undefined' && app.setSpeakingUI) app.setSpeakingUI(false);
+                        }
+                    };
+                    audio.onerror = () => {
+                        URL.revokeObjectURL(blobUrl);
+                        if (this.activeAudioEl === audio) {
+                            this.activeAudioEl = null;
+                            if (typeof app !== 'undefined' && app.setSpeakingUI) app.setSpeakingUI(false);
+                        }
+                    };
+                    if (typeof onPlayStart === 'function') {
+                        try { onPlayStart(); } catch (e) {}
+                    }
+                    await audio.play();
+                    return;
+                } catch (audioElErr) {}
+            }
             if (myReqId === this.playReqId && typeof app !== 'undefined' && app.setSpeakingUI) {
                 app.setSpeakingUI(false);
             }
-            if (e.name === 'AbortError') return;
-            throw e;
+            if (decodeErr.name === 'AbortError') return;
+            throw decodeErr;
+        }
+    },
+
+    warmUpView(viewName) {
+        if (this.warmUpTimer) {
+            clearTimeout(this.warmUpTimer);
+            this.warmUpTimer = null;
         }
     }
 };
@@ -2988,7 +3260,8 @@ const DEFAULT_SETTINGS = {
     requireHoldHome: false,   // Toddler Lock: require double-tap on Home button to exit a game
     speechRate: 'normal',     // 'slow' (0.82), 'normal' (0.96), 'fast' (1.10)
     maxNumber: 20,            // 10 (1-10 Beginner) or 20 (1-20 Advanced)
-    phonicsDetail: 'full'     // 'full' ("A! A says ah! ah, Apple!") or 'simple' ("A! Apple!")
+    phonicsDetail: 'full',    // 'full' ("A! A says ah! ah, Apple!") or 'simple' ("A! Apple!")
+    minimizeMenuHeader: false // Minimize upper title banner on Main Menu to just show cards
 };
 
 const GAME_OPEN_TITLES = {
@@ -3020,10 +3293,35 @@ const app = {
     isOpeningView: false,
     pendingGameIntro: null,
 
+    applyMenuHeaderState() {
+        const isMin = !!(this.settings && this.settings.minimizeMenuHeader);
+        const banner = document.getElementById('menu-header-banner');
+        if (banner) banner.classList.toggle('hidden', isMin);
+        const topContainer = document.getElementById('menu-top-container');
+        if (topContainer) {
+            if (isMin) {
+                topContainer.classList.remove('pt-5', 'pb-2', 'pt-4');
+                topContainer.classList.add('pt-2', 'pb-1');
+            } else {
+                topContainer.classList.remove('pt-2', 'pb-1');
+                topContainer.classList.add('pt-4', 'pb-2');
+            }
+        }
+        const icon = document.getElementById('menu-minimize-icon');
+        const label = document.getElementById('menu-minimize-label');
+        if (icon) icon.textContent = isMin ? '🔽' : '🔼';
+        if (label) label.textContent = isMin ? 'Show Title' : 'Minimize';
+        const optToggle = document.getElementById('opt-minimize-header');
+        if (optToggle) optToggle.checked = isMin;
+    },
+
     saveSettings() {
         try {
             localStorage.setItem('tlh_isolated_v3_settings', JSON.stringify(this.settings));
         } catch (e) {}
+        if (typeof this.applyMenuHeaderState === 'function') {
+            this.applyMenuHeaderState();
+        }
         if (typeof numberGame !== 'undefined' && numberGame.applyMaxNumberSetting) {
             numberGame.applyMaxNumberSetting();
         }
@@ -3079,6 +3377,10 @@ const app = {
         soundFX.stopAll();
         geminiTTS.stop();
 
+        if (typeof zoomController !== 'undefined') {
+            zoomController.resetZoom();
+        }
+
         document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active-view'));
         if (this.currentView === 'letters' && typeof phonicsGame !== 'undefined') phonicsGame.stopBubbles();
         if (this.currentView === 'shapes3d' && typeof shapes3DGame !== 'undefined') shapes3DGame.stop();
@@ -3092,6 +3394,7 @@ const app = {
         if (viewName === 'menu') {
             this.pendingGameIntro = null;
             this.isOpeningView = false;
+            this.applyMenuHeaderState();
             soundFX.playPop();
             return;
         }
@@ -3116,9 +3419,10 @@ const app = {
 
         this.isOpeningView = false;
         this.pendingGameIntro = null;
+        geminiTTS.warmUpView(viewName);
     },
 
-    speak(text) {
+    speak(text, onStartCallback = null) {
         if (!this.settings.voiceEnabled) {
             this.pendingGameIntro = null;
             return;
@@ -3148,35 +3452,16 @@ const app = {
 
         const key = getApiKey();
         if (key) {
-            const cacheKey = `${getTtsModel()}:${getTtsVoice()}:${clean}`;
-            if (geminiTTS.memCache.has(cacheKey)) {
-                geminiTTS.play(clean).catch(() => {
-                    this.speakDeviceVoice(clean);
-                });
-                return;
-            }
-
-            let didFallback = false;
-            let timer = setTimeout(() => {
-                didFallback = true;
-                geminiTTS.stop();
-                this.speakDeviceVoice(clean);
-            }, 1200);
-
-            geminiTTS.play(clean).then(() => {
-                if (timer) { clearTimeout(timer); timer = null; }
-            }).catch(() => {
-                if (timer) { clearTimeout(timer); timer = null; }
-                if (!didFallback) {
-                    this.speakDeviceVoice(clean);
-                }
+            geminiTTS.play(clean, getTtsModel(), getTtsVoice(), key, onStartCallback).catch((err) => {
+                console.warn('Gemini TTS fallback to Device Voice:', err);
+                this.speakDeviceVoice(clean, onStartCallback);
             });
         } else {
-            this.speakDeviceVoice(clean);
+            this.speakDeviceVoice(clean, onStartCallback);
         }
     },
 
-    speakDeviceVoice(cleanText) {
+    speakDeviceVoice(cleanText, onStartCallback = null) {
         try {
             if (!this.settings.voiceEnabled) return;
             if (!('speechSynthesis' in window)) return;
@@ -3192,7 +3477,20 @@ const app = {
             msg.pitch = 1.05;
             if (this.cachedVoice) msg.voice = this.cachedVoice;
 
-            msg.onstart = () => app.setSpeakingUI(true);
+            let started = false;
+            const triggerStart = () => {
+                if (!started) {
+                    started = true;
+                    if (typeof onStartCallback === 'function') {
+                        try { onStartCallback(); } catch (e) {}
+                    }
+                }
+            };
+
+            msg.onstart = () => {
+                app.setSpeakingUI(true);
+                triggerStart();
+            };
             msg.onend = () => {
                 app.setSpeakingUI(false);
                 app.currentUtterance = null;
@@ -3204,6 +3502,7 @@ const app = {
 
             this.currentUtterance = msg;
             window.speechSynthesis.speak(msg);
+            setTimeout(triggerStart, 60);
         } catch (e) {
             app.setSpeakingUI(false);
         }
@@ -3619,17 +3918,18 @@ const solarGame = {
         this.scene.add(sunLight);
 
         this.camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
-        this.camera.position.z = 6.8;
+        this.camera.position.z = 7.4;
 
         this.renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
         this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-        this.renderer.setSize(240, 240);
+        this.renderer.setSize(256, 256);
         container.appendChild(this.renderer.domElement);
 
         const worldX = new THREE.Vector3(1, 0, 0);
         const worldY = new THREE.Vector3(0, 1, 0);
 
         container.addEventListener('pointerdown', e => {
+            if (typeof zoomController !== 'undefined' && zoomController.isPinching) return;
             this.isDragging = true;
             this.prevX = e.clientX;
             this.prevY = e.clientY;
@@ -3637,6 +3937,10 @@ const solarGame = {
         });
 
         container.addEventListener('pointermove', e => {
+            if (typeof zoomController !== 'undefined' && zoomController.isPinching) {
+                this.isDragging = false;
+                return;
+            }
             if (!this.isDragging || !this.rootGroup) return;
             const dx = e.clientX - this.prevX;
             const dy = e.clientY - this.prevY;
@@ -4031,6 +4335,9 @@ const solarGame = {
 
     setMode(newMode) {
         this.mode = newMode;
+        if (typeof zoomController !== 'undefined') {
+            zoomController.resetZoom();
+        }
         document.getElementById('solar-mode-photo').classList.toggle('active', newMode === 'photo');
         document.getElementById('solar-mode-planet').classList.toggle('active', newMode === 'planet');
         document.getElementById('solar-mode-orbit').classList.toggle('active', newMode === 'orbit');
@@ -4055,13 +4362,12 @@ const solarGame = {
             this.stop();
             photoContainer.classList.remove('hidden');
             canvasContainer.classList.add('hidden');
-            const fitClass = (item.id === 'Saturn' || item.id === 'Comet') ? 'object-contain' : 'object-cover';
             const holder = document.getElementById('solar-svg-holder');
             holder.innerHTML = '';
             const img = document.createElement('img');
             img.src = item.photoUrl;
             img.alt = item.id;
-            img.className = `w-full h-full ${fitClass} rounded-2xl drop-shadow-xl transition-all duration-300`;
+            img.className = 'w-full h-full object-contain rounded-2xl drop-shadow-xl transition-all duration-300';
             img.addEventListener('error', () => {
                 holder.innerHTML = getSolarSVG(item.id, 'fallback_stage');
             }, { once: true });
@@ -4172,6 +4478,9 @@ const phonicsGame = {
 
     setMode(newMode) {
         this.mode = newMode;
+        if (typeof zoomController !== 'undefined') {
+            zoomController.resetZoom();
+        }
         document.getElementById('phonics-mode-studio').classList.toggle('active', newMode === 'studio');
         document.getElementById('phonics-mode-bubbles').classList.toggle('active', newMode === 'bubbles');
         document.getElementById('phonics-studio-stage').classList.toggle('hidden', newMode !== 'studio');
@@ -4216,7 +4525,7 @@ const phonicsGame = {
                 else formattedWord += wObj.w[c];
             }
 
-            wCard.innerHTML = `<span class="text-4xl sm:text-5xl mb-1">${wObj.e}</span><span class="font-black text-slate-800 text-base sm:text-lg">${formattedWord}</span>`;
+            wCard.innerHTML = `<span class="text-4xl sm:text-5xl mb-0.5">${wObj.e}</span><span class="font-black text-slate-800 text-xs sm:text-base truncate max-w-full text-center">${formattedWord}</span>`;
             wCard.addEventListener('click', () => {
                 soundFX.playPop();
                 app.animatePop(wCard);
@@ -4817,17 +5126,18 @@ const shapes3DGame = {
         this.scene.add(dirLight);
 
         this.camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
-        this.camera.position.z = 7.0;
+        this.camera.position.z = 6.2;
 
         this.renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
         this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-        this.renderer.setSize(230, 230);
+        this.renderer.setSize(256, 256);
         container.appendChild(this.renderer.domElement);
 
         const worldX = new THREE.Vector3(1, 0, 0);
         const worldY = new THREE.Vector3(0, 1, 0);
 
         container.addEventListener('pointerdown', e => {
+            if (typeof zoomController !== 'undefined' && zoomController.isPinching) return;
             this.isDragging = true;
             this.prevX = e.clientX;
             this.prevY = e.clientY;
@@ -4835,6 +5145,10 @@ const shapes3DGame = {
         });
 
         container.addEventListener('pointermove', e => {
+            if (typeof zoomController !== 'undefined' && zoomController.isPinching) {
+                this.isDragging = false;
+                return;
+            }
             if (!this.isDragging || !this.mesh) return;
             const dx = e.clientX - this.prevX;
             const dy = e.clientY - this.prevY;
@@ -5519,6 +5833,10 @@ const animalGame = {
     select(a, playAudio = true, soundOnly = false) {
         this.current = a;
         soundFX.stopAll();
+        if (this.speechTimer) {
+            clearTimeout(this.speechTimer);
+            this.speechTimer = null;
+        }
         if (soundOnly || !playAudio) {
             geminiTTS.stop();
             if ('speechSynthesis' in window && (window.speechSynthesis.speaking || window.speechSynthesis.pending)) {
@@ -5540,12 +5858,15 @@ const animalGame = {
             if (soundOnly) {
                 soundFX.playAnimalSound(a.id);
             } else {
-                app.speak(a.id);
-                const delay = app.isOpeningView ? 950 : 380;
-                const timer = setTimeout(() => {
-                    soundFX.playAnimalSound(a.id);
-                }, delay);
-                soundFX.registerTimer(timer);
+                const isOpening = app.isOpeningView;
+                app.speak(a.id, () => {
+                    const delay = isOpening ? 950 : 450;
+                    this.speechTimer = setTimeout(() => {
+                        soundFX.playAnimalSound(a.id);
+                        this.speechTimer = null;
+                    }, delay);
+                    soundFX.registerTimer(this.speechTimer);
+                });
             }
         }
     }
@@ -5702,9 +6023,15 @@ const thingsGame = {
     select(item, speak = true, soundOnly = false) {
         this.current = item;
         soundFX.stopAll();
-        geminiTTS.stop();
-        if ('speechSynthesis' in window && (window.speechSynthesis.speaking || window.speechSynthesis.pending)) {
-            try { window.speechSynthesis.cancel(); } catch (e) {}
+        if (this.speechTimer) {
+            clearTimeout(this.speechTimer);
+            this.speechTimer = null;
+        }
+        if (soundOnly || !speak) {
+            geminiTTS.stop();
+            if ('speechSynthesis' in window && (window.speechSynthesis.speaking || window.speechSynthesis.pending)) {
+                try { window.speechSynthesis.cancel(); } catch (e) {}
+            }
         }
         const t = document.getElementById('things-target');
         t.textContent = item.emoji;
@@ -5714,27 +6041,23 @@ const thingsGame = {
             b.classList.toggle('selected', b.dataset.thingId === item.id);
         });
         app.animatePop(t);
+        if (soundOnly) {
+            soundFX.playThingSound(item.id);
+            return;
+        }
         if (speak) {
             if (app.isOpeningView && !app.settings.announceGameOnOpen) {
                 return;
             }
-            if (app.isOpeningView) {
-                app.speak(item.id);
+            const isOpening = app.isOpeningView;
+            const delay = isOpening ? 950 : 450;
+            app.speak(item.id, () => {
                 this.speechTimer = setTimeout(() => {
                     soundFX.playThingSound(item.id);
                     this.speechTimer = null;
-                }, 950);
+                }, delay);
                 soundFX.registerTimer(this.speechTimer);
-            } else {
-                soundFX.playThingSound(item.id);
-                if (!soundOnly) {
-                    this.speechTimer = setTimeout(() => {
-                        app.speak(item.id);
-                        this.speechTimer = null;
-                    }, 350);
-                    soundFX.registerTimer(this.speechTimer);
-                }
-            }
+            });
         }
     }
 };
@@ -5773,7 +6096,7 @@ function updateVoiceStatusIndicator() {
     const modelSel = document.getElementById('gemini-tts-model-select');
     const voiceSel = document.getElementById('gemini-tts-voice-select');
 
-    const storedKey = localStorage.getItem('tlh_isolated_v3_api_key') || localStorage.getItem('toddler_gemini_api_key');
+    const storedKey = runtimeVoiceConfig.apiKey || safeGetStorage('tlh_isolated_v3_api_key') || safeGetStorage('toddler_gemini_api_key');
     if (input && document.activeElement !== input) {
         input.value = storedKey || (apiKey ? "●●●●●●●● (Canvas Injected)" : "");
     }
@@ -5813,6 +6136,259 @@ function updateVoiceStatusIndicator() {
     }
 }
 
+const zoomController = {
+    scale: 1.0,
+    panX: 0,
+    panY: 0,
+    isPinching: false,
+
+    init() {
+        const gameViews = [
+            'letters', 'numbers', 'quiz', 'shapes', 'shapes3d',
+            'colors', 'animals', 'fruits', 'things', 'opposites', 'solar'
+        ];
+
+        gameViews.forEach(vName => {
+            const viewEl = document.getElementById(`view-${vName}`);
+            if (!viewEl) return;
+            const stages = viewEl.querySelectorAll('.main-stage');
+            stages.forEach(stage => {
+                if (stage.id === 'phonics-bubble-stage') return;
+                this.setupStageZoom(stage, vName);
+            });
+        });
+    },
+
+    setupStageZoom(stage, viewName) {
+        if (!stage || stage.querySelector('.zoom-hud-pill')) return;
+
+        // Floating Zoom Control Pill
+        const pill = document.createElement('div');
+        pill.className = 'zoom-hud-pill';
+        pill.title = 'Pinch or tap buttons to Zoom';
+
+        const outBtn = document.createElement('button');
+        outBtn.type = 'button';
+        outBtn.className = 'zoom-out-btn';
+        outBtn.title = 'Zoom Out';
+        outBtn.setAttribute('aria-label', 'Zoom Out');
+        outBtn.textContent = '🔍 −';
+
+        const resetBtn = document.createElement('button');
+        resetBtn.type = 'button';
+        resetBtn.className = 'zoom-reset-btn';
+        resetBtn.title = 'Reset Zoom';
+        resetBtn.setAttribute('aria-label', 'Reset Zoom');
+        resetBtn.textContent = '100%';
+
+        const inBtn = document.createElement('button');
+        inBtn.type = 'button';
+        inBtn.className = 'zoom-in-btn';
+        inBtn.title = 'Zoom In';
+        inBtn.setAttribute('aria-label', 'Zoom In');
+        inBtn.textContent = '+';
+
+        pill.appendChild(outBtn);
+        pill.appendChild(resetBtn);
+        pill.appendChild(inBtn);
+        stage.appendChild(pill);
+
+        pill.addEventListener('pointerdown', e => e.stopPropagation());
+        pill.addEventListener('touchstart', e => e.stopPropagation(), { passive: true });
+        pill.addEventListener('click', e => e.stopPropagation());
+
+        outBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.zoomBy(-0.35);
+        });
+        resetBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (typeof soundFX !== 'undefined') soundFX.playPop();
+            this.resetZoom();
+        });
+        inBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.zoomBy(0.35);
+        });
+
+        // Touch Pinch-to-Zoom & 2-Finger Pan Listeners
+        let startDist = 0;
+        let startScale = 1.0;
+        let startMidX = 0, startMidY = 0;
+        let startPanX = 0, startPanY = 0;
+
+        stage.addEventListener('touchstart', (e) => {
+            if (e.touches.length === 2) {
+                this.isPinching = true;
+                startDist = Math.hypot(
+                    e.touches[0].clientX - e.touches[1].clientX,
+                    e.touches[0].clientY - e.touches[1].clientY
+                );
+                startScale = this.scale;
+                startMidX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+                startMidY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+                startPanX = this.panX;
+                startPanY = this.panY;
+            }
+        }, { passive: false });
+
+        stage.addEventListener('touchmove', (e) => {
+            if (this.isPinching && e.touches.length === 2) {
+                if (e.cancelable) e.preventDefault();
+                const dist = Math.hypot(
+                    e.touches[0].clientX - e.touches[1].clientX,
+                    e.touches[0].clientY - e.touches[1].clientY
+                );
+                if (startDist > 0) {
+                    const factor = dist / startDist;
+                    const newScale = Math.max(0.6, Math.min(3.5, startScale * factor));
+                    const midX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+                    const midY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+                    const newPanX = startPanX + (midX - startMidX);
+                    const newPanY = startPanY + (midY - startMidY);
+                    this.applyZoom(newScale, newPanX, newPanY);
+                }
+            }
+        }, { passive: false });
+
+        const endPinch = (e) => {
+            if (e.touches.length < 2) {
+                this.isPinching = false;
+            }
+        };
+        stage.addEventListener('touchend', endPinch);
+        stage.addEventListener('touchcancel', endPinch);
+
+        // Desktop / Trackpad pinch (wheel with ctrlKey or metaKey)
+        stage.addEventListener('wheel', (e) => {
+            if (e.ctrlKey || e.metaKey) {
+                if (e.cancelable) e.preventDefault();
+                const delta = -e.deltaY * 0.01;
+                this.zoomBy(delta, false);
+            }
+        }, { passive: false });
+    },
+
+    is3DView(viewName) {
+        if (viewName === 'shapes3d') return true;
+        if (viewName === 'solar' && typeof solarGame !== 'undefined' && solarGame.mode !== 'photo') return true;
+        return false;
+    },
+
+    getTargetForView(viewName) {
+        switch (viewName) {
+            case 'letters':
+                return document.getElementById('phonics-zoom-target') || document.getElementById('phonics-main-card');
+            case 'numbers':
+                return document.getElementById('number-items-grid');
+            case 'quiz':
+                return document.getElementById('quiz-choices-grid');
+            case 'shapes':
+                return document.getElementById('shape-target');
+            case 'colors':
+                return document.getElementById('color-explore-box') || document.getElementById('color-bg-target');
+            case 'animals':
+                return document.getElementById('animal-target');
+            case 'fruits':
+                return document.getElementById('fruits-target');
+            case 'things':
+                return document.getElementById('things-target');
+            case 'opposites':
+                return document.getElementById('opposites-cards-grid') || document.querySelector('#view-opposites .main-stage .grid');
+            case 'solar':
+                if (typeof solarGame !== 'undefined' && solarGame.mode !== 'photo') {
+                    return null;
+                }
+                return document.getElementById('solar-photo-container') || document.getElementById('solar-svg-holder');
+            case 'shapes3d':
+                return null;
+            default:
+                return null;
+        }
+    },
+
+    applyZoom(newScale, newPanX = 0, newPanY = 0) {
+        this.scale = Math.max(0.6, Math.min(3.5, Math.round(newScale * 100) / 100));
+        if (Math.abs(this.scale - 1.0) < 0.04) {
+            this.scale = 1.0;
+            this.panX = 0;
+            this.panY = 0;
+        } else {
+            this.panX = Math.round(newPanX);
+            this.panY = Math.round(newPanY);
+        }
+
+        const curView = typeof app !== 'undefined' ? app.currentView : null;
+        if (!curView || curView === 'menu') return;
+
+        if (this.is3DView(curView)) {
+            if (curView === 'shapes3d' && typeof shapes3DGame !== 'undefined' && shapes3DGame.camera) {
+                shapes3DGame.camera.zoom = Math.max(0.55, Math.min(3.2, this.scale));
+                shapes3DGame.camera.updateProjectionMatrix();
+            } else if (curView === 'solar' && typeof solarGame !== 'undefined' && solarGame.camera) {
+                solarGame.camera.zoom = Math.max(0.55, Math.min(3.2, this.scale));
+                solarGame.camera.updateProjectionMatrix();
+            }
+        } else {
+            const target = this.getTargetForView(curView);
+            if (target) {
+                target.style.transformOrigin = 'center center';
+                if (this.scale === 1.0 && this.panX === 0 && this.panY === 0) {
+                    target.style.transform = '';
+                    target.style.zIndex = '';
+                } else {
+                    target.style.transform = `translate3d(${this.panX}px, ${this.panY}px, 0) scale(${this.scale})`;
+                    target.style.zIndex = this.scale > 1.02 ? '25' : '';
+                }
+            }
+        }
+
+        this.updateHUD();
+    },
+
+    zoomBy(delta, playSound = true) {
+        if (playSound && typeof soundFX !== 'undefined') soundFX.playPop();
+        const nextScale = Math.max(0.6, Math.min(3.5, this.scale + delta));
+        const nextPanX = nextScale === 1.0 ? 0 : this.panX;
+        const nextPanY = nextScale === 1.0 ? 0 : this.panY;
+        this.applyZoom(nextScale, nextPanX, nextPanY);
+    },
+
+    resetZoom() {
+        this.scale = 1.0;
+        this.panX = 0;
+        this.panY = 0;
+        const curView = typeof app !== 'undefined' ? app.currentView : null;
+        if (curView) {
+            const target = this.getTargetForView(curView);
+            if (target) {
+                target.style.transform = '';
+                target.style.zIndex = '';
+            }
+            if (typeof shapes3DGame !== 'undefined' && shapes3DGame.camera) {
+                shapes3DGame.camera.zoom = 1.0;
+                shapes3DGame.camera.updateProjectionMatrix();
+            }
+            if (typeof solarGame !== 'undefined' && solarGame.camera) {
+                solarGame.camera.zoom = 1.0;
+                solarGame.camera.updateProjectionMatrix();
+            }
+        }
+        this.updateHUD();
+    },
+
+    updateHUD() {
+        const curView = typeof app !== 'undefined' ? app.currentView : null;
+        if (!curView) return;
+        const viewEl = document.getElementById(`view-${curView}`);
+        if (!viewEl) return;
+        const labels = viewEl.querySelectorAll('.zoom-reset-btn');
+        labels.forEach(btn => {
+            btn.textContent = `${Math.round(this.scale * 100)}%`;
+        });
+    }
+};
+
 window.addEventListener('DOMContentLoaded', () => {
     app.initVoices();
     if ('speechSynthesis' in window) {
@@ -5827,6 +6403,30 @@ window.addEventListener('DOMContentLoaded', () => {
     const modelSel = document.getElementById('gemini-tts-model-select');
     const voiceSel = document.getElementById('gemini-tts-voice-select');
     const testStatus = document.getElementById('voice-test-status');
+
+    const saveVoiceInputsToStorage = () => {
+        if (inp) {
+            const val = inp.value.trim();
+            if (!val.includes('●●●●●●●●')) {
+                runtimeVoiceConfig.apiKey = val;
+                safeSetStorage('tlh_isolated_v3_api_key', val);
+            }
+        }
+        if (modelSel && modelSel.value) {
+            const prevModel = runtimeVoiceConfig.model || safeGetStorage('tlh_isolated_v3_tts_model');
+            if (prevModel && prevModel !== modelSel.value) {
+                safeSetStorage('tlh_isolated_v3_working_strat', '');
+                geminiTTS.workingStrategy = null;
+            }
+            runtimeVoiceConfig.model = modelSel.value;
+            safeSetStorage('tlh_isolated_v3_tts_model', modelSel.value);
+        }
+        if (voiceSel && voiceSel.value) {
+            runtimeVoiceConfig.voice = voiceSel.value;
+            safeSetStorage('tlh_isolated_v3_tts_voice', voiceSel.value);
+        }
+        updateVoiceStatusIndicator();
+    };
 
     const syncSettingsToUI = () => {
         const s = app.settings;
@@ -5848,6 +6448,8 @@ window.addEventListener('DOMContentLoaded', () => {
         if (optAutoSpin) optAutoSpin.checked = !!s.autoSpin3D;
         const optHoldHome = document.getElementById('opt-hold-home');
         if (optHoldHome) optHoldHome.checked = !!s.requireHoldHome;
+        const optMinHeader = document.getElementById('opt-minimize-header');
+        if (optMinHeader) optMinHeader.checked = !!s.minimizeMenuHeader;
     };
 
     const openVoiceModal = () => {
@@ -5860,6 +6462,7 @@ window.addEventListener('DOMContentLoaded', () => {
         if (voiceModal) voiceModal.classList.remove('hidden');
     };
     const closeVoiceModal = () => {
+        saveVoiceInputsToStorage();
         if (voiceModal) voiceModal.classList.add('hidden');
     };
 
@@ -5868,6 +6471,9 @@ window.addEventListener('DOMContentLoaded', () => {
         btn.addEventListener('click', openVoiceModal);
     });
     document.getElementById('voice-modal-close-x')?.addEventListener('click', closeVoiceModal);
+    voiceModal?.addEventListener('click', (e) => {
+        if (e.target === voiceModal) closeVoiceModal();
+    });
 
     // Live option input listeners
     document.getElementById('opt-announce-open')?.addEventListener('change', (e) => {
@@ -5906,44 +6512,32 @@ window.addEventListener('DOMContentLoaded', () => {
         app.settings.requireHoldHome = e.target.checked;
         app.saveSettings();
     });
+    document.getElementById('opt-minimize-header')?.addEventListener('change', (e) => {
+        app.settings.minimizeMenuHeader = e.target.checked;
+        app.saveSettings();
+        app.applyMenuHeaderState();
+    });
 
     document.getElementById('opt-reset-defaults-btn')?.addEventListener('click', () => {
         app.settings = Object.assign({}, DEFAULT_SETTINGS);
         app.saveSettings();
         syncSettingsToUI();
+        app.applyMenuHeaderState();
         soundFX.playPop();
     });
 
     // Live input listeners so changes take effect immediately
-    inp?.addEventListener('input', () => {
-        const val = inp.value.trim();
-        if (!val.includes('●●●●●●●●')) {
-            if (val) localStorage.setItem('tlh_isolated_v3_api_key', val);
-            else localStorage.removeItem('tlh_isolated_v3_api_key');
-            updateVoiceStatusIndicator();
-        }
-    });
-    modelSel?.addEventListener('change', () => {
-        localStorage.setItem('tlh_isolated_v3_tts_model', modelSel.value);
-    });
-    voiceSel?.addEventListener('change', () => {
-        localStorage.setItem('tlh_isolated_v3_tts_voice', voiceSel.value);
-    });
+    inp?.addEventListener('input', saveVoiceInputsToStorage);
+    inp?.addEventListener('change', saveVoiceInputsToStorage);
+    inp?.addEventListener('paste', () => setTimeout(saveVoiceInputsToStorage, 20));
+    inp?.addEventListener('blur', saveVoiceInputsToStorage);
+    modelSel?.addEventListener('change', saveVoiceInputsToStorage);
+    voiceSel?.addEventListener('change', saveVoiceInputsToStorage);
 
     // Save & Done button
     document.getElementById('voice-modal-save-btn')?.addEventListener('click', () => {
-        if (inp) {
-            const val = inp.value.trim();
-            if (!val.includes('●●●●●●●●')) {
-                if (val) localStorage.setItem('tlh_isolated_v3_api_key', val);
-                else localStorage.removeItem('tlh_isolated_v3_api_key');
-            }
-        }
-        if (modelSel) localStorage.setItem('tlh_isolated_v3_tts_model', modelSel.value);
-        if (voiceSel) localStorage.setItem('tlh_isolated_v3_tts_voice', voiceSel.value);
-
+        saveVoiceInputsToStorage();
         app.saveSettings();
-        updateVoiceStatusIndicator();
         closeVoiceModal();
         if (app.settings.voiceEnabled) {
             app.speak("Options saved! Let's explore together!");
@@ -5952,6 +6546,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // Live Test Voice Sample Button (tests live input values directly)
     document.getElementById('voice-test-btn')?.addEventListener('click', async () => {
+        saveVoiceInputsToStorage();
         const testText = "Hello little explorer! Let's count and play together!";
         const curModel = modelSel?.value || getTtsModel();
         const curVoice = voiceSel?.value || getTtsVoice();
@@ -5989,6 +6584,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // Pre-cache Core Words into IndexedDB
     document.getElementById('voice-precache-btn')?.addEventListener('click', async () => {
+        saveVoiceInputsToStorage();
         const key = getApiKey();
         if (!key) {
             alert("Please paste your Gemini API Key first to pre-cache Gemini natural voices!");
@@ -5996,12 +6592,26 @@ window.addEventListener('DOMContentLoaded', () => {
         }
 
         const wordsToCache = [
+            // Numbers
             "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten",
             "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen", "Twenty",
-            "Great job!", "You found it!", "Yay!", "Yum yum!", "Crunch! Delicious!",
-            "Choo choo!", "Blast off!", "Roar!", "Splish splash!", "Ring ring!",
+            // Alphabet
             "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
-            "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
+            "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
+            // Colors
+            "Red", "Blue", "Yellow", "Green", "Orange", "Purple", "Pink",
+            // Shapes
+            "Circle!", "Square!", "Triangle!", "Star!", "Rectangle!", "Heart!",
+            // 3D Shapes
+            "Cube", "Sphere", "Cylinder", "Cone", "Pyramid",
+            // Animals
+            "Lion", "Dog", "Cat", "Cow", "Duck", "Pig", "Sheep", "Horse",
+            "Elephant", "Monkey", "Frog", "Owl", "Bee", "Snake", "Dinosaur", "Bear", "Penguin", "Whale",
+            // Vehicles & Things
+            "Fire Truck", "Train", "Rocket", "Police Car", "Ambulance", "Bus", "Airplane", "Helicopter", "Boat", "Bicycle", "Motorcycle", "Tractor",
+            // Cheers & Praise
+            "Great job!", "You found it!", "Yay!", "Yum yum!", "Crunch! Delicious!",
+            "Choo choo!", "Blast off!", "Roar!", "Splish splash!", "Ring ring!"
         ];
 
         const progressBox = document.getElementById('precache-progress-box');
@@ -6031,6 +6641,38 @@ window.addEventListener('DOMContentLoaded', () => {
         }, 1500);
         app.speak("All core words are ready for instant play!");
     });
+
+    // Wire Menu Header Minimize Button & initial state
+    document.getElementById('menu-minimize-btn')?.addEventListener('click', () => {
+        soundFX.playPop();
+        app.settings.minimizeMenuHeader = !app.settings.minimizeMenuHeader;
+        app.saveSettings();
+        app.applyMenuHeaderState();
+    });
+    app.applyMenuHeaderState();
+
+    // Setup Collapsible Bottom Trays across all docks
+    document.querySelectorAll('.controls-dock').forEach(dock => {
+        if (dock.querySelector('.dock-toggle-bar')) return;
+        const bar = document.createElement('div');
+        bar.className = 'dock-toggle-bar';
+        const btn = document.createElement('button');
+        btn.className = 'dock-toggle-btn';
+        btn.type = 'button';
+        btn.innerHTML = '<span>▼</span><span>Hide Selection Tray</span>';
+        btn.setAttribute('aria-label', 'Toggle Selection Tray');
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            soundFX.playPop();
+            const isCollapsed = dock.classList.toggle('dock-collapsed');
+            btn.innerHTML = isCollapsed ? '<span>▲</span><span>Show Selection Tray</span>' : '<span>▼</span><span>Hide Selection Tray</span>';
+        });
+        dock.insertBefore(bar, dock.firstChild);
+        bar.appendChild(btn);
+    });
+
+    // Initialize Universal Pinch-to-Zoom Controller
+    zoomController.init();
 
     // 3. Main Menu Navigation
     document.querySelectorAll('#main-menu-grid .menu-card').forEach(card => {
@@ -6307,6 +6949,7 @@ window.ToddlerLearningHub = {
     app,
     soundFX,
     geminiTTS,
+    zoomController,
     DEFAULT_SETTINGS,
     GAME_OPEN_TITLES,
     GAMES,
