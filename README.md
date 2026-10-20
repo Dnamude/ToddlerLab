@@ -251,13 +251,13 @@
             transition: font-size 0.22s ease;
         }
         #solar-stage-box {
-            width: min(18rem, calc(100cqh - 8rem), 86cqw);
-            height: min(18rem, calc(100cqh - 8rem), 86cqw);
+            width: min(25rem, calc(100cqh - 5.8rem), calc(100cqw - 5.5rem));
+            height: min(25rem, calc(100cqh - 5.8rem), calc(100cqw - 5.5rem));
             transition: width 0.22s ease, height 0.22s ease;
         }
         #solar-svg-holder {
-            width: 92%;
-            height: 92%;
+            width: 100%;
+            height: 100%;
             background-color: #000000 !important;
             padding: 0 !important;
         }
@@ -279,7 +279,7 @@
             #shape3d-target { width: 15rem; height: 15rem; }
             #fruits-target { width: 14rem; height: 14rem; }
             #animal-target, #things-target { font-size: 8rem; }
-            #solar-stage-box { width: 15rem; height: 15rem; }
+            #solar-stage-box { width: 19rem; height: 19rem; }
             #opposites-cards-grid .squish-btn { min-height: 180px; }
         }
 
@@ -1141,22 +1141,34 @@
         </div>
 
         <div class="main-stage">
-            <!-- Solar Orbit Date Controls Row (Item 9a, only active in Orbit mode) -->
+            <!-- Compact Solar Orbit Control Bar (Items 1 & 2, visible in Orbit mode) -->
             <div id="solar-orbit-controls" class="hidden flex-wrap items-center justify-center gap-1.5 sm:gap-2 mb-1 z-20">
-                <div class="flex items-center gap-1.5 bg-slate-900/90 border border-slate-700/80 rounded-2xl px-2.5 py-1 text-xs text-slate-200 shadow-sm min-h-[36px]">
+                <button id="solar-play-pause-btn" type="button" class="min-h-[34px] px-2.5 py-1 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-white font-black text-xs border border-slate-600 shadow-sm squish-btn flex items-center justify-center gap-1" title="Play / Pause simulation">
+                    <span id="solar-play-icon">⏸</span>
+                </button>
+                <div class="flex items-center gap-1 bg-slate-800/80 border border-slate-600/80 rounded-xl px-1.5 py-0.5 shadow-sm min-h-[34px]">
+                    <button id="solar-speed-down-btn" type="button" class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-slate-700/80 hover:bg-slate-600 text-slate-200 border border-slate-500/50 flex items-center justify-center font-black text-xs squish-btn" title="Slower">🐢</button>
+                    <button id="solar-speed-btn" type="button" class="px-2 py-0.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-400/40 font-black text-xs squish-btn min-w-[50px] min-h-[28px] flex items-center justify-center" title="Click to cycle speed">⚡ 1x</button>
+                    <button id="solar-speed-up-btn" type="button" class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-slate-700/80 hover:bg-slate-600 text-slate-200 border border-slate-500/50 flex items-center justify-center font-black text-xs squish-btn" title="Faster">🚀</button>
+                    <input type="range" id="solar-speed-slider" min="0.25" max="10" step="0.25" value="1" class="w-16 sm:w-20 accent-amber-400 cursor-pointer" title="Orbit Speed">
+                </div>
+                <button id="solar-date-toggle-btn" type="button" class="bg-indigo-900/90 hover:bg-indigo-800 text-indigo-100 border border-indigo-400/50 font-black text-xs px-2.5 py-1 rounded-xl shadow-sm squish-btn min-h-[34px] flex items-center gap-1" title="Pick a Date">
+                    <span>📅</span><span id="solar-date-btn-text">Pick Date</span>
+                </button>
+            </div>
+
+            <!-- On-Demand Date Picker Popover (Item 1, hidden by default) -->
+            <div id="solar-date-popover" class="hidden absolute top-11 left-1/2 -translate-x-1/2 z-40 bg-slate-900/95 backdrop-blur-md border-2 border-indigo-400/60 rounded-2xl p-2.5 shadow-2xl flex flex-wrap items-center justify-center gap-2 min-w-[270px] sm:min-w-[320px]">
+                <div class="flex items-center gap-1.5 bg-slate-800 border border-slate-600 rounded-xl px-2.5 py-1 text-xs text-slate-100">
                     <span class="text-sm">📅</span>
                     <input type="date" id="solar-date-input" min="1800-01-01" max="2050-12-31" class="bg-transparent text-slate-100 text-xs font-bold border-none focus:outline-none cursor-pointer">
                 </div>
-                <button id="solar-today-btn" class="bg-indigo-600 hover:bg-indigo-500 text-white font-black text-xs px-3 py-1.5 rounded-2xl shadow-sm squish-btn min-h-[36px] flex items-center justify-center">Today</button>
-                <button id="solar-play-pause-btn" class="bg-slate-800 hover:bg-slate-700 text-white font-black text-xs px-3 py-1.5 rounded-2xl border border-slate-600 shadow-sm squish-btn min-h-[36px] flex items-center justify-center gap-1" title="Play / Pause simulation">
-                    <span id="solar-play-icon">⏸</span>
-                </button>
-                <div id="solar-date-label" class="bg-slate-900/90 border border-indigo-500/40 text-amber-300 font-extrabold text-xs px-3 py-1.5 rounded-2xl shadow-sm min-h-[36px] flex items-center justify-center">
-                    Oct 20, 2026
-                </div>
+                <button id="solar-today-btn" type="button" class="bg-indigo-600 hover:bg-indigo-500 text-white font-black text-xs px-2.5 py-1.5 rounded-xl shadow-sm squish-btn">Today</button>
+                <div id="solar-date-label" class="bg-slate-800/90 border border-indigo-500/40 text-amber-300 font-extrabold text-xs px-2.5 py-1 rounded-xl">Oct 20, 2026</div>
+                <button id="solar-date-close-btn" type="button" class="text-slate-400 hover:text-white font-black text-xs px-2 py-1 rounded-lg squish-btn" title="Close Date Picker">✕</button>
             </div>
 
-            <div id="solar-header-row" class="flex flex-wrap items-center justify-center gap-2 z-20 mb-1">
+            <div id="solar-header-row" class="flex flex-wrap items-center justify-center gap-2 z-20 mb-0.5">
                 <span id="solar-order-badge" class="bg-indigo-900/90 border border-indigo-400/50 text-indigo-100 text-xs sm:text-sm font-black px-3 py-0.5 rounded-full">
                     ⭐ Center of the Solar System
                 </span>
@@ -1165,19 +1177,26 @@
                 </button>
             </div>
 
-            <div id="solar-stage-box" class="flex items-center justify-center relative">
-                <div id="solar-photo-container" class="w-full h-full flex flex-col items-center justify-center relative cursor-pointer squish-btn">
-                    <div id="solar-svg-holder" class="w-56 h-56 sm:w-64 sm:h-64 rounded-3xl overflow-hidden border-4 border-indigo-300/40 shadow-xl bg-black flex items-center justify-center p-0" style="background-color: #000000;"></div>
-                    <span id="solar-photo-credit" class="mt-1.5 text-[11px] font-extrabold uppercase tracking-wider text-indigo-200 bg-slate-900 px-3 py-0.5 rounded-full border border-indigo-400/30">
-                        🔭 Space Telescope View
-                    </span>
+            <!-- Stage Row with Navigation Arrows (Item 3) -->
+            <div id="solar-stage-row" class="flex items-center justify-center gap-1.5 sm:gap-3 w-full z-10">
+                <button id="solar-prev-btn" type="button" class="w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-slate-900/85 hover:bg-indigo-900 text-white border-2 border-indigo-400/50 shadow-lg flex items-center justify-center text-base sm:text-lg font-black squish-btn flex-shrink-0 z-20" aria-label="Previous Celestial Body" title="Previous">◀</button>
+
+                <div id="solar-stage-box" class="flex items-center justify-center relative">
+                    <div id="solar-photo-container" class="w-full h-full flex flex-col items-center justify-center relative cursor-pointer squish-btn">
+                        <div id="solar-svg-holder" class="w-full h-full rounded-3xl overflow-hidden border-4 border-indigo-300/40 shadow-xl bg-black flex items-center justify-center p-0" style="background-color: #000000;"></div>
+                        <span id="solar-photo-credit" class="hidden absolute bottom-2 left-1/2 -translate-x-1/2 z-10 text-[10px] font-extrabold uppercase tracking-wider text-indigo-100 bg-slate-950/85 backdrop-blur-sm px-2.5 py-0.5 rounded-full border border-indigo-400/40 whitespace-nowrap pointer-events-none">
+                            🔭 Space Telescope View
+                        </span>
+                    </div>
+
+                    <div id="solar-canvas-container" class="hidden w-full h-full flex items-center justify-center cursor-grab active:cursor-grabbing"></div>
                 </div>
 
-                <div id="solar-canvas-container" class="hidden w-full h-full flex items-center justify-center cursor-grab active:cursor-grabbing"></div>
+                <button id="solar-next-btn" type="button" class="w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-slate-900/85 hover:bg-indigo-900 text-white border-2 border-indigo-400/50 shadow-lg flex items-center justify-center text-base sm:text-lg font-black squish-btn flex-shrink-0 z-20" aria-label="Next Celestial Body" title="Next">▶</button>
             </div>
 
-            <h1 id="solar-title" class="text-3xl sm:text-5xl font-black text-white tracking-tight mt-0.5">The Sun</h1>
-            <div id="solar-fact" class="mt-1.5 fact-badge px-4 py-1.5 rounded-2xl font-extrabold text-xs sm:text-base text-center max-w-md shadow-md cursor-pointer squish-btn">
+            <h1 id="solar-title" class="text-2xl sm:text-4xl font-black text-white tracking-tight mt-0.5 leading-tight">The Sun</h1>
+            <div id="solar-fact" class="mt-0.5 fact-badge px-3.5 py-1 rounded-2xl font-extrabold text-xs sm:text-sm text-center max-w-md shadow-md cursor-pointer squish-btn">
                 Our giant, glowing star! It keeps Earth warm and bright!
             </div>
         </div>
@@ -1333,6 +1352,18 @@
                             <div class="text-[11px] font-bold text-slate-500 leading-tight">Hide the top title banner to maximize card space</div>
                         </div>
                         <input id="opt-minimize-header" type="checkbox">
+                        <div class="toggle-slider"></div>
+                    </label>
+
+                    <!-- 11. Show NASA Image Source Credits (Item 4) -->
+                    <label class="toggle-switch flex items-center justify-between p-2.5 rounded-2xl bg-slate-50 hover:bg-slate-100 border border-slate-200 cursor-pointer">
+                        <div class="pr-2">
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
+                                <span>🔭</span><span>Show NASA Image Source Credits</span>
+                            </div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Display telescope & mission source badge on Solar System photos</div>
+                        </div>
+                        <input id="opt-solar-credits" type="checkbox">
                         <div class="toggle-slider"></div>
                     </label>
                 </div>
@@ -3840,7 +3871,8 @@ const DEFAULT_SETTINGS = {
     speechRate: 'normal',     // 'slow' (0.82), 'normal' (0.96), 'fast' (1.10)
     maxNumber: 20,            // 10 (1-10 Beginner) or 20 (1-20 Advanced)
     phonicsDetail: 'full',    // 'full' ("A! A says ah! ah, Apple!") or 'simple' ("A! Apple!")
-    minimizeMenuHeader: false // Minimize upper title banner on Main Menu to just show cards
+    minimizeMenuHeader: false, // Minimize upper title banner on Main Menu to just show cards
+    showSolarCredits: false   // Display NASA telescope & mission source badge on Solar System photos
 };
 
 const GAME_OPEN_TITLES = {
@@ -3873,6 +3905,16 @@ const app = {
     isOpeningView: false,
     pendingGameIntro: null,
 
+    applySolarCreditsState() {
+        const show = !!(this.settings && this.settings.showSolarCredits);
+        const creditEl = document.getElementById('solar-photo-credit');
+        if (creditEl) {
+            creditEl.classList.toggle('hidden', !show);
+        }
+        const optCredits = document.getElementById('opt-solar-credits');
+        if (optCredits) optCredits.checked = show;
+    },
+
     applyMenuHeaderState() {
         const isMin = !!(this.settings && this.settings.minimizeMenuHeader);
         const banner = document.getElementById('menu-header-banner');
@@ -3901,6 +3943,9 @@ const app = {
         } catch (e) {}
         if (typeof this.applyMenuHeaderState === 'function') {
             this.applyMenuHeaderState();
+        }
+        if (typeof this.applySolarCreditsState === 'function') {
+            this.applySolarCreditsState();
         }
         if (typeof numberGame !== 'undefined' && numberGame.applyMaxNumberSetting) {
             numberGame.applyMaxNumberSetting();
@@ -4695,6 +4740,7 @@ const solarGame = {
     textureCache: new Map(),
     simDate: new Date(),
     isPlaying: true,
+    orbitSpeed: 1.0,
     earthMoonPivot: null,
     animatingDate: false,
     dateAnimStart: 0,
@@ -4702,7 +4748,27 @@ const solarGame = {
     dateAnimFrom: new Map(),
     dateAnimTo: new Map(),
 
+    stepBody(delta) {
+        const idx = GAMES.solar.findIndex(s => s.id === this.current.id);
+        const nextIdx = (idx + delta + GAMES.solar.length) % GAMES.solar.length;
+        this.select(GAMES.solar[nextIdx], true);
+        const activeBtn = document.querySelector('#solar-controls .tray-btn.selected');
+        if (activeBtn) {
+            activeBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        }
+    },
+
+    setOrbitSpeed(mult) {
+        const val = Math.max(0.25, Math.min(10, Math.round(mult * 100) / 100));
+        this.orbitSpeed = val;
+        const btn = document.getElementById('solar-speed-btn');
+        if (btn) btn.textContent = `⚡ ${val}x`;
+        const slider = document.getElementById('solar-speed-slider');
+        if (slider) slider.value = String(val);
+    },
+
     open() {
+        document.getElementById('solar-date-popover')?.classList.add('hidden');
         this.select(this.current, true);
     },
 
@@ -5156,6 +5222,7 @@ const solarGame = {
 
     setMode(newMode) {
         this.mode = newMode;
+        document.getElementById('solar-date-popover')?.classList.add('hidden');
         if (typeof zoomController !== 'undefined') {
             zoomController.resetZoom();
         }
@@ -5171,6 +5238,7 @@ const solarGame = {
             this.simDate = new Date();
             this.isPlaying = true;
             this.updateOrbitDateUI();
+            this.setOrbitSpeed(this.orbitSpeed || 1.0);
         }
         document.getElementById('solar-mode-photo').classList.toggle('active', newMode === 'photo');
         document.getElementById('solar-mode-planet').classList.toggle('active', newMode === 'planet');
@@ -5256,6 +5324,9 @@ const solarGame = {
             }, { once: true });
             holder.appendChild(img);
             document.getElementById('solar-photo-credit').textContent = item.credit;
+            if (typeof app !== 'undefined' && app.applySolarCreditsState) {
+                app.applySolarCreditsState();
+            }
             app.animatePop(document.getElementById('solar-stage-box'));
             if (speak && !(app.isOpeningView && !app.settings.announceGameOnOpen)) {
                 soundFX.stopAll();
@@ -5325,15 +5396,18 @@ const solarGame = {
                             this.animatingDate = false;
                         }
                     } else if (this.isPlaying) {
-                        const advanceDays = 4 * this.turboBoost;
+                        const advanceDays = 4 * (this.orbitSpeed || 1.0) * this.turboBoost;
                         this.simDate.setTime(this.simDate.getTime() + advanceDays * 86400000);
                         this.orbitEntries.forEach(entry => {
                             entry.pivot.rotation.y = solarEphemeris.heliocentricLongitude(entry.planetId, this.simDate);
                         });
-                        this.updateOrbitDateUI();
+                        const popover = document.getElementById('solar-date-popover');
+                        if (popover && !popover.classList.contains('hidden')) {
+                            this.updateOrbitDateUI();
+                        }
                     }
                     if (this.earthMoonPivot) {
-                        this.earthMoonPivot.rotation.y += 0.05 * this.turboBoost;
+                        this.earthMoonPivot.rotation.y += 0.05 * (this.orbitSpeed || 1.0) * this.turboBoost;
                     }
                 } else if (!this.isDragging) {
                     if (typeof app === 'undefined' || !app.settings || app.settings.autoSpin3D) {
@@ -5352,6 +5426,7 @@ const solarGame = {
     },
 
     stop() {
+        document.getElementById('solar-date-popover')?.classList.add('hidden');
         if (this.animId) {
             cancelAnimationFrame(this.animId);
             this.animId = null;
@@ -7550,6 +7625,8 @@ window.addEventListener('DOMContentLoaded', () => {
         if (optHoldHome) optHoldHome.checked = !!s.requireHoldHome;
         const optMinHeader = document.getElementById('opt-minimize-header');
         if (optMinHeader) optMinHeader.checked = !!s.minimizeMenuHeader;
+        const optSolarCredits = document.getElementById('opt-solar-credits');
+        if (optSolarCredits) optSolarCredits.checked = !!s.showSolarCredits;
     };
 
     const openVoiceModal = () => {
@@ -7616,6 +7693,12 @@ window.addEventListener('DOMContentLoaded', () => {
         app.settings.minimizeMenuHeader = e.target.checked;
         app.saveSettings();
         app.applyMenuHeaderState();
+    app.applySolarCreditsState();
+    });
+    document.getElementById('opt-solar-credits')?.addEventListener('change', (e) => {
+        app.settings.showSolarCredits = e.target.checked;
+        app.saveSettings();
+        app.applySolarCreditsState();
     });
 
     document.getElementById('opt-reset-defaults-btn')?.addEventListener('click', () => {
@@ -7623,6 +7706,7 @@ window.addEventListener('DOMContentLoaded', () => {
         app.saveSettings();
         syncSettingsToUI();
         app.applyMenuHeaderState();
+        app.applySolarCreditsState();
         soundFX.playPop();
     });
 
@@ -7994,16 +8078,81 @@ window.addEventListener('DOMContentLoaded', () => {
     document.getElementById('solar-mode-photo').addEventListener('click', () => solarGame.setMode('photo'));
     document.getElementById('solar-mode-planet').addEventListener('click', () => solarGame.setMode('planet'));
     document.getElementById('solar-mode-orbit').addEventListener('click', () => solarGame.setMode('orbit'));
-    // Wire Solar Orbit date controls (Item 9a, 9d)
+    // Wire Solar Orbit date & speed controls (Items 1 & 2)
+    document.getElementById('solar-date-toggle-btn')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const popover = document.getElementById('solar-date-popover');
+        if (popover) {
+            const isHidden = popover.classList.toggle('hidden');
+            if (!isHidden) {
+                solarGame.updateOrbitDateUI();
+            }
+        }
+    });
+    document.getElementById('solar-date-close-btn')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        document.getElementById('solar-date-popover')?.classList.add('hidden');
+    });
     document.getElementById('solar-date-input')?.addEventListener('change', e => {
         if (e.target.value) solarGame.goToDate(e.target.value + 'T12:00:00Z', true);
     });
-    document.getElementById('solar-today-btn')?.addEventListener('click', () => {
+    document.getElementById('solar-today-btn')?.addEventListener('click', (e) => {
+        e.stopPropagation();
         solarGame.jumpToday();
     });
-    document.getElementById('solar-play-pause-btn')?.addEventListener('click', () => {
+    document.getElementById('solar-play-pause-btn')?.addEventListener('click', (e) => {
+        e.stopPropagation();
         solarGame.isPlaying = !solarGame.isPlaying;
         solarGame.updateOrbitDateUI();
+    });
+
+    // Speed Controls (Item 2)
+    document.getElementById('solar-speed-down-btn')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const cur = solarGame.orbitSpeed;
+        const presets = [0.25, 0.5, 1, 2, 5, 10];
+        const lower = presets.filter(p => p < cur - 0.05);
+        const target = lower.length ? lower[lower.length - 1] : 0.25;
+        solarGame.setOrbitSpeed(target);
+    });
+    document.getElementById('solar-speed-up-btn')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const cur = solarGame.orbitSpeed;
+        const presets = [0.25, 0.5, 1, 2, 5, 10];
+        const higher = presets.filter(p => p > cur + 0.05);
+        const target = higher.length ? higher[0] : 10;
+        solarGame.setOrbitSpeed(target);
+    });
+    document.getElementById('solar-speed-btn')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const presets = [0.25, 0.5, 1, 2, 5, 10];
+        const cur = solarGame.orbitSpeed;
+        let nextIdx = 0;
+        for (let i = 0; i < presets.length; i++) {
+            if (Math.abs(presets[i] - cur) < 0.1) {
+                nextIdx = (i + 1) % presets.length;
+                break;
+            } else if (presets[i] > cur) {
+                nextIdx = i;
+                break;
+            }
+        }
+        solarGame.setOrbitSpeed(presets[nextIdx]);
+    });
+    document.getElementById('solar-speed-slider')?.addEventListener('input', (e) => {
+        solarGame.setOrbitSpeed(parseFloat(e.target.value));
+    });
+
+    // Solar Navigation Arrows (Item 3)
+    document.getElementById('solar-prev-btn')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        soundFX.playPop();
+        solarGame.stepBody(-1);
+    });
+    document.getElementById('solar-next-btn')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        soundFX.playPop();
+        solarGame.stepBody(1);
     });
 
     document.getElementById('solar-photo-container').addEventListener('click', () => solarGame.triggerAction());
