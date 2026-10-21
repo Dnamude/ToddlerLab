@@ -251,9 +251,62 @@
             transition: font-size 0.22s ease;
         }
         #solar-stage-box {
-            width: min(25rem, calc(100cqh - 5.8rem), calc(100cqw - 5.5rem));
-            height: min(25rem, calc(100cqh - 5.8rem), calc(100cqw - 5.5rem));
+            width: min(24rem, calc(100cqh - 7.8rem), calc(100cqw - 5.5rem));
+            height: min(24rem, calc(100cqh - 7.8rem), calc(100cqw - 5.5rem));
+            flex-shrink: 0;
             transition: width 0.22s ease, height 0.22s ease;
+        }
+        /* Sleek Single-Row Horizontal Scrollable Planet Tray (Upgrade 2) */
+        #solar-controls-dock {
+            height: auto !important;
+            min-height: 82px;
+            max-height: 96px;
+            padding: 0.25rem 0.5rem max(0.4rem, env(safe-area-inset-bottom)) 0.5rem;
+            background: rgba(15, 23, 42, 0.96) !important;
+            border-top: 2px solid #334155 !important;
+        }
+        #solar-controls-dock .control-scroll {
+            overflow-x: auto !important;
+            overflow-y: hidden !important;
+            touch-action: pan-x !important;
+            padding: 0.15rem 0.35rem 0.25rem 0.35rem !important;
+            scrollbar-width: thin;
+            scrollbar-color: #475569 transparent;
+        }
+        #solar-controls-dock .control-scroll::-webkit-scrollbar {
+            height: 4px;
+        }
+        #solar-controls-dock .control-scroll::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 9999px;
+        }
+        #solar-controls {
+            display: flex !important;
+            flex-wrap: nowrap !important;
+            justify-content: flex-start !important;
+            align-items: center !important;
+            gap: 0.5rem !important;
+            max-width: none !important;
+            width: max-content !important;
+            margin: 0 auto !important;
+            padding: 0 0.25rem !important;
+        }
+        #solar-controls .tray-btn {
+            width: 3.6rem !important;
+            height: 3.6rem !important;
+            border-radius: 1rem !important;
+            background: #1e293b !important;
+            border: 2px solid #475569 !important;
+            box-shadow: 0 3px 0 #0f172a !important;
+            flex-shrink: 0 !important;
+        }
+        #solar-controls .tray-btn.selected {
+            background: #312e81 !important;
+            border-color: #fbbf24 !important;
+            box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.4), 0 3px 0 #1e1b4b !important;
+        }
+        #solar-controls .tray-btn span {
+            color: #f1f5f9 !important;
         }
         #solar-svg-holder {
             width: 100%;
@@ -1141,31 +1194,90 @@
         </div>
 
         <div class="main-stage">
-            <!-- Compact Solar Orbit Control Bar (Items 1 & 2, visible in Orbit mode) -->
-            <div id="solar-orbit-controls" class="hidden flex-wrap items-center justify-center gap-1.5 sm:gap-2 mb-1 z-20">
-                <button id="solar-play-pause-btn" type="button" class="min-h-[34px] px-2.5 py-1 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-white font-black text-xs border border-slate-600 shadow-sm squish-btn flex items-center justify-center gap-1" title="Play / Pause simulation">
-                    <span id="solar-play-icon">⏸</span>
+            <!-- Compact Orbit Status & Drawer Launcher Bar (Upgrade 2b, visible only in Orbit mode) -->
+            <div id="solar-orbit-controls" class="hidden flex flex-wrap items-center justify-center gap-2 mb-1 z-20">
+                <button id="solar-play-pause-quick-btn" type="button" class="min-h-[36px] px-3.5 py-1 rounded-full bg-slate-900/90 hover:bg-slate-800 text-amber-300 border border-amber-400/40 font-black text-xs shadow-md squish-btn flex items-center gap-1.5" title="Play / Pause simulation">
+                    <span id="solar-quick-play-icon">⏸</span>
+                    <span id="solar-quick-play-label">Playing</span>
                 </button>
-                <div class="flex items-center gap-1 bg-slate-800/80 border border-slate-600/80 rounded-xl px-1.5 py-0.5 shadow-sm min-h-[34px]">
-                    <button id="solar-speed-down-btn" type="button" class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-slate-700/80 hover:bg-slate-600 text-slate-200 border border-slate-500/50 flex items-center justify-center font-black text-xs squish-btn" title="Slower">🐢</button>
-                    <button id="solar-speed-btn" type="button" class="px-2 py-0.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-400/40 font-black text-xs squish-btn min-w-[50px] min-h-[28px] flex items-center justify-center" title="Click to cycle speed">⚡ 1x</button>
-                    <button id="solar-speed-up-btn" type="button" class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-slate-700/80 hover:bg-slate-600 text-slate-200 border border-slate-500/50 flex items-center justify-center font-black text-xs squish-btn" title="Faster">🚀</button>
-                    <input type="range" id="solar-speed-slider" min="0.25" max="10" step="0.25" value="1" class="w-16 sm:w-20 accent-amber-400 cursor-pointer" title="Orbit Speed">
-                </div>
-                <button id="solar-date-toggle-btn" type="button" class="bg-indigo-900/90 hover:bg-indigo-800 text-indigo-100 border border-indigo-400/50 font-black text-xs px-2.5 py-1 rounded-xl shadow-sm squish-btn min-h-[34px] flex items-center gap-1" title="Pick a Date">
-                    <span>📅</span><span id="solar-date-btn-text">Pick Date</span>
+                <button id="solar-orbit-drawer-btn" type="button" class="min-h-[36px] px-3.5 py-1 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white border-2 border-indigo-300/60 font-black text-xs sm:text-sm shadow-lg squish-btn flex items-center gap-1.5" title="Open Orbit Controls">
+                    <span>🎛️</span>
+                    <span>Orbit Controls</span>
+                    <span id="solar-orbit-summary-badge" class="bg-indigo-950/80 text-amber-300 px-2 py-0.5 rounded-full text-[11px] font-extrabold">1x</span>
                 </button>
             </div>
 
-            <!-- On-Demand Date Picker Popover (Item 1, hidden by default) -->
-            <div id="solar-date-popover" class="hidden absolute top-11 left-1/2 -translate-x-1/2 z-40 bg-slate-900/95 backdrop-blur-md border-2 border-indigo-400/60 rounded-2xl p-2.5 shadow-2xl flex flex-wrap items-center justify-center gap-2 min-w-[270px] sm:min-w-[320px]">
-                <div class="flex items-center gap-1.5 bg-slate-800 border border-slate-600 rounded-xl px-2.5 py-1 text-xs text-slate-100">
-                    <span class="text-sm">📅</span>
-                    <input type="date" id="solar-date-input" min="1800-01-01" max="2050-12-31" class="bg-transparent text-slate-100 text-xs font-bold border-none focus:outline-none cursor-pointer">
+            <!-- Slide-Out Side Control Panel (Upgrade 2b, tucked on side, hidden by default) -->
+            <div id="solar-orbit-drawer" class="hidden absolute top-2 right-2 sm:right-4 z-40 w-72 sm:w-80 bg-slate-900/95 backdrop-blur-xl border-2 border-indigo-400/60 rounded-3xl p-4 shadow-2xl text-white flex flex-col gap-3.5 transition-all duration-200">
+                <!-- Drawer Header -->
+                <div class="flex items-center justify-between border-b border-slate-700/80 pb-2.5">
+                    <div class="flex items-center gap-2">
+                        <span class="text-xl">🪐</span>
+                        <div>
+                            <h3 class="text-sm font-black text-white leading-tight">Orbit Controls</h3>
+                            <p class="text-[11px] text-indigo-300 font-bold">Speed, Motion & Time Travel</p>
+                        </div>
+                    </div>
+                    <button id="solar-orbit-drawer-close" type="button" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white font-black text-sm flex items-center justify-center squish-btn" title="Close Panel">✕</button>
                 </div>
-                <button id="solar-today-btn" type="button" class="bg-indigo-600 hover:bg-indigo-500 text-white font-black text-xs px-2.5 py-1.5 rounded-xl shadow-sm squish-btn">Today</button>
-                <div id="solar-date-label" class="bg-slate-800/90 border border-indigo-500/40 text-amber-300 font-extrabold text-xs px-2.5 py-1 rounded-xl">Oct 20, 2026</div>
-                <button id="solar-date-close-btn" type="button" class="text-slate-400 hover:text-white font-black text-xs px-2 py-1 rounded-lg squish-btn" title="Close Date Picker">✕</button>
+
+                <!-- Section 1 — Playback & Turbo -->
+                <div class="grid grid-cols-2 gap-2">
+                    <button id="solar-play-pause-btn" type="button" class="min-h-[42px] rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-black text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-md squish-btn">
+                        <span id="solar-play-icon">⏸</span>
+                        <span id="solar-play-label">Pause</span>
+                    </button>
+                    <button id="solar-turbo-btn" type="button" class="min-h-[42px] rounded-2xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-md squish-btn">
+                        <span>🚀</span>
+                        <span>Turbo Boost</span>
+                    </button>
+                </div>
+
+                <!-- Section 2 — Orbit Speed Control -->
+                <div class="bg-slate-800/90 border border-slate-700 rounded-2xl p-3 flex flex-col gap-2.5">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-black uppercase tracking-wider text-slate-300">⚡ Orbit Speed</span>
+                        <button id="solar-speed-btn" type="button" class="px-2.5 py-0.5 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-400/40 font-black text-xs squish-btn" title="Click to cycle speed">⚡ 1x</button>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button id="solar-speed-down-btn" type="button" class="w-9 h-9 rounded-xl bg-slate-700 hover:bg-slate-600 text-white font-black text-sm flex items-center justify-center squish-btn flex-shrink-0" title="Slower">🐢</button>
+                        <input type="range" id="solar-speed-slider" min="0.25" max="10" step="0.25" value="1" class="flex-1 accent-amber-400 cursor-pointer h-2" title="Orbit Speed">
+                        <button id="solar-speed-up-btn" type="button" class="w-9 h-9 rounded-xl bg-slate-700 hover:bg-slate-600 text-white font-black text-sm flex items-center justify-center squish-btn flex-shrink-0" title="Faster">🚀</button>
+                    </div>
+                    <div class="grid grid-cols-6 gap-1">
+                        <button type="button" class="solar-speed-preset py-1 rounded-lg bg-slate-900/80 hover:bg-indigo-900 text-slate-200 border border-slate-600/80 font-extrabold text-[11px] squish-btn text-center" data-speed="0.25">0.25x</button>
+                        <button type="button" class="solar-speed-preset py-1 rounded-lg bg-slate-900/80 hover:bg-indigo-900 text-slate-200 border border-slate-600/80 font-extrabold text-[11px] squish-btn text-center" data-speed="0.5">0.5x</button>
+                        <button type="button" class="solar-speed-preset py-1 rounded-lg bg-amber-400 text-slate-950 border-amber-300 font-extrabold text-[11px] squish-btn text-center" data-speed="1">1x</button>
+                        <button type="button" class="solar-speed-preset py-1 rounded-lg bg-slate-900/80 hover:bg-indigo-900 text-slate-200 border border-slate-600/80 font-extrabold text-[11px] squish-btn text-center" data-speed="2">2x</button>
+                        <button type="button" class="solar-speed-preset py-1 rounded-lg bg-slate-900/80 hover:bg-indigo-900 text-slate-200 border border-slate-600/80 font-extrabold text-[11px] squish-btn text-center" data-speed="5">5x</button>
+                        <button type="button" class="solar-speed-preset py-1 rounded-lg bg-slate-900/80 hover:bg-indigo-900 text-slate-200 border border-slate-600/80 font-extrabold text-[11px] squish-btn text-center" data-speed="10">10x</button>
+                    </div>
+                </div>
+
+                <!-- Section 3 — On-Demand Date / Time Travel -->
+                <div class="bg-slate-800/90 border border-slate-700 rounded-2xl p-3 flex flex-col gap-2">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-black uppercase tracking-wider text-slate-300">📅 Planet Date</span>
+                        <button id="solar-date-toggle-btn" type="button" class="bg-indigo-600/90 hover:bg-indigo-500 text-white font-black text-xs px-3 py-1 rounded-xl shadow-sm squish-btn flex items-center gap-1">
+                            <span>📅</span>
+                            <span id="solar-date-btn-text">Pick Date</span>
+                        </button>
+                    </div>
+                    <!-- Date Picker Popover inside Section 3 (hidden by default) -->
+                    <div id="solar-date-popover" class="hidden flex flex-col gap-2 pt-1 border-t border-slate-700/80 mt-1">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[11px] font-bold text-slate-400">Selected Date:</span>
+                            <div class="flex items-center gap-1.5">
+                                <span id="solar-date-label" class="text-amber-300 font-extrabold text-xs">Oct 20, 2026</span>
+                                <button id="solar-date-close-btn" type="button" class="text-slate-400 hover:text-white font-black text-xs px-1.5 py-0.5 rounded squish-btn" title="Hide Date Picker">✕</button>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <input type="date" id="solar-date-input" min="1800-01-01" max="2050-12-31" class="flex-1 bg-slate-900 text-white text-xs sm:text-sm font-bold px-3 py-2 rounded-xl border border-indigo-400/50 focus:outline-none cursor-pointer min-h-[40px]">
+                            <button id="solar-today-btn" type="button" class="bg-indigo-600 hover:bg-indigo-500 text-white font-black text-xs px-3.5 py-2 rounded-xl shadow-sm squish-btn min-h-[40px]">Today</button>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div id="solar-header-row" class="flex flex-wrap items-center justify-center gap-2 z-20 mb-0.5">
@@ -1195,13 +1307,14 @@
                 <button id="solar-next-btn" type="button" class="w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-slate-900/85 hover:bg-indigo-900 text-white border-2 border-indigo-400/50 shadow-lg flex items-center justify-center text-base sm:text-lg font-black squish-btn flex-shrink-0 z-20" aria-label="Next Celestial Body" title="Next">▶</button>
             </div>
 
-            <h1 id="solar-title" class="text-2xl sm:text-4xl font-black text-white tracking-tight mt-0.5 leading-tight">The Sun</h1>
-            <div id="solar-fact" class="mt-0.5 fact-badge px-3.5 py-1 rounded-2xl font-extrabold text-xs sm:text-sm text-center max-w-md shadow-md cursor-pointer squish-btn">
+            <h1 id="solar-title" class="text-2xl sm:text-4xl font-black text-white tracking-tight mt-0.5 leading-tight flex-shrink-0 text-center">The Sun</h1>
+            <div id="solar-fact" class="mt-1 fact-badge px-3.5 py-1.5 rounded-2xl font-extrabold text-xs sm:text-sm text-center max-w-md shadow-md cursor-pointer squish-btn flex-shrink-0 leading-snug">
                 Our giant, glowing star! It keeps Earth warm and bright!
             </div>
         </div>
 
-        <div class="controls-dock" style="background: #0f172a; border-top-color: #334155;">
+        <!-- Single-Row Horizontal Scrollable Tray (Upgrade 2) -->
+        <div id="solar-controls-dock" class="controls-dock" style="background: #0f172a; border-top-color: #334155;">
             <div class="control-scroll"><div class="control-grid" id="solar-controls"></div></div>
         </div>
     </div>
@@ -1408,6 +1521,16 @@
                     </div>
                 </div>
 
+                <!-- Pre-Cache Speed / API Tier Selector (Upgrade 1) -->
+                <div class="flex flex-col gap-1">
+                    <label class="text-xs font-black uppercase tracking-wider text-slate-700">Pre-Cache Speed / API Tier</label>
+                    <select id="precache-tier-select" class="w-full px-3 py-2 rounded-xl border-2 border-slate-300 font-bold text-xs sm:text-sm bg-slate-50 focus:border-indigo-500 focus:outline-none">
+                        <option value="tier2_turbo">🚀 Tier 2 Turbo (~90 RPM • 3x Parallel — Default)</option>
+                        <option value="tier2_max">⚡ Tier 2 Max (~180 RPM • 5x Parallel)</option>
+                        <option value="tier1_safe">🐢 Tier 1 Safe (~8 RPM • 1x Serial)</option>
+                    </select>
+                </div>
+
                 <div id="voice-test-status" class="hidden text-xs font-bold text-center py-2 px-3 rounded-xl transition-all duration-200"></div>
                 <div class="flex flex-wrap items-center gap-2 pt-1">
                     <button id="voice-test-btn" class="flex-1 bg-indigo-100 hover:bg-indigo-200 text-indigo-800 font-black px-4 py-2.5 rounded-xl text-sm squish-btn flex items-center justify-center gap-1.5">
@@ -1420,7 +1543,7 @@
                     </button>
                 </div>
 
-                <div id="precache-progress-box" class="hidden flex-col gap-1.5 bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-amber-900 font-bold">
+                <div id="precache-progress-box" class="hidden flex flex-col gap-1.5 bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-amber-900 font-bold">
                     <div class="flex justify-between items-center">
                         <span id="precache-progress-text">Pre-caching audio...</span>
                         <span id="precache-progress-num">0%</span>
@@ -1429,7 +1552,7 @@
                         <div id="precache-progress-bar" class="bg-amber-600 h-full w-0 transition-all duration-150"></div>
                     </div>
                     <div class="flex items-center justify-between pt-1">
-                        <span class="text-[10px] text-amber-800 font-medium">Safe Tier 1 Pace (~8 RPM) • Runs in background</span>
+                        <span id="precache-tier-sub" class="text-[10px] text-amber-800 font-medium">Tier 2 Turbo (~90 RPM • 3x Parallel) • Runs in background</span>
                         <div class="flex items-center gap-1.5">
                             <button id="precache-modal-pause-btn" type="button" class="px-2.5 py-1 bg-amber-200 hover:bg-amber-300 text-amber-900 rounded-lg text-[11px] font-black squish-btn">⏸️ Pause</button>
                             <button id="precache-modal-cancel-btn" type="button" class="px-2.5 py-1 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-lg text-[11px] font-black squish-btn">Cancel</button>
@@ -2466,7 +2589,8 @@ const geminiTTS = {
                         const errData = await resp.json().catch(() => ({}));
                         const errMsg = errData?.error?.message || `HTTP ${resp.status}`;
                         if (resp.status === 429 || errMsg.includes('RESOURCE_EXHAUSTED')) {
-                            this.setCooldown(60000);
+                            const tierCooldown = (safeGetStorage('tlh_precache_tier') || 'tier2_turbo').startsWith('tier2') ? 25000 : 60000;
+                            this.setCooldown(tierCooldown);
                             throw new Error("HTTP 429: Rate limit reached (RESOURCE_EXHAUSTED)");
                         }
                         throw new Error(errMsg);
@@ -2505,7 +2629,8 @@ const geminiTTS = {
                     clearTimeout(timeoutId);
                     lastErr = err;
                     if (err.message && (err.message.includes('429') || err.message.includes('RESOURCE_EXHAUSTED'))) {
-                        this.setCooldown(60000);
+                        const tierCooldown = (safeGetStorage('tlh_precache_tier') || 'tier2_turbo').startsWith('tier2') ? 25000 : 60000;
+                        this.setCooldown(tierCooldown);
                         break; // Stop trying other strategies on 429
                     }
                 }
@@ -2665,117 +2790,344 @@ const geminiTTS = {
             clearTimeout(this.warmUpTimer);
             this.warmUpTimer = null;
         }
+        if (typeof precacheManager !== 'undefined' && precacheManager.state === 'running') return;
+        const key = getApiKey();
+        if (!key || this.isCoolingDown()) return;
+
+        const tier = safeGetStorage('tlh_precache_tier') || 'tier2_turbo';
+        const delayMs = tier.startsWith('tier2') ? 600 : 3500;
+
+        const phrases = [];
+        if (typeof GAME_OPEN_TITLES !== 'undefined' && GAME_OPEN_TITLES[viewName]) {
+            phrases.push(GAME_OPEN_TITLES[viewName]);
+        }
+        if (typeof GAMES !== 'undefined') {
+            if (viewName === 'letters' && GAMES.phonics) {
+                GAMES.phonics.slice(0, 5).forEach(p => phrases.push(`${p.letter}! ${p.cue} ${p.soundSpell}, ${p.words[0].w}!`));
+            } else if (viewName === 'numbers' && GAMES.numbers) {
+                GAMES.numbers.slice(0, 5).forEach(n => phrases.push(`${n.word}! Tap to count to ${n.num}!`));
+            } else if (viewName === 'shapes' && GAMES.shapes) {
+                GAMES.shapes.slice(0, 5).forEach(s => phrases.push(`${s.id}!`));
+            } else if (viewName === 'shapes3d' && GAMES.shapes3d) {
+                GAMES.shapes3d.slice(0, 5).forEach(s => phrases.push(`${s.id}! ${s.real}`));
+            } else if (viewName === 'colors' && GAMES.colors) {
+                GAMES.colors.slice(0, 5).forEach(c => phrases.push(c.id));
+            } else if (viewName === 'animals' && GAMES.animals) {
+                GAMES.animals.slice(0, 5).forEach(a => phrases.push(a.id));
+            } else if (viewName === 'fruits' && GAMES.fruits) {
+                GAMES.fruits.slice(0, 5).forEach(f => phrases.push(`${f.id}! ${f.desc}`));
+            } else if (viewName === 'things' && GAMES.things) {
+                GAMES.things.slice(0, 5).forEach(t => phrases.push(t.id));
+            } else if (viewName === 'opposites' && GAMES.opposites) {
+                GAMES.opposites.slice(0, 5).forEach(p => phrases.push(`${p.a.label}, and ${p.b.label}!`));
+            } else if (viewName === 'solar' && GAMES.solar) {
+                GAMES.solar.slice(0, 4).forEach(s => phrases.push(s.speech));
+            }
+        }
+
+        const model = getTtsModel();
+        const voice = getTtsVoice();
+        let idx = 0;
+
+        const warmStep = async () => {
+            if (app.currentView !== viewName || (typeof precacheManager !== 'undefined' && precacheManager.state === 'running')) return;
+            if (idx >= phrases.length) return;
+            const phrase = cleanSpokenText(phrases[idx++]);
+            const cacheKey = `${model}:${voice}:${phrase}`;
+            if (!this.hasCached(cacheKey) && !this.knownDbKeys.has(cacheKey)) {
+                try {
+                    await this.fetchAudio(phrase, model, voice, key);
+                } catch (e) {}
+            }
+            this.warmUpTimer = setTimeout(warmStep, delayMs);
+        };
+
+        this.warmUpTimer = setTimeout(warmStep, delayMs);
     }
 };
 
-// Rock-Solid Tier 1 Rate-Limited Background Pre-Cache Engine
+// High-Speed Multi-Tier Concurrent Background Pre-Cache Engine (Upgrade 1)
 const precacheManager = {
     state: 'idle', // 'idle' | 'running' | 'paused' | 'cooling' | 'completed'
-    queue: [],
-    currentIndex: 0,
-    safeIntervalMs: 7200, // 8.33 RPM (safe 17% buffer below 10 RPM Tier 1 cap)
-    backoffStep: 0,
+    allWords: [],
+    uncachedQueue: [],
+    cachedCount: 0,
+    totalCount: 0,
+    activeWorkers: 0,
+    currentConcurrency: 3,
+    backoffCount: 0,
     yieldUntil: 0,
-    timerId: null,
+    workerTimers: [],
 
-    getCoreWordPool() {
-        const pool = [
-            // 1. Numbers 1-20 (words & direct digits)
-            "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten",
-            "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen", "Twenty",
-            "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20",
-            "Sun", "Shoes", "Apples", "Cars", "Stars", "Balloons", "Strawberries", "Fish", "Butterflies", "Dinosaurs",
-            "Ducks", "Cookies", "Ladybugs", "Sailboats", "Grapes", "Music Notes", "Pencils", "Flowers", "Bumblebees", "Gold Stars",
-            // 2. Alphabet & Phonics Cues & Sound-out Words
-            "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
-            "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
-            "A says ah!", "B says buh!", "C says kuh!", "D says duh!", "E says eh!",
-            "F says fff!", "G says guh!", "H says huh!", "I says ih!", "J says juh!",
-            "K says kuh!", "L says lll!", "M says mmm!", "N says nnn!", "O says ah!",
-            "P says puh!", "Q says kwuh!", "R says rrr!", "S says sss!", "T says tuh!",
-            "U says uh!", "V says vvv!", "W says wuh!", "X makes the ks sound!", "Y says yuh!", "Z says zzz!",
-            "Apple", "Ant", "Astronaut", "Bear", "Ball", "Banana", "Cat", "Car", "Cookie", "Dog",
-            "Duck", "Drum", "Elephant", "Egg", "Engine", "Fish", "Frog", "Fire Truck", "Grapes", "Goat",
-            "Guitar", "Horse", "Hat", "House", "Igloo", "Iguana", "Insect", "Juice", "Jellyfish", "Jet",
-            "Kangaroo", "Key", "Kite", "Lion", "Lemon", "Leaf", "Monkey", "Moon", "Milk", "Nest",
-            "Nut", "Nose", "Octopus", "Otter", "Orange", "Pig", "Pizza", "Penguin", "Queen", "Quack Duck",
-            "Question", "Rabbit", "Rocket", "Rainbow", "Snake", "Tiger", "Train", "Turtle",
-            "Umbrella", "Up", "Unicorn", "Violin", "Van", "Volcano", "Watermelon", "Whale", "Watch", "Fox",
-            "Box", "X-Ray", "Yo-yo", "Yarn", "Yellow", "Zebra", "Zoo", "Zipper",
-            // 3. Colors & Blended Mixes
-            "Red", "Blue", "Yellow", "Green", "Orange", "Purple", "Pink", "Brown", "Black", "White",
-            "Sky Blue", "Cream Yellow", "Mint Green", "Peach", "Lavender", "Light Pink", "Tan Khaki",
-            "Gray", "Burgundy Dark Red", "Midnight Navy", "Olive Green", "Forest Green", "Rust Brown",
-            "Deep Violet", "Dusty Plum", "Dark Chocolate", "Warm Slate", "Golden Bronze", "Lime Green",
-            "Teal Turquoise", "Coral Red", "Magenta Rose", "Lilac Violet", "Caramel", "Terracotta",
-            // 4. 2D Shapes, 3D Shapes & Real-World Items
-            "Circle!", "Square!", "Triangle!", "Rectangle!", "Star!", "Heart!",
-            "Oval!", "Diamond!", "Pentagon!", "Hexagon!", "Octagon!", "Crescent!",
-            "Cube", "Sphere", "Cone", "Cylinder", "Donut (Torus)", "Pyramid", "Cuboid (Box)", "Prism", "Diamond (Octahedron)", "Dome (Hemisphere)",
-            "Gift Box", "Dice", "Earth", "Snowman", "Traffic Cone", "Party Hat", "Toy Drum", "Birthday Cake",
-            "Donut", "Swim Ring", "Desert Pyramid", "Pine Tree", "Juice Box", "Toy Bus", "Camping Tent",
-            "Cheese Wedge", "Shiny Gem", "Snow Igloo", "Mushroom",
-            // 5. Animals & Sounds
-            "Cow", "Sheep", "Owl", "Bee", "Dinosaur",
-            "Roar!", "Woof woof!", "Meow!", "Moooo!", "Quack quack!", "Oink oink!", "Baaaa!", "Neigh!",
-            "Pawoo!", "Ooh ooh aah aah!", "Ribbit ribbit!", "Hoo hoo!", "Bzzzzz!", "Hsssss!",
-            "Stomp! Roar!", "Grrrr!", "Waddle waddle!", "Splash!",
-            // 6. Foods & Encouraging Cheers
-            "Strawberry", "Blueberries", "Broccoli", "Carrot", "Avocado", "Corn", "Cheese",
-            "Crunch! Delicious!", "Yum yum!", "So tasty!", "One more bite!",
-            // 7. Vehicles & Objects
-            "Police Car", "Rocket Ship", "Airplane", "Helicopter", "Tractor", "School Bus", "Sailboat", "Bicycle", "Soccer Ball", "Clock",
-            // 8. Opposites Spoken Pairs
-            "Big, and Small!", "Hot, and Cold!", "Happy, and Sad!", "Fast, and Slow!", "Day, and Night!",
-            "Up, and Down!", "Clean, and Dirty!", "Loud, and Quiet!", "Open, and Closed!", "Heavy, and Light!",
-            "Tall, and Short!", "Full, and Empty!", "Wet, and Dry!", "Awake, and Asleep!", "Hard, and Soft!",
-            "Inside, and Outside!", "Many, and Few!", "Long, and Short!", "Sweet, and Sour!", "On, and Off!",
-            // 9. Solar System Bodies & Full Facts
-            "The Sun", "Mercury", "Venus", "Earth's Moon", "Mars", "Asteroid Belt", "Jupiter", "Saturn", "Uranus", "Neptune", "Pluto", "Comet", "Galactic Swirl",
-            "The Sun! Our giant glowing star that gives light and warmth to everything in our solar system!",
-            "Mercury! The speedy first planet closest to the Sun!",
-            "Venus! The hottest planet with thick golden swirling clouds!",
-            "Earth! Our wonderful home planet with blue oceans, green trees, and you!",
-            "The Moon! Earth's best friend that glows at night!",
-            "Mars! The dusty red planet where robot rovers explore!",
-            "The Asteroid Belt! A giant ring of tumbling space rocks orbiting between Mars and Jupiter!",
-            "Jupiter! The giant king of planets with a huge swirling storm!",
-            "Saturn! The beautiful planet with dazzling rings of ice and rock!",
-            "Uranus! The chilly cyan ice giant that spins completely on its side!",
-            "Neptune! The deep blue planet with the fastest winds in the solar system!",
-            "Pluto! The chilly dwarf planet with a giant heart on its surface!",
-            "Comet! An icy space explorer with glowing tails speeding through space!",
-            "Galactic Swirl! Hundreds of billions of glittering stars dancing in a spiral!",
-            // 10. Praises, Game Titles & Prompts
-            "Great job!", "You found it!", "Yay!", "Try again!", "Options saved! Let's explore together!",
-            "All core words are ready for instant play!", "Back to today's planet positions!",
-            "Zoom! Super fast planet orbits!", "All gone! Delicious!",
-            "ABC Phonics!", "Numbers and Counting!", "Look and Find!", "2D Shapes!", "3D Shapes!",
-            "Colors and Paint!", "Animal Friends!", "Yummy Foods!", "Vehicles and Things!", "Opposites!", "Solar System Explorer!"
-        ];
-        return Array.from(new Set(pool.map(cleanSpokenText).filter(Boolean)));
+    TIER_CONFIGS: {
+        tier2_turbo: { id: 'tier2_turbo', label: 'Tier 2 Turbo (~90 RPM • 3x Parallel)', concurrency: 3, intervalMs: 1800, cooldownMs: 25000 },
+        tier2_max: { id: 'tier2_max', label: 'Tier 2 Max (~180 RPM • 5x Parallel)', concurrency: 5, intervalMs: 1200, cooldownMs: 25000 },
+        tier1_safe: { id: 'tier1_safe', label: 'Tier 1 Safe (~8 RPM • 1x Serial)', concurrency: 1, intervalMs: 7200, cooldownMs: 60000 }
     },
 
-    start() {
+    getTierConfig() {
+        const tierKey = safeGetStorage('tlh_precache_tier') || 'tier2_turbo';
+        return this.TIER_CONFIGS[tierKey] || this.TIER_CONFIGS.tier2_turbo;
+    },
+
+    getCoreWordPool() {
+        const list = [];
+        const seen = new Set();
+        const add = (txt) => {
+            const c = cleanSpokenText(txt);
+            if (c && !seen.has(c)) {
+                seen.add(c);
+                list.push(c);
+            }
+        };
+
+        // Priority 1: Game opening announcements (both standalone and combined with default starting items)
+        if (typeof GAME_OPEN_TITLES !== 'undefined') {
+            Object.values(GAME_OPEN_TITLES).forEach(title => add(title));
+        }
+        add('ABC Phonics! A! A says ah! ah, Apple!');
+        add('ABC Phonics! A! Apple!');
+        add('Numbers and Counting! One! Tap to count to 1!');
+        add('2D Shapes! Circle!');
+        add('3D Shapes! Cube! 6 flat square faces — like a box or dice!');
+        add('Colors and Paint! Red');
+        add('Animal Friends! Lion');
+        add('Yummy Foods! Strawberry! Sweet Red Berry!');
+        add('Yummy Foods! Apple! Crunchy Red Apple!');
+        add('Yummy Foods! Apple! Crispy, sweet red apple!');
+        add('Vehicles and Things! Fire Truck');
+        add('Opposites! Big, and Small!');
+        if (typeof GAMES !== 'undefined' && GAMES.solar && GAMES.solar[0]) {
+            add('Solar System! ' + GAMES.solar[0].speech);
+        }
+
+        if (typeof GAMES !== 'undefined') {
+            // Priority 2: Core Game Selections across all 11 games
+            // 1. Phonics / Letters
+            if (GAMES.phonics) {
+                GAMES.phonics.forEach(item => {
+                    add(`${item.letter}! ${item.cue} ${item.soundSpell}, ${item.words[0].w}!`);
+                    add(`${item.letter}! ${item.words[0].w}!`);
+                    item.words.forEach(wObj => {
+                        add(`${item.soundSpell}, ${item.soundSpell}, ${wObj.w}!`);
+                        add(`${wObj.w}!`);
+                    });
+                    add(`Pop ${item.letter}! ${item.cue} ${item.words[0].w}!`);
+                    add(`Yay! ${item.letter} says ${item.soundSpell}! ${item.words[0].w}!`);
+                    add(`That is ${item.letter}. Find ${item.letter}!`);
+                });
+            }
+
+            // 2. Numbers
+            for (let i = 1; i <= 20; i++) {
+                add(String(i));
+            }
+            if (GAMES.numbers) {
+                GAMES.numbers.forEach(n => {
+                    add(n.word);
+                    add(`${n.word}! Tap to count to ${n.num}!`);
+                    add(`${n.num}! Yay! ${n.word} ${n.item}!`);
+                    add(n.item);
+                });
+            }
+
+            // 3. 2D Shapes
+            if (GAMES.shapes) {
+                GAMES.shapes.forEach(s => {
+                    add(`${s.id}!`);
+                    add(s.id);
+                });
+            }
+
+            // 4. 3D Shapes
+            if (GAMES.shapes3d) {
+                GAMES.shapes3d.forEach(s => {
+                    add(`${s.id}! ${s.real}`);
+                    add(s.id);
+                    if (s.examples) {
+                        s.examples.forEach(ex => {
+                            if (ex.id !== 'pure') {
+                                add(`${ex.label}! A 3D ${s.id}!`);
+                                add(ex.label);
+                            }
+                        });
+                    }
+                });
+            }
+
+            // 5. Colors & Key Mixes
+            if (GAMES.colors) {
+                GAMES.colors.forEach(c => add(c.id));
+            }
+            const colorMixPairs = [
+                ['Red', 'Yellow', 'Orange'],
+                ['Blue', 'Yellow', 'Green'],
+                ['Blue', 'Red', 'Purple'],
+                ['Red', 'White', 'Pink'],
+                ['Blue', 'White', 'Sky Blue'],
+                ['White', 'Yellow', 'Cream Yellow'],
+                ['Green', 'White', 'Mint Green'],
+                ['Orange', 'White', 'Peach'],
+                ['Purple', 'White', 'Lavender'],
+                ['Pink', 'White', 'Light Pink'],
+                ['Brown', 'White', 'Tan Khaki'],
+                ['Black', 'White', 'Gray'],
+                ['Black', 'Red', 'Burgundy Dark Red'],
+                ['Black', 'Blue', 'Midnight Navy'],
+                ['Black', 'Yellow', 'Olive Green'],
+                ['Black', 'Green', 'Forest Green'],
+                ['Black', 'Orange', 'Rust Brown'],
+                ['Black', 'Purple', 'Deep Violet'],
+                ['Black', 'Pink', 'Dusty Plum'],
+                ['Black', 'Brown', 'Dark Chocolate'],
+                ['Green', 'Red', 'Brown'],
+                ['Blue', 'Orange', 'Warm Slate'],
+                ['Purple', 'Yellow', 'Golden Bronze'],
+                ['Green', 'Yellow', 'Lime Green'],
+                ['Blue', 'Green', 'Teal Turquoise'],
+                ['Orange', 'Red', 'Coral Red'],
+                ['Pink', 'Purple', 'Magenta Rose'],
+                ['Blue', 'Pink', 'Lilac Violet'],
+                ['Brown', 'Orange', 'Caramel'],
+                ['Brown', 'Red', 'Terracotta']
+            ];
+            colorMixPairs.forEach(([c1, c2, res]) => {
+                add(`${c1} plus ${c2} makes ${res}!`);
+                add(`${c2} plus ${c1} makes ${res}!`);
+                add(res);
+            });
+
+            // 6. Animals
+            if (GAMES.animals) {
+                GAMES.animals.forEach(a => {
+                    add(a.id);
+                    add(a.sound);
+                    add(a.speech);
+                });
+            }
+
+            // 7. Yummy Foods
+            if (GAMES.fruits) {
+                GAMES.fruits.forEach(f => {
+                    add(`${f.id}! ${f.desc}`);
+                    add(f.id);
+                    add(`All gone! Yummy ${f.id}! Delicious!`);
+                });
+                ['Crunch! Delicious!', 'Yum yum!', 'So tasty!', 'One more bite!'].forEach(ch => add(ch));
+            }
+
+            // 8. Vehicles and Things
+            if (GAMES.things) {
+                GAMES.things.forEach(t => {
+                    add(t.id);
+                    add(t.sound);
+                    add(t.speech);
+                });
+            }
+
+            // 9. Opposites
+            if (GAMES.opposites) {
+                GAMES.opposites.forEach(pair => {
+                    add(`${pair.a.label}, and ${pair.b.label}!`);
+                    add(pair.a.label);
+                    add(pair.b.label);
+                });
+            }
+
+            // 10. Solar System
+            if (GAMES.solar) {
+                GAMES.solar.forEach(s => {
+                    add(s.id);
+                    add(s.speech);
+                });
+                add('Zoom! Super fast planet orbits!');
+                add("Back to today's planet positions!");
+            }
+        }
+
+        // Priority 3: Quiz Prompts, General Praises & UI Phrases
+        if (typeof quizGame !== 'undefined' && quizGame.getPool) {
+            quizGame.getPool().forEach(q => {
+                add(q.prompt);
+                add(`Look and Find! ${q.prompt}`);
+                add(`You found it! ${q.label}!`);
+                add(`Try to find ${q.label}!`);
+            });
+        }
+
+        [
+            'Great job!',
+            'You found it!',
+            'Yay!',
+            'Try again!',
+            "Options saved! Let's explore together!",
+            'All core words are ready for instant play!'
+        ].forEach(p => add(p));
+
+        return list;
+    },
+
+    async start() {
         const key = getApiKey();
         if (!key) {
             alert("Please paste your Gemini API Key first to pre-cache Gemini natural voices!");
             return;
         }
-        if (this.queue.length === 0) {
-            this.queue = this.getCoreWordPool();
-            const savedIdx = parseInt(localStorage.getItem('tlh_precache_idx') || '0', 10);
-            this.currentIndex = (savedIdx >= 0 && savedIdx < this.queue.length) ? savedIdx : 0;
-        }
+
+        this.clearTimers();
+        const cfg = this.getTierConfig();
+        this.currentConcurrency = cfg.concurrency;
+        this.backoffCount = 0;
         this.state = 'running';
-        this.backoffStep = 0;
+
+        const model = getTtsModel();
+        const voice = getTtsVoice();
+
+        // 1. Pre-scan IndexedDB keys
+        const dbKeys = await ttsDB.getAllKeys().catch(() => []);
+        dbKeys.forEach(k => geminiTTS.knownDbKeys.add(k));
+
+        // 2. Build full word pool and queue
+        this.allWords = this.getCoreWordPool();
+        this.totalCount = this.allWords.length;
+        this.uncachedQueue = [];
+        this.cachedCount = 0;
+
+        for (const word of this.allWords) {
+            const cacheKey = `${model}:${voice}:${word}`;
+            if (geminiTTS.hasCached(cacheKey) || geminiTTS.knownDbKeys.has(cacheKey)) {
+                this.cachedCount++;
+            } else {
+                this.uncachedQueue.push(word);
+            }
+        }
+
+        if (this.uncachedQueue.length === 0) {
+            this.state = 'completed';
+            this.updateUI();
+            if (typeof app !== 'undefined' && app.speak) {
+                app.speak("All core words are ready for instant play!");
+            }
+            return;
+        }
+
         this.updateUI();
-        this.step();
+
+        // 3. Launch concurrent workers
+        this.activeWorkers = this.currentConcurrency;
+        for (let w = 0; w < this.currentConcurrency; w++) {
+            const t = setTimeout(() => this.runWorker(w), w * 450);
+            this.workerTimers.push(t);
+        }
+    },
+
+    clearTimers() {
+        this.workerTimers.forEach(t => clearTimeout(t));
+        this.workerTimers = [];
     },
 
     pause() {
-        if (this.timerId) clearTimeout(this.timerId);
-        this.timerId = null;
+        this.clearTimers();
         this.state = 'paused';
         this.updateUI();
     },
@@ -2784,15 +3136,17 @@ const precacheManager = {
         if (this.state !== 'paused') return;
         this.state = 'running';
         this.updateUI();
-        this.step();
+        this.activeWorkers = this.currentConcurrency;
+        for (let w = 0; w < this.currentConcurrency; w++) {
+            const t = setTimeout(() => this.runWorker(w), w * 450);
+            this.workerTimers.push(t);
+        }
     },
 
     cancel() {
-        if (this.timerId) clearTimeout(this.timerId);
-        this.timerId = null;
+        this.clearTimers();
         this.state = 'idle';
-        this.currentIndex = 0;
-        try { localStorage.removeItem('tlh_precache_idx'); } catch (e) {}
+        this.uncachedQueue = [];
         this.updateUI();
     },
 
@@ -2803,104 +3157,126 @@ const precacheManager = {
         }
     },
 
-    async step() {
+    async runWorker(workerId) {
         if (this.state !== 'running') return;
+        if (workerId >= this.currentConcurrency) return;
 
-        // 1. Check priority yield for toddler live interaction
         const now = Date.now();
         if (this.yieldUntil > now) {
-            const waitMs = this.yieldUntil - now;
-            this.updateUI("Yielding to toddler speech tap...");
-            this.timerId = setTimeout(() => this.step(), waitMs);
+            const waitMs = this.yieldUntil - now + 100;
+            const t = setTimeout(() => this.runWorker(workerId), waitMs);
+            this.workerTimers.push(t);
             return;
         }
 
-        // 2. Check Gemini cooldown
         if (geminiTTS.isCoolingDown()) {
             const cdWait = Math.max(1000, (geminiTTS.cooldownUntil || 0) - now);
             this.state = 'cooling';
             this.updateUI(`Rate limit cooldown (${Math.ceil(cdWait / 1000)}s)...`);
-            this.timerId = setTimeout(() => {
+            const t = setTimeout(() => {
                 if (this.state === 'cooling') this.state = 'running';
-                this.step();
+                this.runWorker(workerId);
             }, cdWait);
+            this.workerTimers.push(t);
             return;
         }
 
-        // 3. Check completion
-        if (this.currentIndex >= this.queue.length) {
-            this.state = 'completed';
-            try { localStorage.removeItem('tlh_precache_idx'); } catch (e) {}
-            this.updateUI();
-            if (typeof app !== 'undefined' && app.speak) {
-                app.speak("All core words are ready for instant play!");
+        if (this.uncachedQueue.length === 0) {
+            this.activeWorkers--;
+            if (this.activeWorkers <= 0) {
+                this.state = 'completed';
+                this.updateUI();
+                if (typeof app !== 'undefined' && app.speak) {
+                    app.speak("All core words are ready for instant play!");
+                }
             }
             return;
         }
 
-        const word = this.queue[this.currentIndex];
+        const word = this.uncachedQueue.shift();
         const model = getTtsModel();
         const voice = getTtsVoice();
         const key = getApiKey();
         const cacheKey = `${model}:${voice}:${word}`;
 
-        // 4. Instant fast-path if already cached (0ms network delay)
-        let isAlreadyCached = geminiTTS.hasCached(cacheKey);
-        if (!isAlreadyCached) {
-            const inDb = await ttsDB.get(cacheKey).catch(() => null);
-            if (inDb) {
-                geminiTTS.knownDbKeys.add(cacheKey);
-                geminiTTS.memCache.set(cacheKey, inDb);
-                isAlreadyCached = true;
-            }
-        }
-
-        if (isAlreadyCached) {
-            this.currentIndex++;
-            try { localStorage.setItem('tlh_precache_idx', String(this.currentIndex)); } catch (e) {}
+        // Verify if cached while in queue
+        if (geminiTTS.hasCached(cacheKey) || geminiTTS.knownDbKeys.has(cacheKey)) {
+            this.cachedCount++;
             this.updateUI();
-            // Advance immediately with microtask
-            this.timerId = setTimeout(() => this.step(), 0);
+            const t = setTimeout(() => this.runWorker(workerId), 0);
+            this.workerTimers.push(t);
             return;
         }
 
-        // 5. Network fetch with safe Tier 1 pacing (7.2s = 8.33 RPM)
+        const cfg = this.getTierConfig();
         this.updateUI(`Caching "${word}"...`);
+
         try {
             await geminiTTS.fetchAudio(word, model, voice, key);
-            this.currentIndex++;
-            try { localStorage.setItem('tlh_precache_idx', String(this.currentIndex)); } catch (e) {}
-            this.backoffStep = 0; // Reset backoff on success
+            if (this.state !== 'running') {
+                this.cachedCount++;
+                this.updateUI();
+                return;
+            }
+            this.cachedCount++;
+            this.backoffCount = 0;
             this.updateUI();
-            this.timerId = setTimeout(() => this.step(), this.safeIntervalMs);
+            const t = setTimeout(() => this.runWorker(workerId), cfg.intervalMs);
+            this.workerTimers.push(t);
         } catch (err) {
             const is429 = err.message && (err.message.includes('429') || err.message.includes('RESOURCE_EXHAUSTED'));
             if (is429) {
-                this.backoffStep++;
-                const baseWait = this.backoffStep === 1 ? 60000 : this.backoffStep === 2 ? 90000 : 120000;
-                const jitter = Math.floor(Math.random() * 5000);
-                const totalWait = Math.min(180000, baseWait + jitter);
-                geminiTTS.setCooldown(totalWait);
+                // Return phrase to front of queue if not already present
+                if (!this.uncachedQueue.includes(word)) {
+                    this.uncachedQueue.unshift(word);
+                }
+
+                // If another parallel worker already triggered cooling, just return
+                if (this.state === 'cooling') {
+                    return;
+                }
+
+                this.backoffCount++;
+                const isTier2 = cfg.id.startsWith('tier2');
+                const waitMs = isTier2
+                    ? (this.backoffCount === 1 ? 25000 : this.backoffCount === 2 ? 40000 : 60000)
+                    : (this.backoffCount === 1 ? 60000 : this.backoffCount === 2 ? 90000 : 120000);
+
+                geminiTTS.setCooldown(waitMs);
                 this.state = 'cooling';
-                this.updateUI(`Rate limit reached — cooling down (${Math.ceil(totalWait / 1000)}s)...`);
-                this.timerId = setTimeout(() => {
+
+                // Automatically step down concurrency if on Tier 2
+                if (this.currentConcurrency > 1) {
+                    this.currentConcurrency--;
+                }
+
+                this.updateUI(`Rate limit reached — cooling down (${Math.ceil(waitMs / 1000)}s)...`);
+                this.clearTimers();
+                const t = setTimeout(() => {
                     if (this.state === 'cooling') this.state = 'running';
-                    this.step();
-                }, totalWait);
+                    this.activeWorkers = this.currentConcurrency;
+                    for (let w = 0; w < this.currentConcurrency; w++) {
+                        const wt = setTimeout(() => this.runWorker(w), w * 450);
+                        this.workerTimers.push(wt);
+                    }
+                }, waitMs);
+                this.workerTimers.push(t);
             } else {
-                // Non-429 error: advance index so process doesn't get permanently stuck
-                this.currentIndex++;
-                try { localStorage.setItem('tlh_precache_idx', String(this.currentIndex)); } catch (e) {}
+                // Non-429 error: skip phrase so queue doesn't stall
+                if (this.state !== 'running') return;
+                this.cachedCount++;
                 this.updateUI();
-                this.timerId = setTimeout(() => this.step(), this.safeIntervalMs);
+                const t = setTimeout(() => this.runWorker(workerId), cfg.intervalMs);
+                this.workerTimers.push(t);
             }
         }
     },
 
     updateUI(statusOverride = null) {
-        const total = this.queue.length || this.getCoreWordPool().length;
-        const current = this.currentIndex;
+        const total = this.totalCount || (this.allWords && this.allWords.length) || this.getCoreWordPool().length;
+        const current = this.cachedCount;
         const pct = total > 0 ? Math.round((current / total) * 100) : 0;
+        const cfg = this.getTierConfig();
 
         // Modal Elements
         const precacheLabel = document.getElementById('voice-precache-label');
@@ -2909,6 +3285,7 @@ const precacheManager = {
         const progressNum = document.getElementById('precache-progress-num');
         const progressText = document.getElementById('precache-progress-text');
         const pauseModalBtn = document.getElementById('precache-modal-pause-btn');
+        const tierSub = document.getElementById('precache-tier-sub');
 
         // Floating Pill Elements
         const pill = document.getElementById('precache-floating-pill');
@@ -2918,6 +3295,7 @@ const precacheManager = {
 
         if (progressBar) progressBar.style.width = `${pct}%`;
         if (progressNum) progressNum.textContent = `${pct}%`;
+        if (tierSub) tierSub.textContent = `${cfg.label} • Runs in background`;
 
         if (this.state === 'running' || this.state === 'cooling') {
             if (progressBox) progressBox.classList.remove('hidden');
@@ -2930,7 +3308,7 @@ const precacheManager = {
             const displayStatus = statusOverride || defaultText;
             if (progressText) progressText.textContent = displayStatus;
             if (pillTitle) pillTitle.textContent = `Caching: ${current}/${total} (${pct}%)`;
-            if (pillSub) pillSub.textContent = statusOverride || 'Safe 8 RPM Pace';
+            if (pillSub) pillSub.textContent = statusOverride || cfg.label;
         } else if (this.state === 'paused') {
             if (progressBox) progressBox.classList.remove('hidden');
             if (pill) pill.classList.remove('hidden');
@@ -2954,6 +3332,7 @@ const precacheManager = {
             if (precacheLabel) precacheLabel.textContent = 'Pre-cache Core Words';
             if (progressBox) progressBox.classList.add('hidden');
             if (pill) pill.classList.add('hidden');
+            if (pillSub) pillSub.textContent = cfg.label;
         }
     }
 };
@@ -4765,9 +5144,23 @@ const solarGame = {
         if (btn) btn.textContent = `⚡ ${val}x`;
         const slider = document.getElementById('solar-speed-slider');
         if (slider) slider.value = String(val);
+        const badge = document.getElementById('solar-orbit-summary-badge');
+        if (badge) badge.textContent = `${val}x`;
+
+        document.querySelectorAll('.solar-speed-preset').forEach(presetBtn => {
+            const spd = parseFloat(presetBtn.dataset.speed);
+            const isActive = Math.abs(spd - val) < 0.05;
+            presetBtn.classList.toggle('bg-amber-400', isActive);
+            presetBtn.classList.toggle('text-slate-950', isActive);
+            presetBtn.classList.toggle('border-amber-300', isActive);
+            presetBtn.classList.toggle('bg-slate-900/80', !isActive);
+            presetBtn.classList.toggle('text-slate-200', !isActive);
+            presetBtn.classList.toggle('border-slate-600/80', !isActive);
+        });
     },
 
     open() {
+        document.getElementById('solar-orbit-drawer')?.classList.add('hidden');
         document.getElementById('solar-date-popover')?.classList.add('hidden');
         this.select(this.current, true);
     },
@@ -4813,6 +5206,10 @@ const solarGame = {
         const worldY = new THREE.Vector3(0, 1, 0);
 
         container.addEventListener('pointerdown', e => {
+            if (this.mode === 'orbit') {
+                document.getElementById('solar-orbit-drawer')?.classList.add('hidden');
+                document.getElementById('solar-date-popover')?.classList.add('hidden');
+            }
             if (typeof zoomController !== 'undefined' && zoomController.isPinching) return;
             this.isDragging = true;
             this.prevX = e.clientX;
@@ -5222,6 +5619,7 @@ const solarGame = {
 
     setMode(newMode) {
         this.mode = newMode;
+        document.getElementById('solar-orbit-drawer')?.classList.add('hidden');
         document.getElementById('solar-date-popover')?.classList.add('hidden');
         if (typeof zoomController !== 'undefined') {
             zoomController.resetZoom();
@@ -5260,8 +5658,30 @@ const solarGame = {
         if (label) {
             label.textContent = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
         }
+        this.updatePlayPauseUI();
+    },
+
+    updatePlayPauseUI() {
         const icon = document.getElementById('solar-play-icon');
-        if (icon) icon.textContent = this.isPlaying ? '⏸' : '▶';
+        const label = document.getElementById('solar-play-label');
+        const qIcon = document.getElementById('solar-quick-play-icon');
+        const qLabel = document.getElementById('solar-quick-play-label');
+        if (this.isPlaying) {
+            if (icon) icon.textContent = '⏸';
+            if (label) label.textContent = 'Pause';
+            if (qIcon) qIcon.textContent = '⏸';
+            if (qLabel) qLabel.textContent = 'Playing';
+        } else {
+            if (icon) icon.textContent = '▶';
+            if (label) label.textContent = 'Play';
+            if (qIcon) qIcon.textContent = '▶';
+            if (qLabel) qLabel.textContent = 'Paused';
+        }
+    },
+
+    togglePlayPause() {
+        this.isPlaying = !this.isPlaying;
+        this.updatePlayPauseUI();
     },
 
     goToDate(targetDate, speakAnnouncement = true) {
@@ -5426,6 +5846,7 @@ const solarGame = {
     },
 
     stop() {
+        document.getElementById('solar-orbit-drawer')?.classList.add('hidden');
         document.getElementById('solar-date-popover')?.classList.add('hidden');
         if (this.animId) {
             cancelAnimationFrame(this.animId);
@@ -5928,7 +6349,9 @@ const quizGame = {
     score: 0,
     currentAnswer: null,
     answered: false,
+    wrongAttempts: 0,
     nextTimer: null,
+    speechFollowupTimer: null,
 
     open() {
         this.nextQuestion(true);
@@ -5948,26 +6371,47 @@ const quizGame = {
 
     getPool() {
         const lettersPool = GAMES.phonics.map(p => ({
-            label: `Letter ${p.letter}`, display: `${p.letter}${p.letter.toLowerCase()}`,
-            sub: `${p.words[0].e} ${p.words[0].w}`, prompt: `Can you find the letter ${p.letter}?`
+            cat: 'letters',
+            label: `Letter ${p.letter}`,
+            display: `${p.letter}${p.letter.toLowerCase()}`,
+            sub: `${p.words[0].e} ${p.words[0].w}`,
+            prompt: `Can you find the letter ${p.letter}?`
         }));
         const maxNum = (typeof app !== 'undefined' && app.settings && app.settings.maxNumber) ? app.settings.maxNumber : 20;
         const numbersPool = GAMES.numbers.filter(n => n.num <= maxNum).map(n => ({
-            label: `Number ${n.num}`, display: `${n.num}`,
-            sub: `${n.emoji} ${n.word}`, prompt: `Where is the number ${n.num}?`
+            cat: 'numbers',
+            label: `Number ${n.num}`,
+            display: `${n.num}`,
+            sub: `${n.emoji} ${n.word}`,
+            prompt: `Where is the number ${n.num}?`
         }));
         const animalsPool = GAMES.animals.map(a => ({
-            label: a.id, display: a.emoji,
-            sub: a.id, prompt: `Can you find the ${a.id}?`
+            cat: 'animals',
+            label: a.id,
+            display: a.emoji,
+            sub: a.id,
+            prompt: `Can you find the ${a.id}?`
         }));
         const shapesPool = GAMES.shapes.map(s => ({
-            label: s.id, display: s.id === 'Circle' ? '🟣' : s.id === 'Square' ? '🟥' : s.id === 'Triangle' ? '🔺' : s.id === 'Star' ? '⭐' : s.id === 'Heart' ? '❤️' : '🔷',
-            sub: s.id, prompt: `Can you find the ${s.id}?`
+            cat: 'shapes',
+            label: s.id,
+            display: '',
+            displayHtml: `<svg class="w-14 h-14 sm:w-16 sm:h-16 mx-auto drop-shadow-sm pointer-events-none" viewBox="0 0 100 100">${s.svg}</svg>`,
+            sub: s.id,
+            prompt: `Can you find the ${s.id}?`
         }));
-        const solarPool = GAMES.solar.slice(0, 10).map(s => ({
-            label: s.id, display: s.emoji,
-            sub: s.id, prompt: `Where is ${s.id}?`
-        }));
+        const solarPool = GAMES.solar.map((s, idx) => {
+            const needsThe = (s.id === 'Asteroid Belt' || s.id === 'Comet' || s.id === 'Galactic Swirl');
+            const spokenName = needsThe ? `the ${s.id}` : s.id;
+            return {
+                cat: 'solar',
+                label: s.id,
+                display: s.emoji,
+                displayHtml: `<div class="w-14 h-14 sm:w-16 sm:h-16 mx-auto rounded-2xl overflow-hidden bg-slate-950 p-1 shadow-inner border border-indigo-200/40 flex items-center justify-center pointer-events-none">${getSolarSVG(s.id, 'qzsol_' + idx)}</div>`,
+                sub: s.id,
+                prompt: `Where is ${spokenName}?`
+            };
+        });
 
         if (this.category === 'letters') return lettersPool;
         if (this.category === 'numbers') return numbersPool;
@@ -5982,11 +6426,39 @@ const quizGame = {
             clearTimeout(this.nextTimer);
             this.nextTimer = null;
         }
+        if (this.speechFollowupTimer) {
+            clearTimeout(this.speechFollowupTimer);
+            this.speechFollowupTimer = null;
+        }
         this.answered = false;
+        this.wrongAttempts = 0;
+
         const pool = this.getPool();
-        const choices = [...pool].sort(() => Math.random() - 0.5).slice(0, 3);
-        const winner = choices[Math.floor(Math.random() * choices.length)];
+        if (!pool || pool.length === 0) return;
+
+        // 1. Avoid back-to-back duplicate questions
+        const candidatePool = (pool.length > 1 && this.currentAnswer)
+            ? pool.filter(p => p.label !== this.currentAnswer.label)
+            : pool;
+        const winner = candidatePool[Math.floor(Math.random() * candidatePool.length)];
         this.currentAnswer = winner;
+
+        // 2. Pick 2 distractors from the SAME category as winner (prevents cross-category visual collisions)
+        const distractors = pool
+            .filter(p => p.cat === winner.cat && p.label !== winner.label)
+            .sort(() => Math.random() - 0.5)
+            .slice(0, 2);
+
+        // Fallback if not enough in same category (should not occur since each category has >= 10 items)
+        if (distractors.length < 2) {
+            const others = pool
+                .filter(p => p.label !== winner.label && !distractors.some(d => d.label === p.label))
+                .sort(() => Math.random() - 0.5)
+                .slice(0, 2 - distractors.length);
+            distractors.push(...others);
+        }
+
+        const choices = [winner, ...distractors].sort(() => Math.random() - 0.5);
 
         document.getElementById('quiz-question-text').textContent = `Find: ${winner.label}!`;
         const shouldAnnounce = (typeof app !== 'undefined' && app.settings) ? app.settings.announceGameOnOpen : true;
@@ -5998,11 +6470,18 @@ const quizGame = {
 
         choices.forEach(item => {
             const card = document.createElement('div');
-            card.className = 'bg-white rounded-3xl p-4 sm:p-6 shadow-md border-4 border-amber-200 flex flex-col items-center justify-center min-h-[145px] cursor-pointer squish-btn';
-            card.innerHTML = `<div class="text-5xl sm:text-6xl font-black text-slate-800 mb-2">${item.display}</div><div class="text-xs sm:text-sm font-extrabold text-slate-500 text-center">${item.sub}</div>`;
+            card.className = 'bg-white rounded-3xl p-4 sm:p-6 shadow-md border-4 border-amber-200 flex flex-col items-center justify-center min-h-[145px] cursor-pointer squish-btn transition-all duration-200';
+            card.dataset.quizLabel = item.label;
+
+            const visualContent = item.displayHtml
+                ? `<div class="mb-2 flex items-center justify-center">${item.displayHtml}</div>`
+                : `<div class="text-5xl sm:text-6xl font-black text-slate-800 mb-2">${item.display}</div>`;
+
+            card.innerHTML = `${visualContent}<div class="text-xs sm:text-sm font-extrabold text-slate-500 text-center">${item.sub}</div>`;
 
             card.addEventListener('click', () => {
-                if (this.answered && item.label === winner.label) return;
+                // Post-win click lock: Ignore all clicks once answered
+                if (this.answered) return;
 
                 const rect = card.getBoundingClientRect();
                 if (item.label === winner.label) {
@@ -6019,10 +6498,20 @@ const quizGame = {
                     }, 350));
                     this.nextTimer = setTimeout(() => this.nextQuestion(false), 1350);
                 } else {
+                    this.wrongAttempts++;
                     soundFX.playNote(220, 0.15, 'sine');
-                    card.classList.add('shake-anim');
+                    card.classList.add('shake-anim', 'opacity-50');
                     app.speak(`Try to find ${winner.label}!`);
                     setTimeout(() => card.classList.remove('shake-anim'), 350);
+
+                    // Scaffolding: if child tried wrong twice, highlight the winning card
+                    if (this.wrongAttempts >= 2) {
+                        grid.querySelectorAll('.squish-btn').forEach(btn => {
+                            if (btn.dataset.quizLabel === winner.label) {
+                                btn.classList.add('ring-4', 'ring-amber-400', 'border-amber-400', 'animate-pulse');
+                            }
+                        });
+                    }
                 }
             });
             grid.appendChild(card);
@@ -7605,6 +8094,10 @@ window.addEventListener('DOMContentLoaded', () => {
 
     const syncSettingsToUI = () => {
         const s = app.settings;
+        const tierSel = document.getElementById('precache-tier-select');
+        if (tierSel) {
+            tierSel.value = safeGetStorage('tlh_precache_tier') || 'tier2_turbo';
+        }
         const optAnnounce = document.getElementById('opt-announce-open');
         if (optAnnounce) optAnnounce.checked = !!s.announceGameOnOpen;
         const optVoice = document.getElementById('opt-voice-enabled');
@@ -8078,35 +8571,37 @@ window.addEventListener('DOMContentLoaded', () => {
     document.getElementById('solar-mode-photo').addEventListener('click', () => solarGame.setMode('photo'));
     document.getElementById('solar-mode-planet').addEventListener('click', () => solarGame.setMode('planet'));
     document.getElementById('solar-mode-orbit').addEventListener('click', () => solarGame.setMode('orbit'));
-    // Wire Solar Orbit date & speed controls (Items 1 & 2)
-    document.getElementById('solar-date-toggle-btn')?.addEventListener('click', (e) => {
+    // Wire Solar Orbit Drawer & Controls (Upgrade 2b)
+    document.getElementById('solar-orbit-drawer-btn')?.addEventListener('click', (e) => {
         e.stopPropagation();
-        const popover = document.getElementById('solar-date-popover');
-        if (popover) {
-            const isHidden = popover.classList.toggle('hidden');
-            if (!isHidden) {
-                solarGame.updateOrbitDateUI();
-            }
+        soundFX.playPop();
+        const drawer = document.getElementById('solar-orbit-drawer');
+        if (drawer) {
+            drawer.classList.toggle('hidden');
         }
     });
-    document.getElementById('solar-date-close-btn')?.addEventListener('click', (e) => {
+    document.getElementById('solar-orbit-drawer-close')?.addEventListener('click', (e) => {
         e.stopPropagation();
+        document.getElementById('solar-orbit-drawer')?.classList.add('hidden');
         document.getElementById('solar-date-popover')?.classList.add('hidden');
     });
-    document.getElementById('solar-date-input')?.addEventListener('change', e => {
-        if (e.target.value) solarGame.goToDate(e.target.value + 'T12:00:00Z', true);
-    });
-    document.getElementById('solar-today-btn')?.addEventListener('click', (e) => {
+
+    document.getElementById('solar-play-pause-quick-btn')?.addEventListener('click', (e) => {
         e.stopPropagation();
-        solarGame.jumpToday();
+        soundFX.playPop();
+        solarGame.togglePlayPause();
     });
     document.getElementById('solar-play-pause-btn')?.addEventListener('click', (e) => {
         e.stopPropagation();
-        solarGame.isPlaying = !solarGame.isPlaying;
-        solarGame.updateOrbitDateUI();
+        soundFX.playPop();
+        solarGame.togglePlayPause();
+    });
+    document.getElementById('solar-turbo-btn')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        solarGame.triggerAction();
     });
 
-    // Speed Controls (Item 2)
+    // Speed Controls & Preset Pills (Upgrade 2b)
     document.getElementById('solar-speed-down-btn')?.addEventListener('click', (e) => {
         e.stopPropagation();
         const cur = solarGame.orbitSpeed;
@@ -8142,6 +8637,37 @@ window.addEventListener('DOMContentLoaded', () => {
     document.getElementById('solar-speed-slider')?.addEventListener('input', (e) => {
         solarGame.setOrbitSpeed(parseFloat(e.target.value));
     });
+    document.querySelectorAll('.solar-speed-preset').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            soundFX.playPop();
+            const spd = parseFloat(btn.dataset.speed);
+            if (!isNaN(spd)) solarGame.setOrbitSpeed(spd);
+        });
+    });
+
+    // Date Popover inside Drawer (Upgrade 2b)
+    document.getElementById('solar-date-toggle-btn')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const popover = document.getElementById('solar-date-popover');
+        if (popover) {
+            const isHidden = popover.classList.toggle('hidden');
+            if (!isHidden) {
+                solarGame.updateOrbitDateUI();
+            }
+        }
+    });
+    document.getElementById('solar-date-close-btn')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        document.getElementById('solar-date-popover')?.classList.add('hidden');
+    });
+    document.getElementById('solar-date-input')?.addEventListener('change', e => {
+        if (e.target.value) solarGame.goToDate(e.target.value + 'T12:00:00Z', true);
+    });
+    document.getElementById('solar-today-btn')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        solarGame.jumpToday();
+    });
 
     // Solar Navigation Arrows (Item 3)
     document.getElementById('solar-prev-btn')?.addEventListener('click', (e) => {
@@ -8153,6 +8679,12 @@ window.addEventListener('DOMContentLoaded', () => {
         e.stopPropagation();
         soundFX.playPop();
         solarGame.stepBody(1);
+    });
+
+    // Pre-cache Tier Select listener (Upgrade 1)
+    document.getElementById('precache-tier-select')?.addEventListener('change', (e) => {
+        safeSetStorage('tlh_precache_tier', e.target.value);
+        precacheManager.updateUI();
     });
 
     document.getElementById('solar-photo-container').addEventListener('click', () => solarGame.triggerAction());
@@ -8214,7 +8746,7 @@ window.ToddlerLearningHub = {
         <span class="text-amber-400 animate-pulse text-base">⚡</span>
         <div class="flex flex-col">
             <span id="precache-pill-title" class="font-black text-amber-300 text-[11px] leading-tight">Caching: 0/0 (0%)</span>
-            <span id="precache-pill-sub" class="text-[10px] text-slate-300 leading-tight">Safe 8 RPM Pace</span>
+            <span id="precache-pill-sub" class="text-[10px] text-slate-300 leading-tight">Tier 2 Turbo (~90 RPM)</span>
         </div>
         <div class="flex items-center gap-1 ml-1">
             <button id="precache-pill-pause-btn" type="button" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg text-[10px] font-black border border-slate-600 squish-btn" title="Pause / Resume">⏸️</button>
