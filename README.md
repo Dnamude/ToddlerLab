@@ -250,60 +250,84 @@
             font-size: min(9.5rem, calc(100cqh - 8rem), 40cqw);
             transition: font-size 0.22s ease;
         }
+        #view-solar .main-stage {
+            overflow: hidden !important;
+            justify-content: center;
+            gap: 0.15rem;
+            padding: 0.2rem 0.65rem;
+        }
         #solar-stage-box {
-            width: min(24rem, calc(100cqh - 7.8rem), calc(100cqw - 5.5rem));
-            height: min(24rem, calc(100cqh - 7.8rem), calc(100cqw - 5.5rem));
+            width: min(23rem, calc(100cqh - 7.6rem), calc(100cqw - 5.2rem));
+            height: min(23rem, calc(100cqh - 7.6rem), calc(100cqw - 5.2rem));
+            min-width: 8rem;
+            min-height: 8rem;
             flex-shrink: 0;
             transition: width 0.22s ease, height 0.22s ease;
         }
-        /* Sleek Single-Row Horizontal Scrollable Planet Tray (Upgrade 2) */
+        /* Fit-All 7x2 Planet Selection Tray — Zero Scrolling & Zero Cutoff */
         #solar-controls-dock {
             height: auto !important;
-            min-height: 82px;
-            max-height: 96px;
-            padding: 0.25rem 0.5rem max(0.4rem, env(safe-area-inset-bottom)) 0.5rem;
+            min-height: 0 !important;
+            max-height: none !important;
+            padding: 0.2rem 0.5rem max(0.45rem, env(safe-area-inset-bottom)) 0.5rem !important;
             background: rgba(15, 23, 42, 0.96) !important;
             border-top: 2px solid #334155 !important;
+            overflow: visible !important;
+        }
+        #solar-controls-dock.dock-collapsed {
+            max-height: 40px !important;
+            padding-bottom: max(0.25rem, env(safe-area-inset-bottom)) !important;
+            overflow: hidden !important;
         }
         #solar-controls-dock .control-scroll {
-            overflow-x: auto !important;
-            overflow-y: hidden !important;
-            touch-action: pan-x !important;
-            padding: 0.15rem 0.35rem 0.25rem 0.35rem !important;
-            scrollbar-width: thin;
-            scrollbar-color: #475569 transparent;
-        }
-        #solar-controls-dock .control-scroll::-webkit-scrollbar {
-            height: 4px;
-        }
-        #solar-controls-dock .control-scroll::-webkit-scrollbar-thumb {
-            background: #475569;
-            border-radius: 9999px;
+            height: auto !important;
+            overflow: visible !important;
+            padding: 0.1rem 0.15rem 0.25rem 0.15rem !important;
         }
         #solar-controls {
-            display: flex !important;
-            flex-wrap: nowrap !important;
-            justify-content: flex-start !important;
-            align-items: center !important;
-            gap: 0.5rem !important;
-            max-width: none !important;
-            width: max-content !important;
+            display: grid !important;
+            grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+            gap: 0.3rem !important;
+            width: 100% !important;
+            max-width: 640px !important;
             margin: 0 auto !important;
-            padding: 0 0.25rem !important;
+            padding: 0 0.1rem 3px 0.1rem !important;
+        }
+        @media (min-width: 900px) {
+            #solar-controls {
+                grid-template-columns: repeat(14, minmax(0, 1fr)) !important;
+                max-width: 880px !important;
+            }
         }
         #solar-controls .tray-btn {
-            width: 3.6rem !important;
-            height: 3.6rem !important;
-            border-radius: 1rem !important;
+            width: 100% !important;
+            height: 3.15rem !important;
+            min-height: 3.15rem !important;
+            padding: 0.15rem 0.1rem !important;
+            border-radius: 0.85rem !important;
             background: #1e293b !important;
             border: 2px solid #475569 !important;
-            box-shadow: 0 3px 0 #0f172a !important;
-            flex-shrink: 0 !important;
+            box-shadow: 0 2px 0 #0f172a !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 1px !important;
+            overflow: hidden !important;
         }
+        @media (min-width: 600px) {
+            #solar-controls .tray-btn {
+                height: 3.4rem !important;
+                min-height: 3.4rem !important;
+                border-radius: 0.95rem !important;
+            }
+        }
+        #solar-controls .tray-btn:active,
         #solar-controls .tray-btn.selected {
+            transform: translateY(1px) !important;
             background: #312e81 !important;
             border-color: #fbbf24 !important;
-            box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.4), 0 3px 0 #1e1b4b !important;
+            box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.45), 0 1px 0 #1e1b4b !important;
         }
         #solar-controls .tray-btn span {
             color: #f1f5f9 !important;
@@ -1195,7 +1219,7 @@
 
         <div class="main-stage">
             <!-- Compact Orbit Status & Drawer Launcher Bar (Upgrade 2b, visible only in Orbit mode) -->
-            <div id="solar-orbit-controls" class="hidden flex flex-wrap items-center justify-center gap-2 mb-1 z-20">
+            <div id="solar-orbit-controls" class="hidden flex flex-wrap items-center justify-center gap-2 mb-0.5 z-20">
                 <button id="solar-play-pause-quick-btn" type="button" class="min-h-[36px] px-3.5 py-1 rounded-full bg-slate-900/90 hover:bg-slate-800 text-amber-300 border border-amber-400/40 font-black text-xs shadow-md squish-btn flex items-center gap-1.5" title="Play / Pause simulation">
                     <span id="solar-quick-play-icon">⏸</span>
                     <span id="solar-quick-play-label">Playing</span>
@@ -1208,7 +1232,7 @@
             </div>
 
             <!-- Slide-Out Side Control Panel (Upgrade 2b, tucked on side, hidden by default) -->
-            <div id="solar-orbit-drawer" class="hidden absolute top-2 right-2 sm:right-4 z-40 w-72 sm:w-80 bg-slate-900/95 backdrop-blur-xl border-2 border-indigo-400/60 rounded-3xl p-4 shadow-2xl text-white flex flex-col gap-3.5 transition-all duration-200">
+            <div id="solar-orbit-drawer" class="hidden absolute top-2 right-2 sm:right-4 z-40 w-72 sm:w-80 max-h-[calc(100%-1rem)] overflow-y-auto bg-slate-900/95 backdrop-blur-xl border-2 border-indigo-400/60 rounded-3xl p-4 shadow-2xl text-white flex flex-col gap-3.5 transition-all duration-200">
                 <!-- Drawer Header -->
                 <div class="flex items-center justify-between border-b border-slate-700/80 pb-2.5">
                     <div class="flex items-center gap-2">
@@ -1307,8 +1331,8 @@
                 <button id="solar-next-btn" type="button" class="w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-slate-900/85 hover:bg-indigo-900 text-white border-2 border-indigo-400/50 shadow-lg flex items-center justify-center text-base sm:text-lg font-black squish-btn flex-shrink-0 z-20" aria-label="Next Celestial Body" title="Next">▶</button>
             </div>
 
-            <h1 id="solar-title" class="text-2xl sm:text-4xl font-black text-white tracking-tight mt-0.5 leading-tight flex-shrink-0 text-center">The Sun</h1>
-            <div id="solar-fact" class="mt-1 fact-badge px-3.5 py-1.5 rounded-2xl font-extrabold text-xs sm:text-sm text-center max-w-md shadow-md cursor-pointer squish-btn flex-shrink-0 leading-snug">
+            <h1 id="solar-title" class="text-xl sm:text-2xl font-black text-white tracking-tight mt-0.5 leading-tight flex-shrink-0 text-center">The Sun</h1>
+            <div id="solar-fact" class="mt-0.5 fact-badge px-3 py-1 rounded-2xl font-extrabold text-xs sm:text-sm text-center max-w-lg shadow-md cursor-pointer squish-btn flex-shrink-0 leading-snug">
                 Our giant, glowing star! It keeps Earth warm and bright!
             </div>
         </div>
@@ -8544,14 +8568,14 @@ window.addEventListener('DOMContentLoaded', () => {
         app.speak(oppositesGame.current.b.label);
     });
 
-    // 14. Solar System Setup with Real Official NASA Photos in Tray
+    // 14. Solar System Setup with Fit-All 7x2 Planet Selection Tray
     const solarTray = document.getElementById('solar-controls');
     GAMES.solar.forEach((s, idx) => {
         const btn = document.createElement('button');
-        btn.className = 'tray-btn p-1';
+        btn.className = 'tray-btn';
         btn.dataset.solarId = s.id;
         const thumbWrap = document.createElement('div');
-        thumbWrap.className = 'w-9 h-9 rounded-full overflow-hidden border border-slate-400 bg-slate-950 flex items-center justify-center';
+        thumbWrap.className = 'w-7 h-7 sm:w-8 sm:h-8 rounded-full overflow-hidden border border-slate-400 bg-slate-950 flex items-center justify-center flex-shrink-0';
         const thumbImg = document.createElement('img');
         thumbImg.src = s.photoUrl;
         thumbImg.alt = s.short;
@@ -8561,7 +8585,7 @@ window.addEventListener('DOMContentLoaded', () => {
         }, { once: true });
         thumbWrap.appendChild(thumbImg);
         const labelSpan = document.createElement('span');
-        labelSpan.className = 'text-[10px] font-black text-slate-700 mt-0.5 leading-none';
+        labelSpan.className = 'text-[9.5px] sm:text-[10.5px] font-black text-slate-100 leading-none truncate max-w-full px-0.5';
         labelSpan.textContent = s.short;
         btn.appendChild(thumbWrap);
         btn.appendChild(labelSpan);
