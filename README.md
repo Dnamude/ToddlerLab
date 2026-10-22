@@ -252,55 +252,66 @@
         }
         #view-solar .main-stage {
             overflow: hidden !important;
-            justify-content: center;
-            gap: 0.15rem;
-            padding: 0.2rem 0.65rem;
+            justify-content: space-evenly;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.65rem 0.65rem 0.35rem 0.65rem;
         }
         #solar-stage-box {
-            width: min(23rem, calc(100cqh - 7.6rem), calc(100cqw - 5.2rem));
-            height: min(23rem, calc(100cqh - 7.6rem), calc(100cqw - 5.2rem));
-            min-width: 8rem;
-            min-height: 8rem;
+            width: min(20rem, calc(100cqh - 8.8rem), calc(100cqw - 5.5rem));
+            height: min(20rem, calc(100cqh - 8.8rem), calc(100cqw - 5.5rem));
+            min-width: 7.5rem;
+            min-height: 7.5rem;
             flex-shrink: 0;
             transition: width 0.22s ease, height 0.22s ease;
         }
-        /* Fit-All 7x2 Planet Selection Tray — Zero Scrolling & Zero Cutoff */
+        /* Sleek Single-Row Horizontal Scrollable Planet Selection Tray */
         #solar-controls-dock {
             height: auto !important;
             min-height: 0 !important;
-            max-height: none !important;
-            padding: 0.2rem 0.5rem max(0.45rem, env(safe-area-inset-bottom)) 0.5rem !important;
+            max-height: 84px !important;
+            padding: 0.15rem 0.5rem max(0.35rem, env(safe-area-inset-bottom)) 0.5rem !important;
             background: rgba(15, 23, 42, 0.96) !important;
             border-top: 2px solid #334155 !important;
-            overflow: visible !important;
+            overflow: hidden !important;
         }
         #solar-controls-dock.dock-collapsed {
-            max-height: 40px !important;
+            max-height: 38px !important;
             padding-bottom: max(0.25rem, env(safe-area-inset-bottom)) !important;
             overflow: hidden !important;
         }
         #solar-controls-dock .control-scroll {
             height: auto !important;
-            overflow: visible !important;
-            padding: 0.1rem 0.15rem 0.25rem 0.15rem !important;
+            overflow-x: auto !important;
+            overflow-y: hidden !important;
+            touch-action: pan-x !important;
+            -webkit-overflow-scrolling: touch;
+            padding: 0.1rem 0.25rem 0.25rem 0.25rem !important;
+            scrollbar-width: thin;
+            scrollbar-color: #475569 transparent;
+        }
+        #solar-controls-dock .control-scroll::-webkit-scrollbar {
+            height: 3px;
+        }
+        #solar-controls-dock .control-scroll::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 9999px;
         }
         #solar-controls {
-            display: grid !important;
-            grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
-            gap: 0.3rem !important;
-            width: 100% !important;
-            max-width: 640px !important;
+            display: flex !important;
+            flex-wrap: nowrap !important;
+            flex-direction: row !important;
+            justify-content: flex-start !important;
+            align-items: center !important;
+            gap: 0.45rem !important;
+            width: max-content !important;
+            max-width: none !important;
             margin: 0 auto !important;
-            padding: 0 0.1rem 3px 0.1rem !important;
-        }
-        @media (min-width: 900px) {
-            #solar-controls {
-                grid-template-columns: repeat(14, minmax(0, 1fr)) !important;
-                max-width: 880px !important;
-            }
+            padding: 0 0.25rem 2px 0.25rem !important;
         }
         #solar-controls .tray-btn {
-            width: 100% !important;
+            width: 3.25rem !important;
+            min-width: 3.25rem !important;
             height: 3.15rem !important;
             min-height: 3.15rem !important;
             padding: 0.15rem 0.1rem !important;
@@ -313,14 +324,8 @@
             align-items: center !important;
             justify-content: center !important;
             gap: 1px !important;
+            flex-shrink: 0 !important;
             overflow: hidden !important;
-        }
-        @media (min-width: 600px) {
-            #solar-controls .tray-btn {
-                height: 3.4rem !important;
-                min-height: 3.4rem !important;
-                border-radius: 0.95rem !important;
-            }
         }
         #solar-controls .tray-btn:active,
         #solar-controls .tray-btn.selected {
@@ -5746,7 +5751,11 @@ const solarGame = {
         document.getElementById('solar-fact').textContent = item.fact;
 
         document.querySelectorAll('#solar-controls .tray-btn').forEach(b => {
-            b.classList.toggle('selected', b.dataset.solarId === item.id);
+            const isSel = b.dataset.solarId === item.id;
+            b.classList.toggle('selected', isSel);
+            if (isSel) {
+                b.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            }
         });
 
         const photoContainer = document.getElementById('solar-photo-container');
