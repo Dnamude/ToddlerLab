@@ -581,6 +581,62 @@
             background: #334155;
         }
 
+        /* 1-Finger Long-Press & Drag Visual Feedback */
+        .item-drag-active {
+            box-shadow: 0 20px 42px rgba(15, 23, 42, 0.35) !important;
+            filter: drop-shadow(0 16px 28px rgba(0, 0, 0, 0.28)) brightness(1.08) !important;
+            cursor: grabbing !important;
+            z-index: 45 !important;
+            transition: filter 0.15s ease, box-shadow 0.15s ease !important;
+        }
+
+        .drag-hud-badge {
+            position: absolute;
+            top: 0.65rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(-8px) scale(0.85);
+            background: rgba(30, 41, 59, 0.94);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1.5px solid rgba(255, 255, 255, 0.3);
+            color: #ffffff;
+            padding: 0.22rem 0.85rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 900;
+            letter-spacing: 0.02em;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+            z-index: 50;
+            pointer-events: none;
+            opacity: 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            transition: opacity 0.18s ease, transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .drag-hud-badge.visible {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0) scale(1);
+        }
+
+        #view-solar .drag-hud-badge {
+            background: rgba(15, 23, 42, 0.96);
+            border-color: rgba(99, 102, 241, 0.6);
+            box-shadow: 0 8px 24px rgba(79, 70, 229, 0.3);
+        }
+
+        .main-stage {
+            touch-action: none;
+        }
+
+        #shape-target, #shape3d-target, #animal-target, #fruits-target, #things-target, #solar-stage-box, #color-bg-target, #phonics-main-card, #number-items-grid, #quiz-choices-grid, #opposites-cards-grid {
+            touch-action: none !important;
+            user-select: none !important;
+            -webkit-user-select: none !important;
+            -webkit-touch-callout: none !important;
+        }
+
         .control-scroll {
             width: 100%;
             height: 100%;
@@ -1473,7 +1529,7 @@
                             <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
                                 <span>🖐️</span><span>Drag & Spin Speed</span>
                             </div>
-                            <div class="text-[11px] font-bold text-slate-500 leading-tight">1-finger drag sensitivity for shapes & 3D models</div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Press & hold (long-press) to drag items with 1 finger, or spin 3D</div>
                         </div>
                         <select id="opt-drag-speed" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0">
                             <option value="slow">🐢 Slow (0.55x)</option>
@@ -5342,19 +5398,29 @@ const solarGame = {
                 document.getElementById('solar-orbit-drawer')?.classList.add('hidden');
                 document.getElementById('solar-date-popover')?.classList.add('hidden');
             }
-            if (typeof zoomController !== 'undefined' && zoomController.isPinching) return;
-            this.isDragging = true;
+            if (typeof zoomController !== 'undefined' && (zoomController.isPinching || zoomController.isDragging1Finger)) return;
+            this.isDragging = false;
+            this.pointerDownX = e.clientX;
+            this.pointerDownY = e.clientY;
             this.prevX = e.clientX;
             this.prevY = e.clientY;
-            try { container.setPointerCapture(e.pointerId); } catch (err) {}
         });
 
         container.addEventListener('pointermove', e => {
-            if (typeof zoomController !== 'undefined' && zoomController.isPinching) {
+            if (typeof zoomController !== 'undefined' && (zoomController.isPinching || zoomController.isDragging1Finger || zoomController.isLongPressActive)) {
                 this.isDragging = false;
                 return;
             }
-            if (!this.isDragging || !this.rootGroup) return;
+            const dist = Math.hypot(e.clientX - (this.pointerDownX || e.clientX), e.clientY - (this.pointerDownY || e.clientY));
+            if (!this.isDragging) {
+                if (dist > 8) {
+                    this.isDragging = true;
+                    try { container.setPointerCapture(e.pointerId); } catch (err) {}
+                } else {
+                    return;
+                }
+            }
+            if (!this.rootGroup) return;
             const dx = e.clientX - this.prevX;
             const dy = e.clientY - this.prevY;
             this.prevX = e.clientX;
@@ -6874,19 +6940,29 @@ const shapes3DGame = {
         const worldY = new THREE.Vector3(0, 1, 0);
 
         container.addEventListener('pointerdown', e => {
-            if (typeof zoomController !== 'undefined' && zoomController.isPinching) return;
-            this.isDragging = true;
+            if (typeof zoomController !== 'undefined' && (zoomController.isPinching || zoomController.isDragging1Finger)) return;
+            this.isDragging = false;
+            this.pointerDownX = e.clientX;
+            this.pointerDownY = e.clientY;
             this.prevX = e.clientX;
             this.prevY = e.clientY;
-            try { container.setPointerCapture(e.pointerId); } catch (err) {}
         });
 
         container.addEventListener('pointermove', e => {
-            if (typeof zoomController !== 'undefined' && zoomController.isPinching) {
+            if (typeof zoomController !== 'undefined' && (zoomController.isPinching || zoomController.isDragging1Finger || zoomController.isLongPressActive)) {
                 this.isDragging = false;
                 return;
             }
-            if (!this.isDragging || !this.mesh) return;
+            const dist = Math.hypot(e.clientX - (this.pointerDownX || e.clientX), e.clientY - (this.pointerDownY || e.clientY));
+            if (!this.isDragging) {
+                if (dist > 8) {
+                    this.isDragging = true;
+                    try { container.setPointerCapture(e.pointerId); } catch (err) {}
+                } else {
+                    return;
+                }
+            }
+            if (!this.mesh) return;
             const dx = e.clientX - this.prevX;
             const dy = e.clientY - this.prevY;
             this.prevX = e.clientX;
@@ -7943,8 +8019,29 @@ const zoomController = {
     panX: 0,
     panY: 0,
     isPinching: false,
+    isDragging1Finger: false,
+    isLongPressActive: false,
+    suppressClick: false,
+
+    showDragIndicator(stage) {
+        const badge = stage.querySelector('.drag-hud-badge');
+        if (badge) badge.classList.add('visible');
+    },
+
+    hideDragIndicator(stage) {
+        const badge = stage.querySelector('.drag-hud-badge');
+        if (badge) badge.classList.remove('visible');
+    },
 
     init() {
+        // Global click-suppression after drag
+        window.addEventListener('click', (e) => {
+            if (this.suppressClick) {
+                e.stopPropagation();
+                e.preventDefault();
+            }
+        }, true);
+
         const gameViews = [
             'letters', 'numbers', 'quiz', 'shapes', 'shapes3d',
             'colors', 'animals', 'fruits', 'things', 'opposites', 'solar'
@@ -8014,6 +8111,12 @@ const zoomController = {
         pill.appendChild(minBadge);
         pill.appendChild(controlsGroup);
         stage.appendChild(pill);
+
+        // Floating 1-Finger Drag Indicator Badge
+        const dragBadge = document.createElement('div');
+        dragBadge.className = 'drag-hud-badge';
+        dragBadge.innerHTML = '<span>🖐️</span><span>Dragging</span>';
+        stage.appendChild(dragBadge);
 
         // 1-Finger Dragging for the Zoom Pill
         let pillDragging = false;
@@ -8094,54 +8197,149 @@ const zoomController = {
             this.zoomBy(0.35);
         });
 
-        // 1-Finger Universal 2D Stage Dragging (Upgrade 3)
-        let drag2D = false;
-        let dragStartX = 0, dragStartY = 0;
-        let dragStartPanX = 0, dragStartPanY = 0;
-        let dragMovedDist = 0;
+        // 1-Finger Long-Press & Drag System across all games
+        let longPressTimer = null;
+        let isLongPressActive = false;
+        let isDragging1Finger = false;
+        let startPointerId = null;
+        let startX = 0, startY = 0;
+        let lastX = 0, lastY = 0;
         let lastTapTime = 0;
+        let lastTapX = 0, lastTapY = 0;
+        let dragTarget = null;
 
         stage.addEventListener('pointerdown', (e) => {
             if (this.isPinching) return;
-            if (e.target.closest('.zoom-hud-pill') || e.target.closest('#solar-orbit-controls') || e.target.closest('#solar-orbit-drawer') || e.target.closest('.home-btn') || e.target.closest('.options-quick-btn') || e.target.closest('.mode-switch')) {
+            // Ignore touches on UI controls, buttons, drawers, tray, or hud pills
+            if (e.target.closest('.zoom-hud-pill') || e.target.closest('#solar-orbit-controls') || e.target.closest('#solar-orbit-drawer') || e.target.closest('.home-btn') || e.target.closest('.options-quick-btn') || e.target.closest('.mode-switch') || e.target.closest('.controls-dock') || e.target.closest('.top-bar')) {
                 return;
             }
-            if (this.is3DView(viewName)) return;
 
             const now = Date.now();
-            if (now - lastTapTime < 300) {
+            const tapDist = Math.hypot(e.clientX - lastTapX, e.clientY - lastTapY);
+            if (now - lastTapTime < 320 && tapDist < 30) {
+                // Double tap detected: reset zoom & pan to center!
+                clearTimeout(longPressTimer);
+                longPressTimer = null;
+                isLongPressActive = false;
+                isDragging1Finger = false;
+                this.isDragging1Finger = false;
+                this.isLongPressActive = false;
+                if (typeof soundFX !== 'undefined') soundFX.playPop();
                 this.resetZoom();
                 lastTapTime = 0;
                 return;
             }
             lastTapTime = now;
+            lastTapX = e.clientX;
+            lastTapY = e.clientY;
 
-            drag2D = true;
-            dragMovedDist = 0;
-            dragStartX = e.clientX;
-            dragStartY = e.clientY;
-            dragStartPanX = this.panX;
-            dragStartPanY = this.panY;
+            // Prepare potential long-press drag
+            clearTimeout(longPressTimer);
+            isLongPressActive = false;
+            isDragging1Finger = false;
+            this.isDragging1Finger = false;
+            this.isLongPressActive = false;
+            startPointerId = e.pointerId;
+            startX = e.clientX;
+            startY = e.clientY;
+            lastX = e.clientX;
+            lastY = e.clientY;
+
+            const curView = typeof app !== 'undefined' ? app.currentView : viewName;
+            dragTarget = this.getTargetForView(curView);
+
+            // Start Long-Press Timer (380ms)
+            longPressTimer = setTimeout(() => {
+                isLongPressActive = true;
+                isDragging1Finger = true;
+                this.isDragging1Finger = true;
+                this.isLongPressActive = true;
+
+                // Tactile & Audio feedback
+                if (typeof soundFX !== 'undefined') soundFX.playPop();
+                if (navigator.vibrate) {
+                    try { navigator.vibrate([30, 25, 30]); } catch(err) {}
+                }
+
+                // If in 3D view, disengage 3D rotation so finger purely translates the model
+                if (typeof shapes3DGame !== 'undefined') shapes3DGame.isDragging = false;
+                if (typeof solarGame !== 'undefined') solarGame.isDragging = false;
+
+                // Highlight target with lifted state
+                if (dragTarget) {
+                    dragTarget.classList.add('item-drag-active');
+                }
+
+                // Show floating drag badge
+                this.showDragIndicator(stage);
+
+                // Capture pointer to stage so movement is never lost even if moving fast
+                try { stage.setPointerCapture(startPointerId); } catch(err) {}
+            }, 380);
         });
 
         stage.addEventListener('pointermove', (e) => {
-            if (!drag2D || this.isPinching || this.is3DView(viewName)) return;
-            const dx = e.clientX - dragStartX;
-            const dy = e.clientY - dragStartY;
-            dragMovedDist = Math.hypot(dx, dy);
-            if (dragMovedDist > 6) {
-                const speed = typeof app !== 'undefined' ? app.getDragSpeedMultiplier() : 1.0;
-                const newPanX = dragStartPanX + dx * speed;
-                const newPanY = dragStartPanY + dy * speed;
-                this.applyZoom(this.scale, newPanX, newPanY);
+            if (this.isPinching) {
+                clearTimeout(longPressTimer);
+                longPressTimer = null;
+                return;
             }
+
+            if (!isLongPressActive) {
+                // Check if finger moved before the 380ms long-press elapsed
+                const dist = Math.hypot(e.clientX - startX, e.clientY - startY);
+                if (dist > 8) {
+                    // Canceled long-press because user moved/swiped/spun
+                    clearTimeout(longPressTimer);
+                    longPressTimer = null;
+                }
+                return;
+            }
+
+            // Long-press IS active: user is now 1-finger dragging the target!
+            if (e.cancelable) e.preventDefault();
+
+            const dx = e.clientX - lastX;
+            const dy = e.clientY - lastY;
+            lastX = e.clientX;
+            lastY = e.clientY;
+
+            const speedMult = typeof app !== 'undefined' ? app.getDragSpeedMultiplier() : 1.0;
+            const newPanX = this.panX + dx * speedMult;
+            const newPanY = this.panY + dy * speedMult;
+            this.applyZoom(this.scale, newPanX, newPanY);
         });
 
-        const end2DDrag = () => {
-            drag2D = false;
+        const endLongPressDrag = (e) => {
+            clearTimeout(longPressTimer);
+            longPressTimer = null;
+
+            if (isLongPressActive || isDragging1Finger) {
+                isLongPressActive = false;
+                isDragging1Finger = false;
+                this.isDragging1Finger = false;
+                this.isLongPressActive = false;
+
+                if (dragTarget) {
+                    dragTarget.classList.remove('item-drag-active');
+                }
+                this.hideDragIndicator(stage);
+
+                if (typeof soundFX !== 'undefined') soundFX.playPop();
+
+                try { stage.releasePointerCapture(e.pointerId); } catch(err) {}
+
+                // Suppress click event so releasing after a drag doesn't trigger tap action
+                zoomController.suppressClick = true;
+                setTimeout(() => {
+                    zoomController.suppressClick = false;
+                }, 320);
+            }
         };
-        stage.addEventListener('pointerup', end2DDrag);
-        stage.addEventListener('pointercancel', end2DDrag);
+
+        stage.addEventListener('pointerup', endLongPressDrag);
+        stage.addEventListener('pointercancel', endLongPressDrag);
 
         // Touch Pinch-to-Zoom & 2-Finger Pan Listeners
         let startDist = 0;
@@ -8217,6 +8415,8 @@ const zoomController = {
                 return document.getElementById('quiz-choices-grid');
             case 'shapes':
                 return document.getElementById('shape-target');
+            case 'shapes3d':
+                return document.getElementById('shape3d-target');
             case 'colors':
                 return document.getElementById('color-explore-box') || document.getElementById('color-bg-target');
             case 'animals':
@@ -8228,50 +8428,40 @@ const zoomController = {
             case 'opposites':
                 return document.getElementById('opposites-cards-grid') || document.querySelector('#view-opposites .main-stage .grid');
             case 'solar':
-                if (typeof solarGame !== 'undefined' && solarGame.mode !== 'photo') {
-                    return null;
-                }
-                return document.getElementById('solar-photo-container') || document.getElementById('solar-svg-holder');
-            case 'shapes3d':
-                return null;
+                return document.getElementById('solar-stage-box') || document.getElementById('solar-photo-container') || document.getElementById('solar-svg-holder');
             default:
                 return null;
         }
     },
 
-    applyZoom(newScale, newPanX = 0, newPanY = 0) {
+    applyZoom(newScale, newPanX = this.panX, newPanY = this.panY) {
         this.scale = Math.max(0.6, Math.min(3.5, Math.round(newScale * 100) / 100));
         if (Math.abs(this.scale - 1.0) < 0.04) {
             this.scale = 1.0;
-            this.panX = 0;
-            this.panY = 0;
-        } else {
-            this.panX = Math.round(newPanX);
-            this.panY = Math.round(newPanY);
         }
+        this.panX = Math.round(newPanX);
+        this.panY = Math.round(newPanY);
 
         const curView = typeof app !== 'undefined' ? app.currentView : null;
         if (!curView || curView === 'menu') return;
 
-        if (this.is3DView(curView)) {
-            if (curView === 'shapes3d' && typeof shapes3DGame !== 'undefined' && shapes3DGame.camera) {
-                shapes3DGame.camera.zoom = Math.max(0.55, Math.min(3.2, this.scale));
-                shapes3DGame.camera.updateProjectionMatrix();
-            } else if (curView === 'solar' && typeof solarGame !== 'undefined' && solarGame.camera) {
-                solarGame.camera.zoom = Math.max(0.55, Math.min(3.2, this.scale));
-                solarGame.camera.updateProjectionMatrix();
-            }
-        } else {
-            const target = this.getTargetForView(curView);
-            if (target) {
-                target.style.transformOrigin = 'center center';
-                if (this.scale === 1.0 && this.panX === 0 && this.panY === 0) {
-                    target.style.transform = '';
-                    target.style.zIndex = '';
-                } else {
-                    target.style.transform = `translate3d(${this.panX}px, ${this.panY}px, 0) scale(${this.scale})`;
-                    target.style.zIndex = this.scale > 1.02 ? '25' : '';
-                }
+        if (curView === 'shapes3d' && typeof shapes3DGame !== 'undefined' && shapes3DGame.camera) {
+            shapes3DGame.camera.zoom = Math.max(0.55, Math.min(3.2, this.scale));
+            shapes3DGame.camera.updateProjectionMatrix();
+        } else if (curView === 'solar' && typeof solarGame !== 'undefined' && solarGame.camera && solarGame.mode !== 'photo') {
+            solarGame.camera.zoom = Math.max(0.55, Math.min(3.2, this.scale));
+            solarGame.camera.updateProjectionMatrix();
+        }
+
+        const target = this.getTargetForView(curView);
+        if (target) {
+            target.style.transformOrigin = 'center center';
+            if (this.scale === 1.0 && this.panX === 0 && this.panY === 0) {
+                target.style.transform = '';
+                target.style.zIndex = '';
+            } else {
+                target.style.transform = `translate3d(${this.panX}px, ${this.panY}px, 0) scale(${this.scale})`;
+                target.style.zIndex = (this.scale > 1.02 || Math.abs(this.panX) > 6 || Math.abs(this.panY) > 6) ? '25' : '';
             }
         }
 
@@ -8291,20 +8481,25 @@ const zoomController = {
         this.panX = 0;
         this.panY = 0;
         const curView = typeof app !== 'undefined' ? app.currentView : null;
-        if (curView) {
-            const target = this.getTargetForView(curView);
+        const gameViews = [
+            'letters', 'numbers', 'quiz', 'shapes', 'shapes3d',
+            'colors', 'animals', 'fruits', 'things', 'opposites', 'solar'
+        ];
+        gameViews.forEach(vName => {
+            const target = this.getTargetForView(vName);
             if (target) {
                 target.style.transform = '';
                 target.style.zIndex = '';
+                target.classList.remove('item-drag-active');
             }
-            if (typeof shapes3DGame !== 'undefined' && shapes3DGame.camera) {
-                shapes3DGame.camera.zoom = 1.0;
-                shapes3DGame.camera.updateProjectionMatrix();
-            }
-            if (typeof solarGame !== 'undefined' && solarGame.camera) {
-                solarGame.camera.zoom = 1.0;
-                solarGame.camera.updateProjectionMatrix();
-            }
+        });
+        if (typeof shapes3DGame !== 'undefined' && shapes3DGame.camera) {
+            shapes3DGame.camera.zoom = 1.0;
+            shapes3DGame.camera.updateProjectionMatrix();
+        }
+        if (typeof solarGame !== 'undefined' && solarGame.camera) {
+            solarGame.camera.zoom = 1.0;
+            solarGame.camera.updateProjectionMatrix();
         }
         this.updateHUD();
     },
@@ -8781,7 +8976,7 @@ window.addEventListener('DOMContentLoaded', () => {
         });
         foodTray.appendChild(btn);
     });
-    document.getElementById('fruits-target').addEventListener('pointerdown', e => foodGame.chomp(e));
+    document.getElementById('fruits-target').addEventListener('click', e => foodGame.chomp(e));
     document.getElementById('food-chomp-btn').addEventListener('click', () => foodGame.chomp());
 
     // 12. Vehicles & Things Setup
