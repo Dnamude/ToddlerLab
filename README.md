@@ -49,7 +49,6 @@
             display: none;
             width: 100%;
             height: 100%;
-            height: 100dvh;
             position: absolute;
             inset: 0;
             flex-direction: column;
@@ -251,29 +250,44 @@
             transition: font-size 0.22s ease;
         }
         #view-solar .main-stage {
+            flex: 1;
+            min-height: 0;
             overflow: hidden !important;
-            justify-content: space-evenly;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
             align-items: center;
-            gap: 0.25rem;
-            padding: 0.65rem 0.65rem 0.35rem 0.65rem;
+            gap: 0.2rem;
+            padding: 0.45rem 0.65rem 0.45rem 0.65rem;
+        }
+        #solar-stage-row {
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: 100%;
         }
         #solar-stage-box {
-            width: min(20rem, calc(100cqh - 8.8rem), calc(100cqw - 5.5rem));
-            height: min(20rem, calc(100cqh - 8.8rem), calc(100cqw - 5.5rem));
-            min-width: 7.5rem;
-            min-height: 7.5rem;
+            width: min(17rem, calc(100cqh - 11rem), calc(100cqw - 5.5rem));
+            height: min(17rem, calc(100cqh - 11rem), calc(100cqw - 5.5rem));
+            min-width: 6.5rem;
+            min-height: 6.5rem;
             flex-shrink: 0;
             transition: width 0.22s ease, height 0.22s ease;
         }
-        /* Sleek Single-Row Horizontal Scrollable Planet Selection Tray */
+        /* Sleek Single-Row Horizontal Scrollable Planet Selection Tray — Full Visibility */
         #solar-controls-dock {
             height: auto !important;
             min-height: 0 !important;
-            max-height: 84px !important;
-            padding: 0.15rem 0.5rem max(0.35rem, env(safe-area-inset-bottom)) 0.5rem !important;
+            max-height: none !important;
+            flex-shrink: 0 !important;
+            padding: 0.2rem 0.5rem max(0.4rem, env(safe-area-inset-bottom)) 0.5rem !important;
             background: rgba(15, 23, 42, 0.96) !important;
             border-top: 2px solid #334155 !important;
-            overflow: hidden !important;
+            overflow: visible !important;
+            z-index: 30;
         }
         #solar-controls-dock.dock-collapsed {
             max-height: 38px !important;
@@ -286,7 +300,7 @@
             overflow-y: hidden !important;
             touch-action: pan-x !important;
             -webkit-overflow-scrolling: touch;
-            padding: 0.1rem 0.25rem 0.25rem 0.25rem !important;
+            padding: 0.15rem 0.35rem 0.35rem 0.35rem !important;
             scrollbar-width: thin;
             scrollbar-color: #475569 transparent;
         }
@@ -303,19 +317,19 @@
             flex-direction: row !important;
             justify-content: flex-start !important;
             align-items: center !important;
-            gap: 0.45rem !important;
+            gap: 0.5rem !important;
             width: max-content !important;
             max-width: none !important;
             margin: 0 auto !important;
-            padding: 0 0.25rem 2px 0.25rem !important;
+            padding: 0 0.25rem 4px 0.25rem !important;
         }
         #solar-controls .tray-btn {
-            width: 3.25rem !important;
-            min-width: 3.25rem !important;
-            height: 3.15rem !important;
-            min-height: 3.15rem !important;
-            padding: 0.15rem 0.1rem !important;
-            border-radius: 0.85rem !important;
+            width: 3.5rem !important;
+            min-width: 3.5rem !important;
+            height: 3.45rem !important;
+            min-height: 3.45rem !important;
+            padding: 0.2rem 0.1rem !important;
+            border-radius: 0.95rem !important;
             background: #1e293b !important;
             border: 2px solid #475569 !important;
             box-shadow: 0 2px 0 #0f172a !important;
@@ -323,7 +337,7 @@
             flex-direction: column !important;
             align-items: center !important;
             justify-content: center !important;
-            gap: 1px !important;
+            gap: 2px !important;
             flex-shrink: 0 !important;
             overflow: hidden !important;
         }
@@ -8594,7 +8608,7 @@ window.addEventListener('DOMContentLoaded', () => {
         }, { once: true });
         thumbWrap.appendChild(thumbImg);
         const labelSpan = document.createElement('span');
-        labelSpan.className = 'text-[9.5px] sm:text-[10.5px] font-black text-slate-100 leading-none truncate max-w-full px-0.5';
+        labelSpan.className = 'text-[9.5px] sm:text-[10px] font-black text-slate-100 leading-none truncate max-w-full px-0.5 mt-0.5';
         labelSpan.textContent = s.short;
         btn.appendChild(thumbWrap);
         btn.appendChild(labelSpan);
