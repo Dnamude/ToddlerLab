@@ -266,16 +266,28 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 0.5rem;
             width: 100%;
+            position: relative;
         }
         #solar-stage-box {
-            width: min(17rem, calc(100cqh - 11rem), calc(100cqw - 5.5rem));
-            height: min(17rem, calc(100cqh - 11rem), calc(100cqw - 5.5rem));
+            width: min(22rem, calc(100cqh - 7.5rem), calc(100cqw - 1.5rem));
+            height: min(22rem, calc(100cqh - 7.5rem), calc(100cqw - 1.5rem));
             min-width: 6.5rem;
             min-height: 6.5rem;
             flex-shrink: 0;
             transition: width 0.22s ease, height 0.22s ease;
+        }
+        @media (min-width: 640px) {
+            #solar-stage-box {
+                width: min(28rem, calc(100cqh - 8.2rem), calc(100cqw - 3rem));
+                height: min(28rem, calc(100cqh - 8.2rem), calc(100cqw - 3rem));
+            }
+        }
+        @media (min-width: 1024px) {
+            #solar-stage-box {
+                width: min(32rem, calc(100cqh - 8.8rem), calc(100cqw - 4rem));
+                height: min(32rem, calc(100cqh - 8.8rem), calc(100cqw - 4rem));
+            }
         }
         /* Sleek Single-Row Horizontal Scrollable Planet Selection Tray — Full Visibility */
         #solar-controls-dock {
@@ -489,30 +501,48 @@
 
         .zoom-hud-pill {
             position: absolute;
-            right: 0.5rem;
-            bottom: 0.5rem;
-            opacity: 0.75;
+            top: 0.65rem;
+            right: 0.65rem;
+            opacity: 0.85;
+            cursor: grab;
             transition: opacity 0.15s ease;
             display: inline-flex;
             align-items: center;
-            gap: 0.25rem;
+            gap: 0.2rem;
             background: rgba(255, 255, 255, 0.94);
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
             border: 1.5px solid rgba(203, 213, 225, 0.9);
             border-radius: 9999px;
-            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.1);
-            padding: 0.15rem 0.45rem;
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.12);
+            padding: 0.15rem 0.4rem;
             font-size: 0.72rem;
             font-weight: 900;
             color: #475569;
             z-index: 35;
             user-select: none;
-            touch-action: manipulation;
-            pointer-events: auto;
+            touch-action: none;
         }
         .zoom-hud-pill:hover, .zoom-hud-pill:active {
             opacity: 1;
+        }
+        .zoom-hud-pill.minimized {
+            padding: 0.2rem 0.45rem;
+            cursor: pointer;
+        }
+        .zoom-hud-pill.minimized .zoom-controls-group {
+            display: none !important;
+        }
+        .zoom-hud-pill .zoom-min-badge {
+            display: none;
+        }
+        .zoom-hud-pill.minimized .zoom-min-badge {
+            display: inline-flex !important;
+            align-items: center;
+            gap: 0.2rem;
+            font-size: 0.75rem;
+            font-weight: 900;
+            color: #334155;
         }
 
         .zoom-hud-pill button {
@@ -1332,10 +1362,8 @@
                 </button>
             </div>
 
-            <!-- Stage Row with Navigation Arrows (Item 3) -->
-            <div id="solar-stage-row" class="flex items-center justify-center gap-1.5 sm:gap-3 w-full z-10">
-                <button id="solar-prev-btn" type="button" class="w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-slate-900/85 hover:bg-indigo-900 text-white border-2 border-indigo-400/50 shadow-lg flex items-center justify-center text-base sm:text-lg font-black squish-btn flex-shrink-0 z-20" aria-label="Previous Celestial Body" title="Previous">◀</button>
-
+            <!-- Stage Row (Arrows removed to maximize celestial visuals across all devices) -->
+            <div id="solar-stage-row" class="flex items-center justify-center w-full z-10">
                 <div id="solar-stage-box" class="flex items-center justify-center relative">
                     <div id="solar-photo-container" class="w-full h-full flex flex-col items-center justify-center relative cursor-pointer squish-btn">
                         <div id="solar-svg-holder" class="w-full h-full rounded-3xl overflow-hidden border-4 border-indigo-300/40 shadow-xl bg-black flex items-center justify-center p-0" style="background-color: #000000;"></div>
@@ -1346,8 +1374,6 @@
 
                     <div id="solar-canvas-container" class="hidden w-full h-full flex items-center justify-center cursor-grab active:cursor-grabbing"></div>
                 </div>
-
-                <button id="solar-next-btn" type="button" class="w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-slate-900/85 hover:bg-indigo-900 text-white border-2 border-indigo-400/50 shadow-lg flex items-center justify-center text-base sm:text-lg font-black squish-btn flex-shrink-0 z-20" aria-label="Next Celestial Body" title="Next">▶</button>
             </div>
 
             <h1 id="solar-title" class="text-xl sm:text-2xl font-black text-white tracking-tight mt-0.5 leading-tight flex-shrink-0 text-center">The Sun</h1>
@@ -1438,6 +1464,21 @@
                             <option value="slow">🐢 Slow (0.82x)</option>
                             <option value="normal">🚶 Normal (0.96x)</option>
                             <option value="fast">🐇 Fast (1.10x)</option>
+                        </select>
+                    </div>
+
+                    <!-- Drag & Spin Speed (Upgrade 3) -->
+                    <div class="flex items-center justify-between p-2.5 rounded-2xl bg-slate-50 border border-slate-200 gap-2">
+                        <div>
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
+                                <span>🖐️</span><span>Drag & Spin Speed</span>
+                            </div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">1-finger drag sensitivity for shapes & 3D models</div>
+                        </div>
+                        <select id="opt-drag-speed" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0">
+                            <option value="slow">🐢 Slow (0.55x)</option>
+                            <option value="normal">🖐️ Normal (1.0x)</option>
+                            <option value="fast">⚡ Fast (1.75x)</option>
                         </select>
                     </div>
 
@@ -4334,7 +4375,8 @@ const DEFAULT_SETTINGS = {
     maxNumber: 20,            // 10 (1-10 Beginner) or 20 (1-20 Advanced)
     phonicsDetail: 'full',    // 'full' ("A! A says ah! ah, Apple!") or 'simple' ("A! Apple!")
     minimizeMenuHeader: false, // Minimize upper title banner on Main Menu to just show cards
-    showSolarCredits: false   // Display NASA telescope & mission source badge on Solar System photos
+    showSolarCredits: false,  // Display NASA telescope & mission source badge on Solar System photos
+    dragSpeed: 'normal'       // 1-finger drag sensitivity for shapes, visuals & 3D models ('slow': 0.55x, 'normal': 1.0x, 'fast': 1.75x)
 };
 
 const GAME_OPEN_TITLES = {
@@ -4366,6 +4408,13 @@ const app = {
     })(),
     isOpeningView: false,
     pendingGameIntro: null,
+
+    getDragSpeedMultiplier() {
+        const s = this.settings ? this.settings.dragSpeed : 'normal';
+        if (s === 'slow') return 0.55;
+        if (s === 'fast') return 1.75;
+        return 1.0;
+    },
 
     applySolarCreditsState() {
         const show = !!(this.settings && this.settings.showSolarCredits);
@@ -5310,8 +5359,9 @@ const solarGame = {
             const dy = e.clientY - this.prevY;
             this.prevX = e.clientX;
             this.prevY = e.clientY;
-            this.velX = dx * 0.014;
-            this.velY = dy * 0.014;
+            const dragMult = typeof app !== 'undefined' ? app.getDragSpeedMultiplier() : 1.0;
+            this.velX = dx * 0.014 * dragMult;
+            this.velY = dy * 0.014 * dragMult;
             this.rootGroup.rotateOnWorldAxis(worldY, this.velX);
             this.rootGroup.rotateOnWorldAxis(worldX, this.velY);
         });
@@ -6841,8 +6891,9 @@ const shapes3DGame = {
             const dy = e.clientY - this.prevY;
             this.prevX = e.clientX;
             this.prevY = e.clientY;
-            this.velX = dx * 0.014;
-            this.velY = dy * 0.014;
+            const dragMult = typeof app !== 'undefined' ? app.getDragSpeedMultiplier() : 1.0;
+            this.velX = dx * 0.014 * dragMult;
+            this.velY = dy * 0.014 * dragMult;
             this.mesh.rotateOnWorldAxis(worldY, this.velX);
             this.mesh.rotateOnWorldAxis(worldX, this.velY);
         });
@@ -7913,17 +7964,26 @@ const zoomController = {
     setupStageZoom(stage, viewName) {
         if (!stage || stage.querySelector('.zoom-hud-pill')) return;
 
-        // Floating Zoom Control Pill
+        // Floating Draggable & Minimizable Zoom Pill (Upgrade 2)
         const pill = document.createElement('div');
         pill.className = 'zoom-hud-pill';
-        pill.title = 'Pinch or tap buttons to Zoom';
+        pill.title = 'Drag to move • Tap to expand / pinch to zoom';
+
+        // Minimized View Badge (🔍 100%)
+        const minBadge = document.createElement('span');
+        minBadge.className = 'zoom-min-badge';
+        minBadge.innerHTML = '🔍 <span class="zoom-min-pct">100%</span>';
+
+        // Expanded Controls Group
+        const controlsGroup = document.createElement('div');
+        controlsGroup.className = 'zoom-controls-group flex items-center gap-1';
 
         const outBtn = document.createElement('button');
         outBtn.type = 'button';
         outBtn.className = 'zoom-out-btn';
         outBtn.title = 'Zoom Out';
         outBtn.setAttribute('aria-label', 'Zoom Out');
-        outBtn.textContent = '🔍 −';
+        outBtn.textContent = '−';
 
         const resetBtn = document.createElement('button');
         resetBtn.type = 'button';
@@ -7939,14 +7999,86 @@ const zoomController = {
         inBtn.setAttribute('aria-label', 'Zoom In');
         inBtn.textContent = '+';
 
-        pill.appendChild(outBtn);
-        pill.appendChild(resetBtn);
-        pill.appendChild(inBtn);
+        const closeBtn = document.createElement('button');
+        closeBtn.type = 'button';
+        closeBtn.className = 'zoom-close-btn text-slate-400 hover:text-slate-700 px-1';
+        closeBtn.title = 'Minimize Magnifier';
+        closeBtn.setAttribute('aria-label', 'Minimize Magnifier');
+        closeBtn.textContent = '✕';
+
+        controlsGroup.appendChild(outBtn);
+        controlsGroup.appendChild(resetBtn);
+        controlsGroup.appendChild(inBtn);
+        controlsGroup.appendChild(closeBtn);
+
+        pill.appendChild(minBadge);
+        pill.appendChild(controlsGroup);
         stage.appendChild(pill);
 
-        pill.addEventListener('pointerdown', e => e.stopPropagation());
-        pill.addEventListener('touchstart', e => e.stopPropagation(), { passive: true });
-        pill.addEventListener('click', e => e.stopPropagation());
+        // 1-Finger Dragging for the Zoom Pill
+        let pillDragging = false;
+        let pillStartX = 0, pillStartY = 0;
+        let initialPillLeft = 0, initialPillTop = 0;
+        let pillMovedDist = 0;
+
+        pill.addEventListener('pointerdown', (e) => {
+            e.stopPropagation();
+            pillDragging = true;
+            pillMovedDist = 0;
+            pillStartX = e.clientX;
+            pillStartY = e.clientY;
+            const rect = pill.getBoundingClientRect();
+            const stageRect = stage.getBoundingClientRect();
+            initialPillLeft = rect.left - stageRect.left;
+            initialPillTop = rect.top - stageRect.top;
+            try { pill.setPointerCapture(e.pointerId); } catch(err) {}
+        });
+
+        pill.addEventListener('pointermove', (e) => {
+            if (!pillDragging) return;
+            e.stopPropagation();
+            const dx = e.clientX - pillStartX;
+            const dy = e.clientY - pillStartY;
+            pillMovedDist = Math.hypot(dx, dy);
+            if (pillMovedDist > 4) {
+                const stageRect = stage.getBoundingClientRect();
+                const pillW = pill.offsetWidth;
+                const pillH = pill.offsetHeight;
+                const newL = Math.max(4, Math.min(stageRect.width - pillW - 4, initialPillLeft + dx));
+                const newT = Math.max(4, Math.min(stageRect.height - pillH - 4, initialPillTop + dy));
+                pill.style.left = `${newL}px`;
+                pill.style.top = `${newT}px`;
+                pill.style.right = 'auto';
+                pill.style.bottom = 'auto';
+            }
+        });
+
+        const endPillDrag = (e) => {
+            if (!pillDragging) return;
+            e.stopPropagation();
+            pillDragging = false;
+            try { pill.releasePointerCapture(e.pointerId); } catch(err) {}
+        };
+        pill.addEventListener('pointerup', endPillDrag);
+        pill.addEventListener('pointercancel', endPillDrag);
+
+        // Toggle Minimize / Expand
+        pill.addEventListener('click', (e) => {
+            if (pillMovedDist > 6) {
+                e.stopPropagation();
+                return;
+            }
+            if (pill.classList.contains('minimized')) {
+                e.stopPropagation();
+                if (typeof soundFX !== 'undefined') soundFX.playPop();
+                pill.classList.remove('minimized');
+            }
+        });
+        closeBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (typeof soundFX !== 'undefined') soundFX.playPop();
+            pill.classList.add('minimized');
+        });
 
         outBtn.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -7961,6 +8093,55 @@ const zoomController = {
             e.stopPropagation();
             this.zoomBy(0.35);
         });
+
+        // 1-Finger Universal 2D Stage Dragging (Upgrade 3)
+        let drag2D = false;
+        let dragStartX = 0, dragStartY = 0;
+        let dragStartPanX = 0, dragStartPanY = 0;
+        let dragMovedDist = 0;
+        let lastTapTime = 0;
+
+        stage.addEventListener('pointerdown', (e) => {
+            if (this.isPinching) return;
+            if (e.target.closest('.zoom-hud-pill') || e.target.closest('#solar-orbit-controls') || e.target.closest('#solar-orbit-drawer') || e.target.closest('.home-btn') || e.target.closest('.options-quick-btn') || e.target.closest('.mode-switch')) {
+                return;
+            }
+            if (this.is3DView(viewName)) return;
+
+            const now = Date.now();
+            if (now - lastTapTime < 300) {
+                this.resetZoom();
+                lastTapTime = 0;
+                return;
+            }
+            lastTapTime = now;
+
+            drag2D = true;
+            dragMovedDist = 0;
+            dragStartX = e.clientX;
+            dragStartY = e.clientY;
+            dragStartPanX = this.panX;
+            dragStartPanY = this.panY;
+        });
+
+        stage.addEventListener('pointermove', (e) => {
+            if (!drag2D || this.isPinching || this.is3DView(viewName)) return;
+            const dx = e.clientX - dragStartX;
+            const dy = e.clientY - dragStartY;
+            dragMovedDist = Math.hypot(dx, dy);
+            if (dragMovedDist > 6) {
+                const speed = typeof app !== 'undefined' ? app.getDragSpeedMultiplier() : 1.0;
+                const newPanX = dragStartPanX + dx * speed;
+                const newPanY = dragStartPanY + dy * speed;
+                this.applyZoom(this.scale, newPanX, newPanY);
+            }
+        });
+
+        const end2DDrag = () => {
+            drag2D = false;
+        };
+        stage.addEventListener('pointerup', end2DDrag);
+        stage.addEventListener('pointercancel', end2DDrag);
 
         // Touch Pinch-to-Zoom & 2-Finger Pan Listeners
         let startDist = 0;
@@ -8137,6 +8318,10 @@ const zoomController = {
         labels.forEach(btn => {
             btn.textContent = `${Math.round(this.scale * 100)}%`;
         });
+        const minLabels = viewEl.querySelectorAll('.zoom-min-pct');
+        minLabels.forEach(span => {
+            span.textContent = `${Math.round(this.scale * 100)}%`;
+        });
     }
 };
 
@@ -8193,6 +8378,8 @@ window.addEventListener('DOMContentLoaded', () => {
         if (optSfx) optSfx.checked = !!s.sfxEnabled;
         const optSpeechRate = document.getElementById('opt-speech-rate');
         if (optSpeechRate) optSpeechRate.value = s.speechRate || 'normal';
+        const optDragSpeed = document.getElementById('opt-drag-speed');
+        if (optDragSpeed) optDragSpeed.value = s.dragSpeed || 'normal';
         const optMaxNum = document.getElementById('opt-max-number');
         if (optMaxNum) optMaxNum.value = String(s.maxNumber || 20);
         const optPhonics = document.getElementById('opt-phonics-detail');
@@ -8247,6 +8434,10 @@ window.addEventListener('DOMContentLoaded', () => {
     });
     document.getElementById('opt-speech-rate')?.addEventListener('change', (e) => {
         app.settings.speechRate = e.target.value;
+        app.saveSettings();
+    });
+    document.getElementById('opt-drag-speed')?.addEventListener('change', (e) => {
+        app.settings.dragSpeed = e.target.value;
         app.saveSettings();
     });
     document.getElementById('opt-max-number')?.addEventListener('change', (e) => {
