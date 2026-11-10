@@ -2,14 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Toddler Learning Hub</title>
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Toddler Hub">
     <meta name="theme-color" content="#e0f2fe">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌟</text></svg>">
-    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌟</text></svg>">
+    <link rel="icon" type="image/png" sizes="64x64" href="favicon.png?v=2">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=2">
+    <link rel="apple-touch-icon-precomposed" sizes="180x180" href="apple-touch-icon.png?v=2">
+    <link rel="manifest" href="manifest.json?v=2">
 
         <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -33,12 +36,26 @@
         html, body {
             margin: 0;
             padding: 0;
+            position: fixed;
+            inset: 0;
             width: 100%;
             height: 100%;
+            min-height: 100vh;
+            min-height: -webkit-fill-available;
             height: 100dvh;
             overflow: hidden;
+            overscroll-behavior: none;
+            background-color: #e0f2fe;
+            background-image: linear-gradient(135deg, #e0f2fe 0%, #f0fdf4 50%, #fef3c7 100%);
             font-family: 'Nunito', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #e0f2fe 0%, #f0fdf4 50%, #fef3c7 100%);
+        }
+
+        #menu-top-container {
+            padding-top: max(1rem, calc(env(safe-area-inset-top, 0px) + 0.5rem));
+        }
+
+        #menu-top-container.pt-2 {
+            padding-top: max(0.5rem, calc(env(safe-area-inset-top, 0px) + 0.25rem));
         }
 
         h1, h2, h3, .menu-title, #phonics-big-upper, #phonics-big-lower, #number-big-digit, #solar-title, #shape-text, #shape3d-title, #fruits-text, #animal-text, #things-text, #opp-title {
@@ -80,7 +97,7 @@
             overflow-y: auto;
             touch-action: pan-y;
             -webkit-overflow-scrolling: touch;
-            padding: 0.5rem 1rem 3rem 1rem;
+            padding: 0.5rem 1rem max(3rem, calc(env(safe-area-inset-bottom, 0px) + 1.5rem)) 1rem;
         }
 
         .menu-grid {
@@ -154,7 +171,7 @@
             align-items: center;
             justify-content: space-between;
             padding: 0.75rem 1rem;
-            padding-top: max(0.6rem, env(safe-area-inset-top));
+            padding-top: max(0.75rem, calc(env(safe-area-inset-top, 0px) + 0.35rem));
             z-index: 40;
             width: 100%;
             max-width: 900px;
@@ -221,7 +238,7 @@
             width: 100%;
             max-width: 860px;
             margin: 0 auto;
-            padding: 0.35rem 0.75rem;
+            padding: 0.35rem 0.75rem max(0.5rem, calc(env(safe-area-inset-bottom, 0px) + 0.35rem)) 0.75rem;
             position: relative;
             overflow-y: auto;
             overflow-x: hidden;
@@ -295,7 +312,7 @@
             min-height: 0 !important;
             max-height: none !important;
             flex-shrink: 0 !important;
-            padding: 0.2rem 0.5rem max(0.4rem, env(safe-area-inset-bottom)) 0.5rem !important;
+            padding: 0.2rem 0.5rem max(0.4rem, calc(env(safe-area-inset-bottom, 0px) + 0.4rem)) 0.5rem !important;
             background: rgba(15, 23, 42, 0.96) !important;
             border-top: 2px solid #334155 !important;
             overflow: visible !important;
@@ -303,7 +320,7 @@
         }
         #solar-controls-dock.dock-collapsed {
             max-height: 38px !important;
-            padding-bottom: max(0.25rem, env(safe-area-inset-bottom)) !important;
+            padding-bottom: max(0.25rem, calc(env(safe-area-inset-bottom, 0px) + 0.25rem)) !important;
             overflow: hidden !important;
         }
         #solar-controls-dock .control-scroll {
@@ -430,7 +447,7 @@
             border-top-right-radius: 2rem;
             box-shadow: 0 -8px 28px rgba(15, 23, 42, 0.08);
             padding: 0.35rem 0.65rem 0.75rem 0.65rem;
-            padding-bottom: max(0.65rem, env(safe-area-inset-bottom));
+            padding-bottom: max(0.65rem, calc(env(safe-area-inset-bottom, 0px) + 0.35rem));
             z-index: 30;
             height: 22vh;
             min-height: 118px;
@@ -446,7 +463,7 @@
             min-height: 0 !important;
             max-height: 44px !important;
             padding-top: 0.25rem;
-            padding-bottom: max(0.25rem, env(safe-area-inset-bottom));
+            padding-bottom: max(0.25rem, calc(env(safe-area-inset-bottom, 0px) + 0.25rem));
         }
 
         .controls-dock.dock-collapsed .control-scroll {
@@ -4558,6 +4575,28 @@ const app = {
         }
     },
 
+    updateViewportTheme(viewName) {
+        let themeColor = '#e0f2fe';
+        if (viewName === 'solar') {
+            themeColor = '#020617';
+        } else if (viewName === 'shapes3d') {
+            themeColor = '#090d16';
+        }
+        const metaTheme = document.querySelector('meta[name="theme-color"]');
+        if (metaTheme) metaTheme.setAttribute('content', themeColor);
+        document.documentElement.style.backgroundColor = themeColor;
+        document.body.style.backgroundColor = themeColor;
+        if (viewName === 'solar' || viewName === 'shapes3d') {
+            document.body.style.backgroundImage = 'none';
+        } else {
+            document.body.style.backgroundImage = '';
+        }
+    },
+
+    goHome() {
+        this.switchView('menu');
+    },
+
     setSpeakingUI(isSpeaking) {
         document.querySelectorAll('.audio-vis-pill').forEach(el => {
             if (isSpeaking) el.classList.add('speaking');
@@ -4585,6 +4624,7 @@ const app = {
         const target = document.getElementById(`view-${viewName}`);
         if (target) target.classList.add('active-view');
         this.currentView = viewName;
+        this.updateViewportTheme(viewName);
 
         if (viewName === 'menu') {
             this.pendingGameIntro = null;
@@ -8521,6 +8561,7 @@ const zoomController = {
 };
 
 window.addEventListener('DOMContentLoaded', () => {
+    app.updateViewportTheme(app.currentView || 'menu');
     app.initVoices();
     if ('speechSynthesis' in window) {
         window.speechSynthesis.onvoiceschanged = () => app.initVoices();
