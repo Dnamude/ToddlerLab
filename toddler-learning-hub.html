@@ -934,18 +934,22 @@
 
 /* Main Full-Viewport Container */
 #view-blocks {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  height: 100dvh;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
   user-select: none;
   -webkit-user-select: none;
   background: linear-gradient(180deg, #bae6fd 0%, #e0f2fe 48%, #fef9c3 78%, #dcfce7 100%);
   font-family: 'Fredoka', 'Nunito', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   color: #1e293b;
+  isolation: isolate;
+}
+
+#view-blocks:not(.active-view) {
+  display: none !important;
+  pointer-events: none !important;
+}
+
+#view-blocks.active-view {
+  display: flex;
+  z-index: 20;
 }
 
 /* --------------------------------------------------------------------------
@@ -14931,6 +14935,16 @@ window.ToddlerLearningHub = {
       metrics = renderer.getMetrics();
     }
 
+    if (typeof requestAnimationFrame === 'function') {
+      requestAnimationFrame(() => {
+        if (isOpen && renderer) {
+          renderer.resize();
+          metrics = renderer.getMetrics();
+          updateDock();
+        }
+      });
+    }
+
     applySettings();
 
     // Spawns starter blocks 1 and 2 if stage is completely empty
@@ -14986,6 +15000,16 @@ window.ToddlerLearningHub = {
       metrics = renderer.getMetrics();
     }
 
+    if (typeof requestAnimationFrame === 'function') {
+      requestAnimationFrame(() => {
+        if (isOpen && renderer) {
+          renderer.resize();
+          metrics = renderer.getMetrics();
+          updateDock();
+        }
+      });
+    }
+
     applySettings();
 
     // Unlock n if <= 10
@@ -15013,6 +15037,7 @@ window.ToddlerLearningHub = {
     clearAllTimers();
     entities = [];
     onboardingArc = null;
+    onboardingTimer = 0;
     snapTarget = null;
     activeEquationPill = null;
     splitToolActive = false;
@@ -15041,8 +15066,9 @@ window.ToddlerLearningHub = {
 
     // Celebration burst & intro speech
     if (renderer && renderer.spawnBurst) {
-      const topY = ent.bbox ? (ground - ent.bbox.h) : (ground - 60);
-      renderer.spawnBurst(centerX, topY, 'mergeStarburst', 24);
+      const b = getEntityBounds(ent);
+      const topY = b ? (ground - b.height * 0.5) : (ground - 60);
+      renderer.spawnBurst(spawnX, topY, 'mergeStarburst', 24);
     }
 
     if (NB.Audio) {
