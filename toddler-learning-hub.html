@@ -2397,6 +2397,34 @@
                         </select>
                     </div>
 
+                    <!-- 4a. Voice Volume -->
+                    <div class="flex items-center justify-between p-2.5 rounded-2xl bg-slate-50 border border-slate-200 gap-2">
+                        <div>
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
+                                <span>🔊</span><span>Voice Volume</span>
+                            </div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Loudness for spoken counting, words &amp; prompts</div>
+                        </div>
+                        <div class="flex items-center gap-2 flex-shrink-0">
+                            <input id="opt-voice-volume" type="range" min="0" max="1" step="0.05" value="1" class="w-24 accent-indigo-600 cursor-pointer">
+                            <span id="opt-voice-volume-label" class="text-[11px] font-black text-indigo-700 w-9 text-right">100%</span>
+                        </div>
+                    </div>
+
+                    <!-- 4b. Sound Effects Volume -->
+                    <div class="flex items-center justify-between p-2.5 rounded-2xl bg-slate-50 border border-slate-200 gap-2">
+                        <div>
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
+                                <span>🎵</span><span>Sound Effects Volume</span>
+                            </div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Loudness for chimes, pops, marimba &amp; fanfare</div>
+                        </div>
+                        <div class="flex items-center gap-2 flex-shrink-0">
+                            <input id="opt-sfx-volume" type="range" min="0" max="1" step="0.05" value="0.85" class="w-24 accent-indigo-600 cursor-pointer">
+                            <span id="opt-sfx-volume-label" class="text-[11px] font-black text-indigo-700 w-9 text-right">85%</span>
+                        </div>
+                    </div>
+
                     <!-- Drag & Spin Speed (Upgrade 3) -->
                     <div class="flex items-center justify-between p-2.5 rounded-2xl bg-slate-50 border border-slate-200 gap-2">
                         <div>
@@ -2534,13 +2562,13 @@
 
                 <!-- Dock Spawner Preset -->
                 <div class="flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80">
-                    <div class="flex flex-col">
+                    <div class="flex flex-col min-w-0">
                         <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
                             <span>🧰</span><span>Dock Tray Numbers</span>
                         </div>
                         <div class="text-[11px] font-bold text-slate-500 leading-tight">Choose which blocks appear in the bottom tray</div>
                     </div>
-                    <select id="opt-nb-dock-range" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0">
+                    <select id="opt-nb-dock-range" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0 max-w-[148px] sm:max-w-none truncate">
                         <option value="1-10">1 to 10</option>
                         <option value="place-value">1–9 + Tens (10–90)</option>
                         <option value="tens-only">Tens Only (10–90)</option>
@@ -2550,13 +2578,13 @@
 
                 <!-- Math Speech Announcements -->
                 <div class="flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80">
-                    <div class="flex flex-col">
+                    <div class="flex flex-col min-w-0">
                         <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
                             <span>🗣️</span><span>Math Voice Announcements</span>
                         </div>
                         <div class="text-[11px] font-bold text-slate-500 leading-tight">How additions and splits are spoken aloud</div>
                     </div>
-                    <select id="opt-nb-speech-style" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0">
+                    <select id="opt-nb-speech-style" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0 max-w-[148px] sm:max-w-none truncate">
                         <option value="math_and_fun">Equation + Fun Fact</option>
                         <option value="math_only">Equation Only (2 + 3 = 5)</option>
                         <option value="number_only">Result Number Only</option>
@@ -2565,13 +2593,13 @@
 
                 <!-- Combine Snap Distance -->
                 <div class="flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80">
-                    <div class="flex flex-col">
+                    <div class="flex flex-col min-w-0">
                         <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
                             <span>🧲</span><span>Combine Magnet Range</span>
                         </div>
                         <div class="text-[11px] font-bold text-slate-500 leading-tight">How close blocks must be before they snap together</div>
                     </div>
-                    <select id="opt-nb-snap-mode" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0">
+                    <select id="opt-nb-snap-mode" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0 max-w-[148px] sm:max-w-none truncate">
                         <option value="easy">Wide / Forgiving</option>
                         <option value="normal">Balanced (Default)</option>
                         <option value="close">Close Touch Only</option>
@@ -2596,20 +2624,32 @@
                 </div>
 
                 <!-- Combine When Falling on Top -->
-                <label class="flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80 cursor-pointer">
-                    <div class="flex flex-col">
+                <label class="toggle-switch flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80 cursor-pointer">
+                    <div class="flex flex-col pr-2">
                         <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
                             <span>⬇️</span><span>Combine When Landing on Top</span>
                         </div>
-                        <div class="text-[11px] font-bold text-slate-500 leading-tight">Falling blocks automatically add together when they stack</div>
+                        <div class="text-[11px] font-bold text-slate-500 leading-tight">On: falling blocks add together. Off: stack towers without merging</div>
                     </div>
                     <input id="opt-nb-fall-combine" type="checkbox">
                     <div class="toggle-slider"></div>
                 </label>
 
+                <!-- True 1:1 Block Scale & Auto-Zoom -->
+                <label class="toggle-switch flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80 cursor-pointer">
+                    <div class="flex flex-col pr-2">
+                        <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
+                            <span>📐</span><span>True 1:1 Block Scale &amp; Auto-Zoom</span>
+                        </div>
+                        <div class="text-[11px] font-bold text-slate-500 leading-tight">Keep every cube the same real size and smoothly zoom the camera to fit</div>
+                    </div>
+                    <input id="opt-nb-true-scale" type="checkbox">
+                    <div class="toggle-slider"></div>
+                </label>
+
                 <!-- Show Big Floating Equations -->
-                <label class="flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80 cursor-pointer">
-                    <div class="flex flex-col">
+                <label class="toggle-switch flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80 cursor-pointer">
+                    <div class="flex flex-col pr-2">
                         <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
                             <span>➕</span><span>Show Equation Banners</span>
                         </div>
@@ -2620,8 +2660,8 @@
                 </label>
 
                 <!-- Auto-Space Idle Blocks -->
-                <label class="flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80 cursor-pointer">
-                    <div class="flex flex-col">
+                <label class="toggle-switch flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80 cursor-pointer">
+                    <div class="flex flex-col pr-2">
                         <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
                             <span>↔️</span><span>Gentle Auto-Space Blocks</span>
                         </div>
@@ -2632,8 +2672,8 @@
                 </label>
 
                 <!-- Unlock All Dock Blocks -->
-                <label class="flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80 cursor-pointer">
-                    <div class="flex flex-col">
+                <label class="toggle-switch flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80 cursor-pointer">
+                    <div class="flex flex-col pr-2">
                         <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
                             <span>🔓</span><span>Unlock All Dock Numbers</span>
                         </div>
@@ -3883,8 +3923,11 @@ const geminiTTS = {
             if (typeof app !== 'undefined' && app.getSpeechRateValue) {
                 src.playbackRate.value = app.getSpeechRateValue();
             }
+            const voiceVol = (typeof app !== 'undefined' && app.settings && typeof app.settings.voiceVolume === 'number')
+                ? Math.max(0, Math.min(1, app.settings.voiceVolume))
+                : 1.0;
             const gain = soundFX.ctx.createGain();
-            gain.gain.setValueAtTime(1.0, soundFX.ctx.currentTime);
+            gain.gain.setValueAtTime(voiceVol, soundFX.ctx.currentTime);
             src.connect(gain);
             gain.connect(soundFX.ctx.destination);
 
@@ -3947,6 +3990,10 @@ const geminiTTS = {
                     const blob = new Blob([wavBuf.slice(0)], { type: 'audio/wav' });
                     const blobUrl = URL.createObjectURL(blob);
                     const audio = new Audio(blobUrl);
+                    const voiceVol = (typeof app !== 'undefined' && app.settings && typeof app.settings.voiceVolume === 'number')
+                        ? Math.max(0, Math.min(1, app.settings.voiceVolume))
+                        : 1.0;
+                    audio.volume = voiceVol;
                     if (typeof app !== 'undefined' && app.getSpeechRateValue) {
                         audio.playbackRate = app.getSpeechRateValue();
                     }
@@ -4843,8 +4890,17 @@ const soundFX = {
         }
     },
 
+    getSfxVol() {
+        const v = (typeof app !== 'undefined' && app.settings && typeof app.settings.sfxVolume === 'number')
+            ? app.settings.sfxVolume
+            : 0.85;
+        return Math.max(0, Math.min(1, v));
+    },
+
     playNote(freq = 440, duration = 0.14, type = 'sine', vol = 0.22, delay = 0) {
         if (typeof app !== 'undefined' && app.settings && !app.settings.sfxEnabled) return;
+        const sv = this.getSfxVol();
+        if (sv <= 0) return;
         try {
             this.init();
             if (!this.ctx) return;
@@ -4854,7 +4910,7 @@ const soundFX = {
             osc.type = type;
             osc.frequency.setValueAtTime(freq, t);
             gain.gain.setValueAtTime(0.001, t);
-            gain.gain.linearRampToValueAtTime(vol, t + 0.015);
+            gain.gain.linearRampToValueAtTime(Math.max(0.002, vol * sv), t + 0.015);
             gain.gain.exponentialRampToValueAtTime(0.001, t + duration);
             osc.connect(gain);
             gain.connect(this.ctx.destination);
@@ -4866,6 +4922,8 @@ const soundFX = {
 
     playSlide(fStart, fEnd, duration = 0.35, type = 'sawtooth', vol = 0.22, delay = 0, filterFreq = 1800) {
         if (typeof app !== 'undefined' && app.settings && !app.settings.sfxEnabled) return;
+        const sv = this.getSfxVol();
+        if (sv <= 0) return;
         try {
             this.init();
             if (!this.ctx) return;
@@ -4879,7 +4937,7 @@ const soundFX = {
             filter.type = 'lowpass';
             filter.frequency.setValueAtTime(filterFreq, t);
             gain.gain.setValueAtTime(0.001, t);
-            gain.gain.linearRampToValueAtTime(vol, t + 0.02);
+            gain.gain.linearRampToValueAtTime(Math.max(0.002, vol * sv), t + 0.02);
             gain.gain.exponentialRampToValueAtTime(0.001, t + duration);
             osc.connect(filter);
             filter.connect(gain);
@@ -4892,6 +4950,8 @@ const soundFX = {
 
     playNoise(duration = 0.25, filterType = 'bandpass', freq = 1000, q = 2.0, vol = 0.25, delay = 0) {
         if (typeof app !== 'undefined' && app.settings && !app.settings.sfxEnabled) return;
+        const sv = this.getSfxVol();
+        if (sv <= 0) return;
         try {
             this.init();
             if (!this.ctx || !this.noiseBuf) return;
@@ -4904,7 +4964,7 @@ const soundFX = {
             filter.Q.setValueAtTime(q, t);
             const gain = this.ctx.createGain();
             gain.gain.setValueAtTime(0.001, t);
-            gain.gain.linearRampToValueAtTime(vol, t + 0.02);
+            gain.gain.linearRampToValueAtTime(Math.max(0.002, vol * sv), t + 0.02);
             gain.gain.exponentialRampToValueAtTime(0.001, t + duration);
             src.connect(filter);
             filter.connect(gain);
@@ -4917,6 +4977,7 @@ const soundFX = {
 
     playCrunch() {
         if (typeof app !== 'undefined' && app.settings && !app.settings.sfxEnabled) return 550;
+        const sv = this.getSfxVol();
         try {
             this.init();
             if (!this.ctx) return 550;
@@ -4930,7 +4991,7 @@ const soundFX = {
                 const rate = 0.95 + Math.random() * 0.11; // 0.95 - 1.06
                 src.playbackRate.value = rate;
                 const gain = this.ctx.createGain();
-                gain.gain.setValueAtTime(0.95, now);
+                gain.gain.setValueAtTime(0.95 * sv, now);
                 src.connect(gain);
                 gain.connect(this.ctx.destination);
                 this.trackNode(src);
@@ -4943,7 +5004,7 @@ const soundFX = {
                 const src = this.ctx.createBufferSource();
                 src.buffer = this.munchBuffer;
                 const gain = this.ctx.createGain();
-                gain.gain.setValueAtTime(0.9, now);
+                gain.gain.setValueAtTime(0.9 * sv, now);
                 src.connect(gain);
                 gain.connect(this.ctx.destination);
                 this.trackNode(src);
@@ -4956,6 +5017,8 @@ const soundFX = {
 
     playBubblePop() {
         if (typeof app !== 'undefined' && app.settings && !app.settings.sfxEnabled) return;
+        const sv = this.getSfxVol();
+        if (sv <= 0) return;
         try {
             this.init();
             if (!this.ctx) return;
@@ -4965,7 +5028,7 @@ const soundFX = {
             osc.type = 'sine';
             osc.frequency.setValueAtTime(380, t0);
             osc.frequency.exponentialRampToValueAtTime(1150, t0 + 0.065);
-            gain.gain.setValueAtTime(0.32, t0);
+            gain.gain.setValueAtTime(Math.max(0.002, 0.32 * sv), t0);
             gain.gain.exponentialRampToValueAtTime(0.001, t0 + 0.075);
             osc.connect(gain);
             gain.connect(this.ctx.destination);
@@ -5533,10 +5596,13 @@ const DEFAULT_SETTINGS = {
     minimizeMenuHeader: false, // Minimize upper title banner on Main Menu to just show cards
     showSolarCredits: false,  // Display NASA telescope & mission source badge on Solar System photos
     dragSpeed: 'normal',      // 1-finger drag sensitivity for shapes, visuals & 3D models ('slow': 0.55x, 'normal': 1.0x, 'fast': 1.75x)
+    voiceVolume: 1.0,         // Spoken voice / TTS volume (0.0 .. 1.0)
+    sfxVolume: 0.85,          // Sound effects volume (0.0 .. 1.0)
     nbDockRange: '1-10',      // '1-10', 'place-value', 'tens-only', '1-5'
     nbUnlockAll: true,        // Unlock all dock spawner tiles by default
     nbSpeechStyle: 'math_and_fun', // 'math_and_fun', 'math_only', 'number_only'
     nbFallCombine: true,      // Combine blocks automatically when one lands on top of another
+    nbTrueScale: true,        // True 1:1 block scale & auto-framing 2D camera
     nbSnapMode: 'normal',     // 'easy', 'normal', 'close'
     nbShowEquations: true,    // Show floating animated equation pills (e.g. 2 + 3 = 5)
     nbAutoSpace: true,        // Gently nudge resting blocks apart horizontally
@@ -5641,6 +5707,9 @@ const app = {
         if (window.NumberBlocks && window.NumberBlocks.Game && window.NumberBlocks.Game.applySettings) {
             window.NumberBlocks.Game.applySettings();
         }
+        if (window.NumberBlocks && window.NumberBlocks.Audio && typeof window.NumberBlocks.Audio.syncMasterGain === 'function') {
+            window.NumberBlocks.Audio.syncMasterGain();
+        }
     },
 
     getSpeechRateValue() {
@@ -5710,6 +5779,9 @@ const app = {
             if (isSpeaking) el.classList.add('speaking');
             else el.classList.remove('speaking');
         });
+        if (window.NumberBlocks && window.NumberBlocks.Audio && typeof window.NumberBlocks.Audio.setSpeechDucking === 'function') {
+            window.NumberBlocks.Audio.setSpeechDucking(!!isSpeaking);
+        }
     },
 
     switchView(viewName) {
@@ -5780,6 +5852,9 @@ const app = {
             if (endFired) return;
             if (token !== this.speechToken) return;
             endFired = true;
+            if (window.NumberBlocks && window.NumberBlocks.Audio && typeof window.NumberBlocks.Audio.setSpeechDucking === 'function') {
+                window.NumberBlocks.Audio.setSpeechDucking(false);
+            }
             if (typeof onEndCallback === 'function') {
                 try { onEndCallback(); } catch (e) {}
             }
@@ -5809,6 +5884,13 @@ const app = {
         if (this.speechTimeout) {
             clearTimeout(this.speechTimeout);
             this.speechTimeout = null;
+        }
+
+        const voiceVol = (typeof this.settings.voiceVolume === 'number')
+            ? Math.max(0, Math.min(1, this.settings.voiceVolume))
+            : 1.0;
+        if (voiceVol > 0.01 && window.NumberBlocks && window.NumberBlocks.Audio && typeof window.NumberBlocks.Audio.setSpeechDucking === 'function') {
+            window.NumberBlocks.Audio.setSpeechDucking(true);
         }
 
         const rate = this.getSpeechRateValue() || 1.0;
@@ -5866,6 +5948,9 @@ const app = {
             if (endFired) return;
             if (token !== this.speechToken) return;
             endFired = true;
+            if (window.NumberBlocks && window.NumberBlocks.Audio && typeof window.NumberBlocks.Audio.setSpeechDucking === 'function') {
+                window.NumberBlocks.Audio.setSpeechDucking(false);
+            }
             if (typeof onEndCallback === 'function') {
                 try { onEndCallback(); } catch (e) {}
             }
@@ -5892,6 +5977,10 @@ const app = {
             const rate = this.getSpeechRateValue() || 1.0;
             msg.rate = rate;
             msg.pitch = 1.05;
+            const voiceVol = (typeof this.settings.voiceVolume === 'number')
+                ? Math.max(0, Math.min(1, this.settings.voiceVolume))
+                : 1.0;
+            msg.volume = voiceVol;
             if (this.cachedVoice) msg.voice = this.cachedVoice;
 
             let started = false;
@@ -9797,6 +9886,16 @@ window.addEventListener('DOMContentLoaded', () => {
         if (optSfx) optSfx.checked = !!s.sfxEnabled;
         const optSpeechRate = document.getElementById('opt-speech-rate');
         if (optSpeechRate) optSpeechRate.value = s.speechRate || 'normal';
+        const voiceVolVal = (typeof s.voiceVolume === 'number') ? Math.max(0, Math.min(1, s.voiceVolume)) : 1.0;
+        const optVoiceVol = document.getElementById('opt-voice-volume');
+        if (optVoiceVol) optVoiceVol.value = String(voiceVolVal);
+        const optVoiceVolLbl = document.getElementById('opt-voice-volume-label');
+        if (optVoiceVolLbl) optVoiceVolLbl.textContent = `${Math.round(voiceVolVal * 100)}%`;
+        const sfxVolVal = (typeof s.sfxVolume === 'number') ? Math.max(0, Math.min(1, s.sfxVolume)) : 0.85;
+        const optSfxVol = document.getElementById('opt-sfx-volume');
+        if (optSfxVol) optSfxVol.value = String(sfxVolVal);
+        const optSfxVolLbl = document.getElementById('opt-sfx-volume-label');
+        if (optSfxVolLbl) optSfxVolLbl.textContent = `${Math.round(sfxVolVal * 100)}%`;
         const optDragSpeed = document.getElementById('opt-drag-speed');
         if (optDragSpeed) optDragSpeed.value = s.dragSpeed || 'normal';
         const optMaxNum = document.getElementById('opt-max-number');
@@ -9817,6 +9916,8 @@ window.addEventListener('DOMContentLoaded', () => {
         if (optNbEq) optNbEq.checked = s.nbShowEquations !== false;
         const optNbSpace = document.getElementById('opt-nb-auto-space');
         if (optNbSpace) optNbSpace.checked = s.nbAutoSpace !== false;
+        const optNbTrueScale = document.getElementById('opt-nb-true-scale');
+        if (optNbTrueScale) optNbTrueScale.checked = s.nbTrueScale !== false;
         const optNbUnlock = document.getElementById('opt-nb-unlock-all');
         if (optNbUnlock) optNbUnlock.checked = s.nbUnlockAll !== false;
         const optPhonics = document.getElementById('opt-phonics-detail');
@@ -9880,6 +9981,27 @@ window.addEventListener('DOMContentLoaded', () => {
         app.settings.speechRate = e.target.value;
         app.saveSettings();
     });
+    ['input', 'change'].forEach((evtName) => {
+        document.getElementById('opt-voice-volume')?.addEventListener(evtName, (e) => {
+            const v = Math.max(0, Math.min(1, parseFloat(e.target.value)));
+            if (!Number.isFinite(v)) return;
+            app.settings.voiceVolume = v;
+            const lbl = document.getElementById('opt-voice-volume-label');
+            if (lbl) lbl.textContent = `${Math.round(v * 100)}%`;
+            if (evtName === 'change') app.saveSettings();
+        });
+        document.getElementById('opt-sfx-volume')?.addEventListener(evtName, (e) => {
+            const v = Math.max(0, Math.min(1, parseFloat(e.target.value)));
+            if (!Number.isFinite(v)) return;
+            app.settings.sfxVolume = v;
+            const lbl = document.getElementById('opt-sfx-volume-label');
+            if (lbl) lbl.textContent = `${Math.round(v * 100)}%`;
+            if (window.NumberBlocks && window.NumberBlocks.Audio && typeof window.NumberBlocks.Audio.syncMasterGain === 'function') {
+                window.NumberBlocks.Audio.syncMasterGain();
+            }
+            if (evtName === 'change') app.saveSettings();
+        });
+    });
     document.getElementById('opt-drag-speed')?.addEventListener('change', (e) => {
         app.settings.dragSpeed = e.target.value;
         app.saveSettings();
@@ -9922,6 +10044,10 @@ window.addEventListener('DOMContentLoaded', () => {
     });
     document.getElementById('opt-nb-auto-space')?.addEventListener('change', (e) => {
         app.settings.nbAutoSpace = e.target.checked;
+        app.saveSettings();
+    });
+    document.getElementById('opt-nb-true-scale')?.addEventListener('change', (e) => {
+        app.settings.nbTrueScale = e.target.checked;
         app.saveSettings();
     });
     document.getElementById('opt-nb-unlock-all')?.addEventListener('change', (e) => {
@@ -11786,6 +11912,58 @@ window.ToddlerLearningHub = {
 
   let sharedCompressor = null;
   let sharedCompressorCtx = null;
+  let masterSfxGain = null;
+  let masterSfxGainCtx = null;
+  let speechDucked = false;
+  let duckSafetyTimer = null;
+
+  function computeMasterGainValue() {
+    const tlh = getTLH();
+    const appRef = (tlh && tlh.app) || (typeof window !== 'undefined' && window.app) || null;
+    const sfxVol = (appRef && appRef.settings && typeof appRef.settings.sfxVolume === 'number')
+      ? Math.max(0, Math.min(1, appRef.settings.sfxVolume))
+      : 0.85;
+    const enabled = !(appRef && appRef.settings && appRef.settings.sfxEnabled === false);
+    if (!enabled || sfxVol <= 0) return 0;
+    return speechDucked ? sfxVol * 0.45 : sfxVol;
+  }
+
+  function syncMasterGain(timeConstant) {
+    const val = computeMasterGainValue();
+    if (masterSfxGain && masterSfxGainCtx) {
+      try {
+        const t = masterSfxGainCtx.currentTime;
+        masterSfxGain.gain.cancelScheduledValues(t);
+        if (typeof timeConstant === 'number' && timeConstant > 0) {
+          masterSfxGain.gain.setTargetAtTime(val, t, timeConstant);
+        } else {
+          masterSfxGain.gain.setValueAtTime(val, t);
+        }
+      } catch (e) {}
+    }
+    return val;
+  }
+
+  function setSpeechDucking(active) {
+    const next = !!active;
+    if (duckSafetyTimer) {
+      clearTimeout(duckSafetyTimer);
+      duckSafetyTimer = null;
+    }
+    if (next) {
+      duckSafetyTimer = setTimeout(() => {
+        duckSafetyTimer = null;
+        if (speechDucked) {
+          speechDucked = false;
+          syncMasterGain(0.12);
+        }
+      }, 6000);
+    }
+    if (speechDucked !== next) {
+      speechDucked = next;
+      syncMasterGain(next ? 0.04 : 0.12);
+    }
+  }
 
   function ensureAudioCtx(sfx) {
     if (!sfx) return null;
@@ -11799,10 +11977,13 @@ window.ToddlerLearningHub = {
 
   function getOutputNode(ctx) {
     if (!ctx) return null;
-    if (sharedCompressorCtx === ctx && sharedCompressor) {
-      return sharedCompressor;
+    if (masterSfxGainCtx === ctx && masterSfxGain) {
+      return masterSfxGain;
     }
-    if (typeof ctx.createDynamicsCompressor === 'function') {
+    let dest = ctx.destination;
+    if (sharedCompressorCtx === ctx && sharedCompressor) {
+      dest = sharedCompressor;
+    } else if (typeof ctx.createDynamicsCompressor === 'function') {
       try {
         const comp = ctx.createDynamicsCompressor();
         comp.threshold.setValueAtTime(-12, ctx.currentTime);
@@ -11813,10 +11994,51 @@ window.ToddlerLearningHub = {
         comp.connect(ctx.destination);
         sharedCompressor = comp;
         sharedCompressorCtx = ctx;
-        return comp;
+        dest = comp;
       } catch (e) {}
     }
-    return ctx.destination;
+    if (typeof ctx.createGain === 'function') {
+      try {
+        const gain = ctx.createGain();
+        gain.gain.setValueAtTime(computeMasterGainValue(), ctx.currentTime);
+        gain.connect(dest);
+        masterSfxGain = gain;
+        masterSfxGainCtx = ctx;
+        return gain;
+      } catch (e) {}
+    }
+    return dest;
+  }
+
+  function playLocalSlide(fStart, fEnd, dur = 0.1, type = 'sine', vol = 0.25, jitter = true) {
+    if (!isSfxEnabled()) return;
+    const sfx = getSoundFX();
+    const ctx = ensureAudioCtx(sfx);
+    if (!ctx) return;
+    const out = getOutputNode(ctx);
+    try {
+      const t = ctx.currentTime;
+      const mult = jitter ? (0.93 + Math.random() * 0.14) : 1.0;
+      const sFreq = Math.max(20, fStart * mult);
+      const eFreq = Math.max(20, fEnd * mult);
+      const osc = ctx.createOscillator();
+      const filter = ctx.createBiquadFilter();
+      const gain = ctx.createGain();
+      osc.type = type || 'sine';
+      osc.frequency.setValueAtTime(sFreq, t);
+      osc.frequency.exponentialRampToValueAtTime(eFreq, t + dur);
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(2000, t);
+      gain.gain.setValueAtTime(0.0001, t);
+      gain.gain.linearRampToValueAtTime(Math.max(0.001, vol), t + 0.015);
+      gain.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      osc.connect(filter);
+      filter.connect(gain);
+      gain.connect(out);
+      trackNode(osc);
+      osc.start(t);
+      osc.stop(t + dur + 0.03);
+    } catch (e) {}
   }
 
   function unlock() {
@@ -11917,20 +12139,12 @@ window.ToddlerLearningHub = {
 
   function playPickup() {
     if (!isSfxEnabled()) return;
-    const sfx = getSoundFX();
-    if (sfx && typeof sfx.playSlide === 'function') {
-      sfx.playSlide(280, 520, 0.085, 'sine', 0.30);
-    } else {
-      playMarimbaNote(1, 0);
-    }
+    playLocalSlide(280, 520, 0.085, 'sine', 0.30, true);
   }
 
   function playTapBounce(n) {
     if (!isSfxEnabled()) return;
-    const sfx = getSoundFX();
-    if (sfx && typeof sfx.playSlide === 'function') {
-      sfx.playSlide(290, 560, 0.085, 'sine', 0.24);
-    }
+    playLocalSlide(290, 560, 0.085, 'sine', 0.24, true);
     const val = Math.max(1, Math.min(100, Math.round(Number(n) || 1)));
     playMarimbaNote(val, 0.015);
   }
@@ -11978,10 +12192,7 @@ window.ToddlerLearningHub = {
 
   function playLand(n) {
     if (!isSfxEnabled()) return;
-    const sfx = getSoundFX();
-    if (sfx && typeof sfx.playSlide === 'function') {
-      sfx.playSlide(175, 92, 0.09, 'triangle', 0.26);
-    }
+    playLocalSlide(175, 92, 0.09, 'triangle', 0.26, true);
     const val = Math.max(1, Math.min(100, Math.round(Number(n) || 1)));
     playMarimbaNote(val, 0.02);
   }
@@ -12069,11 +12280,8 @@ window.ToddlerLearningHub = {
 
   function playSplitPop(partA, partB) {
     if (!isSfxEnabled()) return;
-    const sfx = getSoundFX();
-    if (sfx && typeof sfx.playSlide === 'function') {
-      // Playful cork-pop
-      sfx.playSlide(680, 310, 0.11, 'sine', 0.36);
-    }
+    // Playful cork-pop with subtle pitch micro-variation
+    playLocalSlide(680, 310, 0.11, 'sine', 0.36, true);
     const a = Math.max(1, Math.min(100, Math.round(Number(partA) || 1)));
     const b = Math.max(1, Math.min(100, Math.round(Number(partB) || 1)));
     playMarimbaNote(a, 0.04);
@@ -12111,12 +12319,7 @@ window.ToddlerLearningHub = {
 
   function playRemovePop() {
     if (!isSfxEnabled()) return;
-    const sfx = getSoundFX();
-    if (sfx && typeof sfx.playSlide === 'function') {
-      sfx.playSlide(480, 180, 0.11, 'sine', 0.30);
-    } else {
-      playUndoSound();
-    }
+    playLocalSlide(480, 180, 0.11, 'sine', 0.30, true);
   }
 
   function playUnlockJingle() {
@@ -12152,11 +12355,8 @@ window.ToddlerLearningHub = {
 
   function playHighFiveBounce() {
     if (!isSfxEnabled()) return;
-    const sfx = getSoundFX();
-    if (sfx && typeof sfx.playSlide === 'function') {
-      sfx.playSlide(320, 640, 0.12, 'sine', 0.30);
-    }
-    const ctx = ensureAudioCtx(sfx);
+    playLocalSlide(320, 640, 0.12, 'sine', 0.30, true);
+    const ctx = ensureAudioCtx(getSoundFX());
     if (!ctx) return;
     const out = getOutputNode(ctx);
 
@@ -12391,7 +12591,11 @@ window.ToddlerLearningHub = {
     speakMerge,
     speakSplit,
     speakTap,
-    speakSupernova
+    speakSupernova,
+    setSpeechDucking,
+    isSpeechDucked: () => speechDucked,
+    getMasterGainValue: computeMasterGainValue,
+    syncMasterGain
   });
 
 })();
@@ -12875,14 +13079,36 @@ window.ToddlerLearningHub = {
     }
   }
 
+  function hasActiveParticles() {
+    for (let i = 0; i < PARTICLE_POOL_SIZE; i++) {
+      if (particlePool[i].active) return true;
+    }
+    return false;
+  }
+
   // --------------------------------------------------------------------------
-  // Drifting Clouds Parallax System
+  // Drifting Clouds Parallax & Ambient Sky Motes System
   // --------------------------------------------------------------------------
   const clouds = [
     { xRatio: 0.12, yRatio: 0.12, w: 120, h: 36, speed: 7 },
     { xRatio: 0.58, yRatio: 0.20, w: 90, h: 28, speed: 5 },
     { xRatio: 0.82, yRatio: 0.10, w: 110, h: 32, speed: 8 },
     { xRatio: 0.35, yRatio: 0.26, w: 80, h: 24, speed: 6 }
+  ];
+
+  const ambientMotes = [
+    { xRatio: 0.08, yRatio: 0.14, r: 2.0, baseAlpha: 0.28, speedX: 3.2, phase: 0.4 },
+    { xRatio: 0.17, yRatio: 0.38, r: 2.8, baseAlpha: 0.34, speedX: 4.5, phase: 1.7 },
+    { xRatio: 0.26, yRatio: 0.22, r: 1.7, baseAlpha: 0.24, speedX: 2.8, phase: 2.9 },
+    { xRatio: 0.33, yRatio: 0.49, r: 3.1, baseAlpha: 0.30, speedX: 5.2, phase: 0.9 },
+    { xRatio: 0.42, yRatio: 0.11, r: 2.3, baseAlpha: 0.38, speedX: 3.8, phase: 4.1 },
+    { xRatio: 0.51, yRatio: 0.31, r: 1.9, baseAlpha: 0.25, speedX: 6.1, phase: 2.2 },
+    { xRatio: 0.60, yRatio: 0.54, r: 2.6, baseAlpha: 0.32, speedX: 2.6, phase: 5.0 },
+    { xRatio: 0.68, yRatio: 0.18, r: 3.2, baseAlpha: 0.40, speedX: 4.9, phase: 3.3 },
+    { xRatio: 0.76, yRatio: 0.42, r: 2.1, baseAlpha: 0.26, speedX: 3.5, phase: 1.1 },
+    { xRatio: 0.84, yRatio: 0.27, r: 2.7, baseAlpha: 0.35, speedX: 5.8, phase: 4.6 },
+    { xRatio: 0.91, yRatio: 0.52, r: 1.8, baseAlpha: 0.23, speedX: 3.0, phase: 2.6 },
+    { xRatio: 0.96, yRatio: 0.09, r: 2.4, baseAlpha: 0.41, speedX: 6.4, phase: 0.2 }
   ];
 
   function updateAndDrawClouds(ctx, width, height, dt) {
@@ -12897,6 +13123,26 @@ window.ToddlerLearningHub = {
       const cx = c.xRatio * width;
       const cy = c.yRatio * height;
       drawRoundRect(ctx, cx, cy, c.w, c.h, c.h / 2);
+      ctx.fill();
+    }
+    ctx.restore();
+  }
+
+  function updateAndDrawAmbientMotes(ctx, width, groundY, dt, nowMs) {
+    if (width <= 0 || groundY <= 20) return;
+    ctx.save();
+    const skySpan = Math.max(40, groundY - 18);
+    for (let i = 0; i < ambientMotes.length; i++) {
+      const m = ambientMotes[i];
+      m.xRatio += (m.speedX * dt) / width;
+      if (m.xRatio > 1.03) m.xRatio = -0.03;
+      const mx = m.xRatio * width;
+      const my = m.yRatio * skySpan + Math.sin(nowMs * 0.0014 + m.phase) * 5;
+      const twinkle = 0.65 + 0.35 * Math.sin(nowMs * 0.0028 + m.phase * 1.7);
+      ctx.globalAlpha = m.baseAlpha * twinkle;
+      ctx.beginPath();
+      ctx.arc(mx, my, m.r, 0, Math.PI * 2);
+      ctx.fillStyle = (i % 2 === 0) ? '#fef9c3' : '#ffffff';
       ctx.fill();
     }
     ctx.restore();
@@ -13169,25 +13415,26 @@ window.ToddlerLearningHub = {
     ctx.restore();
   }
 
-  function drawCartoonShoe(ctx, legX, legTopY, u, dir, legColor, shoeStyle, tapLift) {
+  function drawCartoonShoe(ctx, legX, legTopY, u, dir, legColor, shoeStyle, tapLift, strideX) {
     const shoeRy = u * 0.11;
     const shoeRx = u * 0.205;
     const legW = Math.max(2.2, u * 0.13);
     const footY = -(tapLift || 0); // 0 rests directly on groundY
+    const footX = legX + (strideX || 0);
 
     ctx.save();
 
     // Short vertical leg from bottom of block (-legH - 2) down into shoe
     ctx.beginPath();
     ctx.moveTo(legX, legTopY);
-    ctx.lineTo(legX, footY - shoeRy * 0.85);
+    ctx.lineTo(footX, footY - shoeRy * 0.85);
     ctx.lineWidth = legW;
     ctx.lineCap = 'round';
     ctx.strokeStyle = legColor;
     ctx.stroke();
 
     // Outward-pointing rounded shoe resting flat on y = footY
-    const shoeCx = legX + dir * (u * 0.09);
+    const shoeCx = footX + dir * (u * 0.09);
     const shoeCy = footY - shoeRy;
 
     if (shoeStyle === 'twoToneOrange') {
@@ -13220,7 +13467,7 @@ window.ToddlerLearningHub = {
       ctx.strokeStyle = '#991b1b';
       ctx.stroke();
       // Boot cuff
-      drawRoundRect(ctx, legX - legW * 0.72, legTopY + u * 0.03, legW * 1.44, u * 0.07, u * 0.03);
+      drawRoundRect(ctx, (legX + footX) * 0.5 - legW * 0.72, legTopY + u * 0.03, legW * 1.44, u * 0.07, u * 0.03);
       ctx.fillStyle = '#facc15';
       ctx.fill();
     } else if (shoeStyle === 'football11') {
@@ -13259,6 +13506,10 @@ window.ToddlerLearningHub = {
     const entId = (entity && entity.id) ? entity.id : n;
     const idleWave = isStatic ? 0 : Math.sin(nowMs * 0.0036 + entId * 1.7);
     const tapBoost = (tapP > 0 || isCel) ? Math.sin((nowMs * 0.015) + tapP * 10) : 0;
+    const lagX = (!isStatic && entity) ? (entity.accessoryLagX || 0) : 0;
+    const lagY = (!isStatic && entity) ? (entity.accessoryLagY || 0) : 0;
+    const gaitBlend = (!isStatic && entity) ? (entity.gaitBlend || 0) : 0;
+    const gaitSin = (!isStatic && entity) ? Math.sin(entity.gaitPhase || 0) : 0;
 
     // -----------------------------------------------------------------------
     // Special Case 8: Octoblock's 8 Curved Pink Tentacles (6 Side + 2 Bottom)
@@ -13277,18 +13528,20 @@ window.ToddlerLearningHub = {
         // Left tentacle
         ctx.beginPath();
         ctx.moveTo(-totalW / 2 + 2, anchorY);
-        ctx.quadraticCurveTo(-totalW / 2 - u * 0.30, anchorY - u * 0.18 + wave, -totalW / 2 - u * 0.48, anchorY + u * 0.10 - wave);
+        ctx.quadraticCurveTo(-totalW / 2 - u * 0.30, anchorY - u * 0.18 + wave + lagY * u * 0.14, -totalW / 2 - u * 0.48 + lagX * u * 0.20, anchorY + u * 0.10 - wave + lagY * u * 0.28);
         ctx.stroke();
         // Right tentacle
         ctx.beginPath();
         ctx.moveTo(totalW / 2 - 2, anchorY);
-        ctx.quadraticCurveTo(totalW / 2 + u * 0.30, anchorY - u * 0.18 - wave, totalW / 2 + u * 0.48, anchorY + u * 0.10 + wave);
+        ctx.quadraticCurveTo(totalW / 2 + u * 0.30, anchorY - u * 0.18 - wave + lagY * u * 0.14, totalW / 2 + u * 0.48 + lagX * u * 0.20, anchorY + u * 0.10 + wave + lagY * u * 0.28);
         ctx.stroke();
       }
 
       // 2 curled bottom tentacle legs resting flat at y = 0
-      const footLiftL = isStatic ? 0 : Math.max(0, tapBoost) * u * 0.06;
-      const footLiftR = isStatic ? 0 : Math.max(0, -tapBoost) * u * 0.06;
+      const footLiftL = isStatic ? 0 : (Math.max(0, tapBoost) * u * 0.06 + Math.max(0, gaitSin) * u * 0.08 * gaitBlend);
+      const footLiftR = isStatic ? 0 : (Math.max(0, -tapBoost) * u * 0.06 + Math.max(0, -gaitSin) * u * 0.08 * gaitBlend);
+      const stride8L = isStatic ? 0 : gaitSin * u * 0.10 * gaitBlend;
+      const stride8R = -stride8L;
       const footLX = -u * 0.46;
       const footRX = u * 0.46;
       const curlR = tentW * 0.5;
@@ -13296,14 +13549,14 @@ window.ToddlerLearningHub = {
       // Left bottom tentacle + curled foot tip
       ctx.beginPath();
       ctx.moveTo(footLX, -legH - 2);
-      ctx.quadraticCurveTo(footLX - u * 0.02, -legH * 0.25, footLX - u * 0.24, -curlR - footLiftL);
-      ctx.quadraticCurveTo(footLX - u * 0.34, -curlR - u * 0.06 - footLiftL, footLX - u * 0.28, -curlR - u * 0.11 - footLiftL);
+      ctx.quadraticCurveTo(footLX - u * 0.02 + stride8L * 0.5, -legH * 0.25, footLX - u * 0.24 + stride8L, -curlR - footLiftL);
+      ctx.quadraticCurveTo(footLX - u * 0.34 + stride8L, -curlR - u * 0.06 - footLiftL, footLX - u * 0.28 + stride8L, -curlR - u * 0.11 - footLiftL);
       ctx.stroke();
       // Right bottom tentacle + curled foot tip
       ctx.beginPath();
       ctx.moveTo(footRX, -legH - 2);
-      ctx.quadraticCurveTo(footRX + u * 0.02, -legH * 0.25, footRX + u * 0.24, -curlR - footLiftR);
-      ctx.quadraticCurveTo(footRX + u * 0.34, -curlR - u * 0.06 - footLiftR, footRX + u * 0.28, -curlR - u * 0.11 - footLiftR);
+      ctx.quadraticCurveTo(footRX + u * 0.02 + stride8R * 0.5, -legH * 0.25, footRX + u * 0.24 + stride8R, -curlR - footLiftR);
+      ctx.quadraticCurveTo(footRX + u * 0.34 + stride8R, -curlR - u * 0.06 - footLiftR, footRX + u * 0.28 + stride8R, -curlR - u * 0.11 - footLiftR);
       ctx.stroke();
 
       ctx.restore();
@@ -13317,9 +13570,13 @@ window.ToddlerLearningHub = {
     const legSpan = char.cols === 1 ? u * 0.22 : Math.min(totalW * 0.26, u * 0.56);
     const liftL = isStatic ? 0 : Math.max(0, tapBoost) * u * 0.07;
     const liftR = isStatic ? 0 : Math.max(0, -tapBoost) * u * 0.07;
+    const walkLiftL = isStatic ? 0 : Math.max(0, gaitSin) * u * 0.10 * gaitBlend;
+    const walkLiftR = isStatic ? 0 : Math.max(0, -gaitSin) * u * 0.10 * gaitBlend;
+    const strideL = isStatic ? 0 : gaitSin * u * 0.14 * gaitBlend;
+    const strideR = -strideL;
 
-    drawCartoonShoe(ctx, -legSpan, legTopY, u, -1, style.legColor, style.shoeStyle, liftL);
-    drawCartoonShoe(ctx, legSpan, legTopY, u, 1, style.legColor, style.shoeStyle, liftR);
+    drawCartoonShoe(ctx, -legSpan, legTopY, u, -1, style.legColor, style.shoeStyle, liftL + walkLiftL, strideL);
+    drawCartoonShoe(ctx, legSpan, legTopY, u, 1, style.legColor, style.shoeStyle, liftR + walkLiftR, strideR);
 
     // -----------------------------------------------------------------------
     // 2. Curved Arms & 3-Fingered Cartoon Mitts
@@ -13347,10 +13604,10 @@ window.ToddlerLearningHub = {
     if (n === 1) leftUpFactor = -0.85;
     const waveL = idleWave * (u * 0.09) + tapBoost * (u * 0.14);
     const armReachL = (n === 10 || n === 20 || n >= 30) ? 0.44 : (n === 7 ? 0.38 : 0.36);
-    const leftHandX = leftEdgeX - u * armReachL;
-    const leftHandY = leftShoulderY + leftUpFactor * (u * 0.32) + waveL;
-    const leftCtrlX = leftEdgeX - u * 0.24;
-    const leftCtrlY = leftShoulderY + (leftUpFactor < 0 ? u * 0.08 : -u * 0.05) + waveL * 0.5;
+    const leftHandX = leftEdgeX - u * armReachL + lagX * u * 0.30;
+    const leftHandY = leftShoulderY + leftUpFactor * (u * 0.32) + waveL + lagY * u * 0.42;
+    const leftCtrlX = leftEdgeX - u * 0.24 + lagX * u * 0.15;
+    const leftCtrlY = leftShoulderY + (leftUpFactor < 0 ? u * 0.08 : -u * 0.05) + waveL * 0.5 + lagY * u * 0.21;
 
     ctx.save();
     ctx.beginPath();
@@ -13380,10 +13637,10 @@ window.ToddlerLearningHub = {
       if (n === 1) rightUpFactor = -0.35;
       const waveR = -idleWave * (u * 0.09) - tapBoost * (u * 0.14);
       const armReachR = (n === 10 || n === 20) ? 0.42 : (n === 7 ? 0.38 : 0.36);
-      const rightHandX = rightEdgeX + u * armReachR;
-      const rightHandY = rightShoulderY + rightUpFactor * (u * 0.32) + waveR;
-      const rightCtrlX = rightEdgeX + u * 0.24;
-      const rightCtrlY = rightShoulderY + (rightUpFactor < 0 ? u * 0.08 : -u * 0.05) + waveR * 0.5;
+      const rightHandX = rightEdgeX + u * armReachR + lagX * u * 0.30;
+      const rightHandY = rightShoulderY + rightUpFactor * (u * 0.32) + waveR + lagY * u * 0.42;
+      const rightCtrlX = rightEdgeX + u * 0.24 + lagX * u * 0.15;
+      const rightCtrlY = rightShoulderY + (rightUpFactor < 0 ? u * 0.08 : -u * 0.05) + waveR * 0.5 + lagY * u * 0.21;
 
       ctx.save();
       ctx.beginPath();
@@ -13399,10 +13656,10 @@ window.ToddlerLearningHub = {
     } else {
       // Five's right arm reaching out and up from behind the block; giant star hand drawn in front pass
       const wave5 = isStatic ? 0 : Math.sin(nowMs * 0.006 + tapP * 8) * (u * 0.08);
-      const handX = rightEdgeX + u * 0.44;
-      const handY = -legH - 4.30 * u + wave5;
-      const ctrlX = rightEdgeX + u * 0.26;
-      const ctrlY = rightShoulderY + u * 0.05;
+      const handX = rightEdgeX + u * 0.44 + lagX * u * 0.30;
+      const handY = -legH - 4.30 * u + wave5 + lagY * u * 0.42;
+      const ctrlX = rightEdgeX + u * 0.26 + lagX * u * 0.15;
+      const ctrlY = rightShoulderY + u * 0.05 + lagY * u * 0.21;
 
       ctx.save();
       ctx.beginPath();
@@ -13422,10 +13679,12 @@ window.ToddlerLearningHub = {
     const totalW = char.cols * u;
     const rightEdgeX = totalW / 2 - 2;
     const tapP = (!isStatic && entity) ? (entity.tapProgress || 0) : 0;
+    const lagX = (!isStatic && entity) ? (entity.accessoryLagX || 0) : 0;
+    const lagY = (!isStatic && entity) ? (entity.accessoryLagY || 0) : 0;
     const wave5 = isStatic ? 0 : Math.sin(nowMs * 0.006 + tapP * 8) * (u * 0.08);
-    const handX = rightEdgeX + u * 0.48;
-    const handY = -legH - 4.35 * u + wave5;
-    const rot = -0.35 + (isStatic ? 0 : Math.sin(nowMs * 0.006 + tapP * 8) * 0.18);
+    const handX = rightEdgeX + u * 0.48 + lagX * u * 0.30;
+    const handY = -legH - 4.35 * u + wave5 + lagY * u * 0.42;
+    const rot = -0.35 + (isStatic ? 0 : Math.sin(nowMs * 0.006 + tapP * 8) * 0.18) + lagX * 0.25;
     drawHighFiveHand(ctx, handX, handY, rot, u);
   }
 
@@ -13541,6 +13800,8 @@ window.ToddlerLearningHub = {
   function drawCharacterFaceAndProps(ctx, entity, char, u, metrics, nowMs, isStatic) {
     const tapP = (!isStatic && entity) ? (entity.tapProgress || 0) : 0;
     const isAnticipating = (!isStatic && entity && entity.expression === 'anticipation');
+    const lagX = (!isStatic && entity) ? (entity.accessoryLagX || 0) : 0;
+    const lagY = (!isStatic && entity) ? (entity.accessoryLagY || 0) : 0;
     const entId = (entity && entity.id) ? entity.id : char.n;
     const blinkY = getBlinkScaleY(entId, nowMs, isStatic);
     const legH = getLegHeight(u);
@@ -13622,7 +13883,8 @@ window.ToddlerLearningHub = {
 
       // 3 Red Triangular Jester Cap Spikes on Top of Row 2
       ctx.save();
-      ctx.translate(0, -u * 0.52);
+      ctx.translate(lagX * u * 0.16, -u * 0.52 + clamp(lagY * u * 0.22, -u * 0.10, u * 0.06));
+      ctx.rotate(lagX * 0.30);
       const spikes = [
         { baseX: -u * 0.25, tipX: -u * 0.44, tipY: -u * 0.30, halfW: u * 0.145 },
         { baseX: 0, tipX: 0, tipY: -u * 0.38, halfW: u * 0.15 },
@@ -13778,7 +14040,8 @@ window.ToddlerLearningHub = {
 
       // 7 bold flat-topped vertical/fanning rainbow hair bars across top of row 6
       ctx.save();
-      ctx.translate(0, -u * 0.52);
+      ctx.translate(lagX * u * 0.16, -u * 0.52 + clamp(lagY * u * 0.22, -u * 0.10, u * 0.06));
+      ctx.rotate(lagX * 0.30);
       const rainbowColors = ['#ef4444', '#f97316', '#facc15', '#22c55e', '#38bdf8', '#4f46e5', '#9333ea'];
       const barW = u * 0.105;
       for (let i = 0; i < 7; i++) {
@@ -14049,10 +14312,8 @@ window.ToddlerLearningHub = {
 
       // Classy Top Hat sitting cleanly on top of row 4
       ctx.save();
-      ctx.translate(0, -u * 0.52);
-      if (tapP > 0) {
-        ctx.rotate(Math.sin(tapP * Math.PI) * -0.28);
-      }
+      ctx.translate(lagX * u * 0.16, -u * 0.52 + clamp(lagY * u * 0.22, -u * 0.10, u * 0.06));
+      ctx.rotate(lagX * 0.30 + (tapP > 0 ? Math.sin(tapP * Math.PI) * -0.28 : 0));
       // Brim
       drawRoundRect(ctx, -u * 0.85, -u * 0.08, u * 1.7, u * 0.13, u * 0.06);
       ctx.fillStyle = '#1e293b';
@@ -14111,17 +14372,22 @@ window.ToddlerLearningHub = {
       if (faceDef.type === 'decadeHero') {
         // Golden Star Crown centered on top of the decade tower
         ctx.save();
-        ctx.translate(0, -u * 0.65);
+        ctx.translate(lagX * u * 0.16, -u * 0.65 + clamp(lagY * u * 0.22, -u * 0.10, u * 0.06));
+        ctx.rotate(lagX * 0.30);
         drawStar(ctx, 0, -u * 0.24, 5, u * 0.42, u * 0.20, '#facc15', '#b45309', Math.max(1.2, u * 0.04));
         ctx.restore();
       } else if (faceDef.tens === 20) {
         // Classy mini hat rim for 21..29
+        ctx.save();
+        ctx.translate(lagX * u * 0.16, clamp(lagY * u * 0.22, -u * 0.10, u * 0.06));
+        ctx.rotate(lagX * 0.30);
         drawRoundRect(ctx, -u * 0.72, -u * 0.64, u * 1.44, u * 0.14, u * 0.06);
         ctx.fillStyle = '#1e293b';
         ctx.fill();
         drawRoundRect(ctx, -u * 0.42, -u * 0.96, u * 0.84, u * 0.36, u * 0.06);
         ctx.fillStyle = '#0f172a';
         ctx.fill();
+        ctx.restore();
       }
 
       drawPupilEye(ctx, -eyeSpacing, eyeY, eyeR, blinkY, pOffsetX, pOffsetY, rim, isAnticipating, 0.24);
@@ -14137,7 +14403,8 @@ window.ToddlerLearningHub = {
 
       // Golden Crown above 10x10 top row
       ctx.save();
-      ctx.translate(0, -u * 1.45);
+      ctx.translate(lagX * u * 0.16, -u * 1.45 + clamp(lagY * u * 0.22, -u * 0.10, u * 0.06));
+      ctx.rotate(lagX * 0.30);
       drawStar(ctx, -u * 0.6, 0, 5, u * 0.28, u * 0.14, '#facc15', '#b45309', 1.4);
       drawStar(ctx, 0, -u * 0.12, 5, u * 0.42, u * 0.20, '#fde047', '#b45309', 1.6);
       drawStar(ctx, u * 0.6, 0, 5, u * 0.28, u * 0.14, '#facc15', '#b45309', 1.4);
@@ -14322,18 +14589,19 @@ window.ToddlerLearningHub = {
   // --------------------------------------------------------------------------
   // Floating Equation Pill
   // --------------------------------------------------------------------------
+  function getCharUnitScale(char, metrics) {
+    if (!char) return 1.0;
+    if (metrics && metrics.trueScale !== false) return 1.0;
+    return char.unitScale || 1.0;
+  }
+
   function drawEquationPill(ctx, pill, metrics) {
     if (!pill || pill.alpha <= 0.01) return;
 
     ctx.save();
-    ctx.globalAlpha = pill.alpha;
+    ctx.globalAlpha = clamp(pill.alpha, 0, 1);
 
     const scale = pill.scale || 1.0;
-    const clampedY = Math.max(metrics.topSafeY + 24, pill.y);
-
-    ctx.translate(pill.x, clampedY);
-    ctx.scale(scale, scale);
-
     let textStr = '';
     if (pill.mode === 'preview') {
       textStr = pill.leftN + ' + ' + pill.rightN + ' = ✨ ?';
@@ -14351,6 +14619,13 @@ window.ToddlerLearningHub = {
     const textW = ctx.measureText(textStr).width;
     const pillW = textW + 36;
     const pillH = 38;
+    const halfScaledW = (pillW * Math.abs(scale)) / 2;
+    const maxEdgeX = Math.max(halfScaledW + 8, metrics.width - halfScaledW - 8);
+    const clampedX = clamp(pill.x, halfScaledW + 8, maxEdgeX);
+    const clampedY = clamp(pill.y, metrics.topSafeY + 24, Math.max(metrics.topSafeY + 24, metrics.groundY - 24));
+
+    ctx.translate(clampedX, clampedY);
+    ctx.scale(scale, scale);
 
     // Soft offset backing pill instead of GPU-stalling shadowBlur
     drawRoundRect(ctx, -pillW / 2, -pillH / 2 + 4, pillW, pillH, pillH / 2);
@@ -14361,14 +14636,77 @@ window.ToddlerLearningHub = {
     ctx.fillStyle = 'rgba(255, 255, 255, 0.97)';
     ctx.fill();
 
-    ctx.lineWidth = 2;
-    ctx.strokeStyle = '#e2e8f0';
+    ctx.lineWidth = pill.accentColor ? 2.5 : 2;
+    ctx.strokeStyle = pill.accentColor || '#cbd5e1';
     ctx.stroke();
 
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillStyle = '#1e293b';
     ctx.fillText(textStr, 0, 1);
+
+    ctx.restore();
+  }
+
+  function drawMilestoneBanner(ctx, banner, metrics) {
+    if (!banner || banner.alpha <= 0.01) return;
+
+    ctx.save();
+    if (banner.washAlpha && banner.washAlpha > 0.005) {
+      ctx.fillStyle = 'rgba(254, 240, 138, ' + clamp(banner.washAlpha, 0, 0.22) + ')';
+      ctx.fillRect(0, 0, metrics.width, metrics.height);
+    }
+
+    ctx.globalAlpha = clamp(banner.alpha, 0, 1);
+    const scale = banner.scale || 1.0;
+    const isNarrow = metrics.width < 430;
+    const titleFontPx = isNarrow ? 15 : 18;
+    const subFontPx = isNarrow ? 12 : 14;
+    const titleStr = String(banner.text || '');
+    const subStr = banner.subText ? String(banner.subText) : '';
+
+    ctx.font = '700 ' + titleFontPx + "px 'Fredoka', 'Nunito', sans-serif";
+    const titleW = ctx.measureText(titleStr).width;
+    let subW = 0;
+    if (subStr) {
+      ctx.font = '700 ' + subFontPx + "px 'Fredoka', 'Nunito', sans-serif";
+      subW = ctx.measureText(subStr).width;
+    }
+
+    const padX = isNarrow ? 26 : 36;
+    const pillW = Math.min(metrics.width - 18, Math.max(titleW, subW) + padX);
+    const pillH = subStr ? (isNarrow ? 50 : 54) : (isNarrow ? 38 : 42);
+    const bx = metrics.width / 2;
+    const by = metrics.topSafeY + (subStr ? 40 : 34) + (banner.offsetY || 0);
+
+    ctx.translate(bx, by);
+    ctx.scale(scale, scale);
+
+    // Warm backing shadow (no shadowBlur)
+    drawRoundRect(ctx, -pillW / 2, -pillH / 2 + 4, pillW, pillH, pillH / 2);
+    ctx.fillStyle = 'rgba(180, 83, 9, 0.16)';
+    ctx.fill();
+
+    // Warm cream celebratory ribbon
+    drawRoundRect(ctx, -pillW / 2, -pillH / 2, pillW, pillH, pillH / 2);
+    ctx.fillStyle = '#fffbeb';
+    ctx.fill();
+
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = banner.color || '#f59e0b';
+    ctx.stroke();
+
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.font = '700 ' + titleFontPx + "px 'Fredoka', 'Nunito', sans-serif";
+    ctx.fillStyle = '#92400e';
+    ctx.fillText(titleStr, 0, subStr ? -pillH * 0.16 : 1);
+
+    if (subStr) {
+      ctx.font = '700 ' + subFontPx + "px 'Fredoka', 'Nunito', sans-serif";
+      ctx.fillStyle = '#b45309';
+      ctx.fillText(subStr, 0, pillH * 0.22);
+    }
 
     ctx.restore();
   }
@@ -14395,7 +14733,7 @@ window.ToddlerLearningHub = {
 
     const targetChar = getCharacter(snap.sum);
     if (targetChar) {
-      const gU = (targetChar.unitScale || 1.0) * u;
+      const gU = getCharUnitScale(targetChar, metrics) * u;
       const gLegH = getLegHeight(gU);
       const totalW = targetChar.cols * gU;
       const startX = snap.x - totalW / 2;
@@ -14466,7 +14804,10 @@ window.ToddlerLearningHub = {
     width: 0,
     height: 0,
     dpr: 1,
+    baseUnitSize: 48,
     unitSize: 48,
+    cameraZoom: 1.0,
+    trueScale: true,
     topSafeY: 12,
     groundY: 400
   };
@@ -14524,12 +14865,20 @@ window.ToddlerLearningHub = {
     const ground = Math.round(rect.height - 18);
     const playH = Math.max(100, ground - topSafe - 24);
     const unitSize = Math.round(clamp(28, Math.min(rect.width / 8.2, playH / 8.2), 64));
+    const tlh = (typeof window !== 'undefined') ? (window.ToddlerLearningHub || window.TLH) : null;
+    const settings = (tlh && tlh.app && tlh.app.settings) || (typeof app !== 'undefined' && app.settings);
+    const prevZoom = (cachedMetrics && cachedMetrics.cameraZoom) ? cachedMetrics.cameraZoom : 1.0;
+    const trueScale = settings ? (settings.nbTrueScale !== false) : true;
+    const camZoom = trueScale ? prevZoom : 1.0;
 
     cachedMetrics = {
       width: rect.width,
       height: rect.height,
       dpr: dpr,
-      unitSize: unitSize,
+      baseUnitSize: unitSize,
+      unitSize: Math.max(10, unitSize * camZoom),
+      cameraZoom: camZoom,
+      trueScale: trueScale,
       topSafeY: topSafe,
       groundY: ground
     };
@@ -14547,7 +14896,7 @@ window.ToddlerLearningHub = {
     if (!entity) return null;
     const m = metrics || cachedMetrics;
     const char = getCharacter(entity.n || 1);
-    const unitScale = (char && char.unitScale) ? char.unitScale : 1.0;
+    const unitScale = getCharUnitScale(char, m);
     const u = unitScale * (m ? m.unitSize : 48);
 
     const cols = char ? char.cols : 1;
@@ -14663,6 +15012,22 @@ window.ToddlerLearningHub = {
         const vx = (Math.random() - 0.5) * 140;
         const vy = -80 - Math.random() * 140;
         activateParticle(x, y, vx, vy, 5 + Math.random() * 4, 0.4 + Math.random() * 0.3, '#facc15', 'star', 200, 0);
+      }
+    } else if (preset === 'landPuff') {
+      const colors = ['rgba(255, 255, 255, 0.80)', '#dcfce7', '#bbf7d0', customColor || '#bef264'];
+      const count = typeof maybeCount === 'number' ? maybeCount : 8;
+      for (let i = 0; i < count; i++) {
+        const dir = (i % 2 === 0 ? -1 : 1);
+        const vx = dir * (35 + Math.random() * 80);
+        const vy = -18 - Math.random() * 37;
+        activateParticle(x + dir * (4 + Math.random() * 8), y - 2, vx, vy, 4 + Math.random() * 4, 0.30 + Math.random() * 0.18, colors[i % colors.length], 'smoke', 55, 0);
+      }
+    } else if (preset === 'dragTrail') {
+      const col = customColor || '#fef08a';
+      for (let i = 0; i < 2; i++) {
+        const vx = (Math.random() - 0.5) * 36;
+        const vy = -10 + Math.random() * 32;
+        activateParticle(x + (Math.random() - 0.5) * 14, y + (Math.random() - 0.5) * 14, vx, vy, 3 + Math.random() * 2.5, 0.24 + Math.random() * 0.14, col, i === 0 ? 'star' : 'circle', 35, 0);
       }
     }
   }
@@ -14824,8 +15189,15 @@ window.ToddlerLearningHub = {
     ctx2d.fillStyle = cachedSkyGrad || '#e0f2fe';
     ctx2d.fillRect(0, 0, w, h);
 
-    // 2. Pill Clouds
+    // 2. Pill Clouds & Ambient Sky Motes
     updateAndDrawClouds(ctx2d, w, h, dt);
+    updateAndDrawAmbientMotes(ctx2d, w, metrics.groundY, dt, nowMs);
+
+    const shakeY = (renderState && renderState.cameraShakeY) ? renderState.cameraShakeY : 0;
+    ctx2d.save();
+    if (Math.abs(shakeY) > 0.02) {
+      ctx2d.translate(0, shakeY);
+    }
 
     // 3. Rolling Pastel Hills
     ctx2d.beginPath();
@@ -14850,7 +15222,7 @@ window.ToddlerLearningHub = {
 
     // 4. Play Floor & Turf Strip (cached)
     ctx2d.fillStyle = cachedTurfGrad || '#4ade80';
-    ctx2d.fillRect(0, metrics.groundY, w, h - metrics.groundY);
+    ctx2d.fillRect(0, metrics.groundY, w, h - metrics.groundY + 12);
 
     ctx2d.fillStyle = '#bef264';
     ctx2d.fillRect(0, metrics.groundY - 3, w, 3);
@@ -14860,7 +15232,7 @@ window.ToddlerLearningHub = {
       drawOnboardingArc(ctx2d, renderState.onboardingArc);
     }
 
-    // 6. Ground Contact Shadows
+    // 6. Ground & Stack-Surface Contact Shadows
     const entities = (renderState && renderState.entities) ? renderState.entities : [];
     for (let i = 0; i < entities.length; i++) {
       const ent = entities[i];
@@ -14868,13 +15240,16 @@ window.ToddlerLearningHub = {
       const b = getEntityBounds(ent, metrics);
       if (!b) continue;
 
-      const distOffGround = Math.max(0, metrics.groundY - ent.y);
+      const shadowY = (ent.supportEntityId && ent.supportY && ent.supportY < metrics.groundY - 2)
+        ? ent.supportY
+        : metrics.groundY;
+      const distOffGround = Math.max(0, shadowY - ent.y);
       const liftFactor = clamp(1.0 - distOffGround / 280, 0.25, 1.0);
       const rx = b.width * 0.48 * clamp(1.0 - distOffGround / 320, 0.32, 1.0);
-      const ry = clamp(metrics.unitSize * 0.13, 5, 10) * liftFactor;
+      const ry = clamp(metrics.unitSize * 0.13, 4, 10) * liftFactor;
 
       ctx2d.beginPath();
-      ctx2d.ellipse(ent.x, metrics.groundY, rx, ry, 0, 0, Math.PI * 2);
+      ctx2d.ellipse(ent.x, shadowY, rx, ry, 0, 0, Math.PI * 2);
       ctx2d.fillStyle = 'rgba(15, 55, 30, ' + (0.22 * liftFactor) + ')';
       ctx2d.fill();
     }
@@ -14898,7 +15273,7 @@ window.ToddlerLearningHub = {
       const char = getCharacter(ent.n);
       if (!char) continue;
 
-      const u = (char.unitScale || 1.0) * metrics.unitSize;
+      const u = getCharUnitScale(char, metrics) * metrics.unitSize;
       const legH = getLegHeight(u);
       const headgearH = getHeadgearHeight(char.n, u);
       const poofP = ent.poofProgress || 0;
@@ -14967,9 +15342,16 @@ window.ToddlerLearningHub = {
         } else {
           for (let cIdx = 0; cIdx < cubes.length; cIdx++) {
             const cube = cubes[cIdx];
-            const curX = (1 - p) * cube.fromX + p * cube.toX + 4 * p * (1 - p) * (cube.arcX || 0);
-            const curY = (1 - p) * cube.fromY + p * cube.toY + 4 * p * (1 - p) * (cube.arcY || 0);
-            const curSize = (1 - p) * cube.fromSize + p * cube.toSize;
+            const toSize = (cube.col !== undefined && cube.row !== undefined) ? u : cube.toSize;
+            const toX = (cube.col !== undefined && cube.row !== undefined)
+              ? (ent.x - (char.cols * u) / 2 + cube.col * u)
+              : cube.toX;
+            const toY = (cube.col !== undefined && cube.row !== undefined)
+              ? (ent.y - (cube.row + 1) * u)
+              : cube.toY;
+            const curX = (1 - p) * cube.fromX + p * toX + 4 * p * (1 - p) * (cube.arcX || 0);
+            const curY = (1 - p) * cube.fromY + p * toY + 4 * p * (1 - p) * (cube.arcY || 0);
+            const curSize = (1 - p) * cube.fromSize + p * toSize;
             const curPal = lerpPalette(cube.fromPalette, cube.toPalette, p);
             const isLit = (mInfo.litCount || 0) > cIdx;
             const isActiveStep = (mInfo.phase === 'cubes' && mInfo.activeStepIndex === cIdx);
@@ -15039,9 +15421,21 @@ window.ToddlerLearningHub = {
     // 9. 120-Slot Pooled Particle Engine Update & Draw
     updateAndDrawParticles(ctx2d, dt);
 
-    // 10. Floating Equation Pill
+    ctx2d.restore(); // end cameraShakeY transform
+
+    // 10. Persistent Rising Equation Banners & Hover Pill
+    if (renderState && renderState.equationBanners && renderState.equationBanners.length > 0) {
+      for (let bIdx = 0; bIdx < renderState.equationBanners.length; bIdx++) {
+        drawEquationPill(ctx2d, renderState.equationBanners[bIdx], metrics);
+      }
+    }
     if (renderState && renderState.equationPill) {
       drawEquationPill(ctx2d, renderState.equationPill, metrics);
+    }
+
+    // 11. Non-Blocking Milestone Celebration Ribbon
+    if (renderState && renderState.milestoneBanner) {
+      drawMilestoneBanner(ctx2d, renderState.milestoneBanner, metrics);
     }
 
     ctx2d.restore();
@@ -15077,6 +15471,7 @@ window.ToddlerLearningHub = {
     getRemoveBadgeRect: getRemoveBadgeRect,
     renderFrame: renderFrame,
     spawnBurst: spawnBurst,
+    hasActiveParticles: hasActiveParticles,
     renderDockIcon: renderDockIcon,
     getQuizCardHTML: getQuizCardHTML,
     lerpPalette: lerpPalette
@@ -15195,6 +15590,19 @@ window.ToddlerLearningHub = {
 
   let snapTarget = null;
   let activeEquationPill = null;
+  let equationBanners = [];
+  let milestoneBanner = null;
+
+  let cameraZoom = 1.0;
+  let targetCameraZoom = 1.0;
+  let cameraZoomVel = 0;
+  let cameraShakeY = 0;
+  let cameraShakeVel = 0;
+
+  let idleTimerSec = 0;
+  let isIdleThrottled = false;
+  let lastRenderedAt = 0;
+  let renderedFrameCounter = 0;
 
   const splitBondCycleMap = new Map();
   const firstMergeSessionMap = new Set();
@@ -15239,10 +15647,151 @@ window.ToddlerLearningHub = {
   // SPRING HELPER
   // ---------------------------------------------------------------------------
   function stepSpring(val, vel, target, stiffness, damping, dt) {
-    const force = -stiffness * (val - target) - damping * vel;
-    vel += force * dt;
-    val += vel * dt;
+    const steps = dt > 0.022 ? Math.min(4, Math.ceil(dt / 0.02)) : 1;
+    const h = dt / steps;
+    for (let s = 0; s < steps; s++) {
+      const force = -stiffness * (val - target) - damping * vel;
+      vel += force * h;
+      val += vel * h;
+    }
+    if (Math.abs(val - target) < 0.0001 && Math.abs(vel) < 0.001) {
+      val = target;
+      vel = 0;
+    }
     return [val, vel];
+  }
+
+  function wakeFromIdle() {
+    idleTimerSec = 0;
+    isIdleThrottled = false;
+  }
+
+  function isTrueScaleEnabled() {
+    return getNbSettings().nbTrueScale !== false;
+  }
+
+  function getCharUnitScale(char) {
+    if (isTrueScaleEnabled()) return 1.0;
+    return (char && char.unitScale) ? char.unitScale : 1.0;
+  }
+
+  function computeTargetCameraZoom() {
+    if (!isTrueScaleEnabled() || !metrics) return 1.0;
+    const baseU = metrics.baseUnitSize || metrics.unitSize || 48;
+    const playH = Math.max(110, metrics.groundY - metrics.topSafeY - 36);
+    const playW = Math.max(180, metrics.width - 36);
+    let minZoom = 1.0;
+    let groundWidthSum = 0;
+
+    for (let i = 0; i < entities.length; i++) {
+      const e = entities[i];
+      if (!e || e.state === 'POOFING_OUT') continue;
+      const char = (NB.Data && NB.Data.getCharacter) ? NB.Data.getCharacter(e.n) : { rows: 1, cols: 1 };
+      let baseRows = 0;
+      let cur = e;
+      let guard = 0;
+      const seen = new Set([cur.id]);
+      while (cur && cur.supportEntityId && guard < 12) {
+        const sup = findEntity(cur.supportEntityId);
+        if (!sup || seen.has(sup.id)) break;
+        seen.add(sup.id);
+        const sc = (NB.Data && NB.Data.getCharacter) ? NB.Data.getCharacter(sup.n) : null;
+        baseRows += (sc ? sc.rows : 1) + 0.24;
+        cur = sup;
+        guard++;
+      }
+
+      const spanRows = baseRows + char.rows + 1.25;
+      const reqZoomH = playH / (spanRows * baseU);
+      const spanCols = char.cols + 0.9;
+      const reqZoomW = playW / (spanCols * baseU);
+      minZoom = Math.min(minZoom, reqZoomH, reqZoomW);
+
+      if (!e.supportEntityId) {
+        groundWidthSum += (char.cols + 0.55) * baseU;
+      }
+    }
+
+    if (groundWidthSum > playW * 1.12) {
+      minZoom = Math.min(minZoom, (playW * 1.12) / groundWidthSum);
+    }
+
+    return Math.max(0.30, Math.min(1.0, minZoom));
+  }
+
+  function applyZoomToMetrics() {
+    if (!metrics) return;
+    if (!metrics.baseUnitSize) {
+      metrics.baseUnitSize = metrics.unitSize || 48;
+    }
+    const ts = isTrueScaleEnabled();
+    metrics.trueScale = ts;
+    metrics.cameraZoom = ts ? cameraZoom : 1.0;
+    metrics.unitSize = Math.max(10, metrics.baseUnitSize * metrics.cameraZoom);
+  }
+
+  function snapCameraZoomImmediate() {
+    if (!metrics) return;
+    targetCameraZoom = computeTargetCameraZoom();
+    cameraZoom = targetCameraZoom;
+    cameraZoomVel = 0;
+    applyZoomToMetrics();
+    const stageWidth = metrics.width;
+    const ground = metrics.groundY;
+    for (let i = 0; i < entities.length; i++) {
+      const e = entities[i];
+      if (!e || e.state === 'POOFING_OUT') continue;
+      const b = getEntityBounds(e);
+      if (!b) continue;
+      const halfW = b.width / 2;
+      e.x = clampEntityX(e.x, halfW, stageWidth, 12);
+      if (!e.supportEntityId && e.state === 'IDLE') {
+        e.y = Math.min(ground, e.y);
+        e.supportY = ground;
+      }
+    }
+  }
+
+  function spawnEquationBanner(opts) {
+    const s = getNbSettings();
+    if (s.nbShowEquations === false) return;
+    wakeFromIdle();
+    const topSafe = metrics ? metrics.topSafeY : 20;
+    const ground = metrics ? metrics.groundY : 350;
+    equationBanners.push({
+      x: opts.x,
+      y: Math.max(topSafe + 28, Math.min(ground - 36, opts.y)),
+      vy: -28,
+      mode: opts.mode || 'merge',
+      leftN: opts.leftN,
+      rightN: opts.rightN,
+      sumN: opts.sumN,
+      accentColor: opts.accentColor || null,
+      age: 0,
+      holdDur: opts.holdDur || 1.4,
+      fadeDur: 0.45,
+      alpha: 1.0,
+      scale: 0.01
+    });
+    while (equationBanners.length > 4) {
+      equationBanners.shift();
+    }
+  }
+
+  function triggerMilestoneBanner(text, color, subText) {
+    wakeFromIdle();
+    milestoneBanner = {
+      text: text,
+      subText: subText || '',
+      color: color || '#f59e0b',
+      age: 0,
+      holdDur: 1.85,
+      fadeDur: 0.45,
+      scale: 0.01,
+      alpha: 1.0,
+      washAlpha: 0,
+      offsetY: 0
+    };
   }
 
   // ---------------------------------------------------------------------------
@@ -15290,7 +15839,7 @@ window.ToddlerLearningHub = {
   }
 
   function unlockFriend(n) {
-    if (!isUnlocked(n)) {
+    if (unlockedFriends.indexOf(n) === -1) {
       unlockedFriends.push(n);
       unlockedFriends.sort((a, b) => a - b);
       saveUnlocked(unlockedFriends);
@@ -15429,12 +15978,20 @@ window.ToddlerLearningHub = {
     return null;
   }
 
+  function clampEntityX(x, halfW, stageWidth, pad) {
+    const p = (pad !== undefined) ? pad : 12;
+    const minX = halfW + p;
+    const maxX = stageWidth - halfW - p;
+    if (minX >= maxX) return stageWidth * 0.5;
+    return Math.max(minX, Math.min(maxX, x));
+  }
+
   function getEntityBounds(entity) {
     if (NB.Renderer && NB.Renderer.getEntityBounds && metrics) {
       return NB.Renderer.getEntityBounds(entity, metrics);
     }
     const char = (NB.Data && NB.Data.getCharacter) ? NB.Data.getCharacter(entity.n) : { rows: 1, cols: 1, unitScale: 1.0 };
-    const u = (char.unitScale || 1.0) * (metrics ? metrics.unitSize : 48);
+    const u = getCharUnitScale(char) * (metrics ? metrics.unitSize : 48);
     const w = char.cols * u;
     const h = char.rows * u;
     return {
@@ -15522,6 +16079,7 @@ window.ToddlerLearningHub = {
 
   function performUndo() {
     if (undoStack.length === 0) return false;
+    wakeFromIdle();
     const snap = undoStack.pop();
     updateUndoButton();
 
@@ -15535,8 +16093,10 @@ window.ToddlerLearningHub = {
     if (dockEl) dockEl.classList.remove('is-trash-drop');
 
     const ground = metrics ? metrics.groundY : 350;
+    const fallCombineEnabled = getNbSettings().nbFallCombine !== false;
     entities = snap.items.map(item => {
-      const ent = createEntity(item.n, item.x, ground, 'IDLE');
+      const restoreY = (!fallCombineEnabled && typeof item.y === 'number') ? Math.min(ground, item.y) : ground;
+      const ent = createEntity(item.n, item.x, restoreY, 'IDLE');
       ent.zOrder = item.zOrder || 1;
       ent.scaleY = 1.12;
       ent.scaleX = 0.89;
@@ -15553,6 +16113,7 @@ window.ToddlerLearningHub = {
 
   function removeEntity(ent, skipUndoPush) {
     if (!ent || ent.state === 'POOFING_OUT') return;
+    wakeFromIdle();
     if (!skipUndoPush) {
       pushUndoSnapshot();
     }
@@ -15576,7 +16137,7 @@ window.ToddlerLearningHub = {
   function findOpenStageX(n) {
     const stageWidth = metrics ? metrics.width : 400;
     const char = (NB.Data && NB.Data.getCharacter) ? NB.Data.getCharacter(n) : { cols: 1, unitScale: 1.0 };
-    const u = (char.unitScale || 1.0) * (metrics ? metrics.unitSize : 48);
+    const u = getCharUnitScale(char) * (metrics ? metrics.unitSize : 48);
     const halfW = (char.cols * u) / 2;
     const minX = halfW + 20;
     const maxX = Math.max(minX, stageWidth - halfW - 20);
@@ -15607,7 +16168,7 @@ window.ToddlerLearningHub = {
   function createEntity(n, x, y, state) {
     state = state || 'IDLE';
     const char = (NB.Data && NB.Data.getCharacter) ? NB.Data.getCharacter(n) : { rows: 1, cols: 1, unitScale: 1.0 };
-    const u = (char.unitScale || 1.0) * (metrics ? metrics.unitSize : 48);
+    const u = getCharUnitScale(char) * (metrics ? metrics.unitSize : 48);
     const b = getEntityBounds({ n: n, x: x, y: y });
     const boundsHeight = b ? b.height : (char.rows * u);
     const halfWidth = b ? (b.width / 2) : ((char.cols * u) / 2);
@@ -15616,10 +16177,10 @@ window.ToddlerLearningHub = {
     const ground = metrics ? metrics.groundY : 350;
     const stageWidth = metrics ? metrics.width : 400;
     const numberlingPad = metrics ? metrics.unitSize * 0.65 : 30;
-    const minAllowedY = topSafe + boundsHeight + numberlingPad;
+    const minAllowedY = Math.min(ground, topSafe + boundsHeight + numberlingPad);
 
     const clampedY = Math.min(ground, Math.max(minAllowedY, y));
-    const clampedX = Math.max(halfWidth + 12, Math.min(stageWidth - halfWidth - 12, x));
+    const clampedX = clampEntityX(x, halfWidth, stageWidth, 12);
 
     return {
       id: nextEntityId++,
@@ -15649,7 +16210,18 @@ window.ToddlerLearningHub = {
       lookTarget: null,
       expression: 'happy',
       morphInfo: null,
-      stretchInfo: null
+      stretchInfo: null,
+      accessoryLagX: 0,
+      accessoryLagY: 0,
+      accessoryVelX: 0,
+      accessoryVelY: 0,
+      gaitPhase: 0,
+      gaitBlend: 0,
+      lastStepX: clampedX,
+      lastTrailX: clampedX,
+      lastTrailY: clampedY,
+      supportEntityId: null,
+      supportY: ground
     };
   }
 
@@ -15832,20 +16404,19 @@ window.ToddlerLearningHub = {
       if (NB.Audio.speakSplit) NB.Audio.speakSplit(parentN, partA, partB);
     }
 
-    // Equation pill
-    const s = getNbSettings();
+    // Persistent rising equation banner (does not collide with hover pill)
+    activeEquationPill = null;
     const topSafe = metrics ? metrics.topSafeY : 20;
-    activeEquationPill = s.nbShowEquations === false ? null : {
+    spawnEquationBanner({
       x: parentX,
-      y: Math.max(topSafe + 24, parentY - boundsHeight - 24),
+      y: Math.max(topSafe + 28, parentY - boundsHeight - 24),
       mode: 'split',
       leftN: parentN,
       rightN: partA,
       sumN: partB,
-      alpha: 1.0,
-      scale: 1.0,
-      timer: 1.8
-    };
+      accentColor: '#3b82f6',
+      holdDur: 1.5
+    });
 
     // Challenge check
     checkChallengeGoal('split', { whole: parentN, partA: partA, partB: partB });
@@ -15855,6 +16426,7 @@ window.ToddlerLearningHub = {
   // 4-BEAT MERGE & SUPERNOVA BOUNCE
   // ---------------------------------------------------------------------------
   function performMerge(entityA, entityB) {
+    wakeFromIdle();
     const sum = entityA.n + entityB.n;
     const leftN = entityA.n;
     const rightN = entityB.n;
@@ -15876,9 +16448,9 @@ window.ToddlerLearningHub = {
     const charC = (NB.Data && NB.Data.getCharacter) ? NB.Data.getCharacter(sum) : { cells: [], unitScale: 1.0 };
 
     const u = metrics ? metrics.unitSize : 48;
-    const uA = (charA.unitScale || 1.0) * u;
-    const uB = (charB.unitScale || 1.0) * u;
-    const uC = (charC.unitScale || 1.0) * u;
+    const uA = getCharUnitScale(charA) * u;
+    const uB = getCharUnitScale(charB) * u;
+    const uC = getCharUnitScale(charC) * u;
 
     const boundsA = getEntityBounds(entityA);
     const boundsB = getEntityBounds(entityB);
@@ -15913,6 +16485,8 @@ window.ToddlerLearningHub = {
         const toY = boundsC.bottom - (cell.row + 1) * uC;
         const src = sourceCells[idx] || sourceCells[sourceCells.length - 1] || { x: boundsC.centerX, y: boundsC.centerY, size: uC, palette: cell.palette };
         cubes.push({
+          col: cell.col,
+          row: cell.row,
           fromX: src.x,
           fromY: src.y,
           fromSize: src.size,
@@ -15964,24 +16538,24 @@ window.ToddlerLearningHub = {
       NB.Audio.speakMerge(leftN, rightN, sum, isFirstInSession);
     }
 
-    const s = getNbSettings();
+    activeEquationPill = null;
     const topSafe = metrics ? metrics.topSafeY : 20;
-    activeEquationPill = s.nbShowEquations === false ? null : {
-      x: targetX,
-      y: Math.max(topSafe + 24, boundsC.top - 28),
+    spawnEquationBanner({
+      x: entityC.x,
+      y: Math.max(topSafe + 28, boundsC.top - 28),
       mode: 'merge',
       leftN: leftN,
       rightN: rightN,
       sumN: sum,
-      alpha: 1.0,
-      scale: 1.0,
-      timer: (entityC.morphInfo.totalDuration / 1000) + 1.4
-    };
+      accentColor: charC.primaryColor || '#f59e0b',
+      holdDur: (entityC.morphInfo.totalDuration / 1000) + 1.1
+    });
 
     snapTarget = null;
   }
 
   function performSupernovaBounce(entityA, entityB) {
+    wakeFromIdle();
     const midX = (entityA.x + entityB.x) / 2;
     const midY = (entityA.y + entityB.y) / 2 - 40;
     const sum = entityA.n + entityB.n;
@@ -16014,19 +16588,18 @@ window.ToddlerLearningHub = {
     entityB.splitImmunityTimer = 0.65;
     entityB.expression = 'happy';
 
-    const s = getNbSettings();
+    activeEquationPill = null;
     const topSafe = metrics ? metrics.topSafeY : 20;
-    activeEquationPill = s.nbShowEquations === false ? null : {
+    spawnEquationBanner({
       x: midX,
-      y: Math.max(topSafe + 24, midY - 30),
+      y: Math.max(topSafe + 28, midY - 30),
       mode: 'boom',
       leftN: entityA.n,
       rightN: entityB.n,
       sumN: sum,
-      alpha: 1.0,
-      scale: 1.0,
-      timer: 1.7
-    };
+      accentColor: '#ec4899',
+      holdDur: 1.6
+    });
 
     snapTarget = null;
   }
@@ -16047,6 +16620,7 @@ window.ToddlerLearningHub = {
 
   function loadChallenge(challenge) {
     if (!challenge) return;
+    wakeFromIdle();
     challengeGoalReached = false;
     challengeIdleTimer = 8.0;
 
@@ -16065,6 +16639,7 @@ window.ToddlerLearningHub = {
       entities.push(ent);
     });
 
+    snapCameraZoomImmediate();
     updateChallengeUI();
 
     if (NB.Audio && NB.Audio.speak && isBlocksActive()) {
@@ -16090,6 +16665,7 @@ window.ToddlerLearningHub = {
   function triggerChallengeHint() {
     const challenge = getCurrentChallenge();
     if (!challenge) return;
+    wakeFromIdle();
 
     if (NB.Audio && NB.Audio.speak && isBlocksActive()) {
       NB.Audio.speak(challenge.hintText, 'high');
@@ -16162,6 +16738,10 @@ window.ToddlerLearningHub = {
       if (tlh && tlh.app && tlh.app.burstConfetti && isBlocksActive() && metrics) {
         tlh.app.burstConfetti(metrics.width / 2, metrics.height / 3);
       }
+      if (tlh && tlh.app && tlh.app.animatePop && challengeStarsEl) {
+        tlh.app.animatePop(challengeStarsEl);
+      }
+      triggerMilestoneBanner('⭐ CHALLENGE COMPLETE!', '#f59e0b', '');
 
       addTimer(() => {
         advanceChallenge();
@@ -16179,6 +16759,7 @@ window.ToddlerLearningHub = {
   function switchMode(newMode) {
     if (currentMode === newMode) return;
     currentMode = newMode;
+    wakeFromIdle();
 
     if (modePlayBtn) {
       modePlayBtn.classList.toggle('active', currentMode === 'play');
@@ -16204,10 +16785,13 @@ window.ToddlerLearningHub = {
 
   function spawnStarterFriends() {
     if (!metrics) return;
+    wakeFromIdle();
     entities = [];
+    snapCameraZoomImmediate();
     const one = createEntity(1, metrics.width * 0.38, metrics.groundY, 'IDLE');
     const two = createEntity(2, metrics.width * 0.62, metrics.groundY, 'IDLE');
     entities.push(one, two);
+    snapCameraZoomImmediate();
 
     onboardingArc = {
       fromX: one.x,
@@ -16241,7 +16825,9 @@ window.ToddlerLearningHub = {
     let closest = null;
     let minEdgeDist = Infinity;
     const u = metrics ? metrics.unitSize : 48;
-    const snapMode = getNbSettings().nbSnapMode || 'normal';
+    const settings = getNbSettings();
+    const fallCombineEnabled = settings.nbFallCombine !== false;
+    const snapMode = settings.nbSnapMode || 'normal';
     const snapEnterDist = snapMode === 'easy'
       ? Math.max(88, 1.75 * u)
       : snapMode === 'close'
@@ -16252,6 +16838,12 @@ window.ToddlerLearningHub = {
       const other = entities[i];
       if (other.id === draggedEnt.id || other.state !== 'IDLE') continue;
       const bOther = getEntityBounds(other);
+      if (!fallCombineEnabled) {
+        const otherBlockTopY = other.y - (bOther.legH || 0) - bOther.rows * bOther.u;
+        if (bDragged.bottom <= otherBlockTopY + bOther.u * 0.55 && Math.abs(dragCenterX - bOther.centerX) < (bDragged.width + bOther.width) * 0.52) {
+          continue;
+        }
+      }
       const edgeDist = Math.max(0, Math.hypot(dragCenterX - bOther.centerX, dragCenterY - bOther.centerY) - (bDragged.width + bOther.width) / 2);
       if (edgeDist < minEdgeDist && edgeDist <= snapEnterDist) {
         minEdgeDist = edgeDist;
@@ -16262,6 +16854,7 @@ window.ToddlerLearningHub = {
   }
 
   function onDockPointerDown(e) {
+    wakeFromIdle();
     const tile = e.target.closest('.nb-dock-tile');
     if (!tile) return;
     const n = parseInt(tile.dataset.n, 10);
@@ -16312,6 +16905,7 @@ window.ToddlerLearningHub = {
   }
 
   function onCanvasPointerDown(e) {
+    wakeFromIdle();
     if (NB.Audio && NB.Audio.unlock) {
       NB.Audio.unlock();
     }
@@ -16462,6 +17056,7 @@ window.ToddlerLearningHub = {
     }
 
     if (primaryPointer.id !== e.pointerId) return;
+    wakeFromIdle();
 
     const latestEv = (typeof e.getCoalescedEvents === 'function')
       ? (e.getCoalescedEvents().slice(-1)[0] || e)
@@ -16615,7 +17210,10 @@ window.ToddlerLearningHub = {
         // Check hysteresis exit
         const bSnap = getEntityBounds(snapTarget);
         const curDist = Math.max(0, Math.hypot(bounds.centerX - bSnap.centerX, bounds.centerY - bSnap.centerY) - (bounds.width + bSnap.width) / 2);
-        if (curDist > snapExitDist || dockTrashOver) {
+        const fallCombineEnabled = getNbSettings().nbFallCombine !== false;
+        const snapBlockTopY = snapTarget.y - (bSnap.legH || 0) - bSnap.rows * bSnap.u;
+        const stackedAboveSnap = !fallCombineEnabled && bounds.bottom <= snapBlockTopY + bSnap.u * 0.55 && Math.abs(bounds.centerX - bSnap.centerX) < (bounds.width + bSnap.width) * 0.52;
+        if (curDist > snapExitDist || dockTrashOver || stackedAboveSnap) {
           snapTarget.expression = 'happy';
           snapTarget = null;
           activeEquationPill = null;
@@ -16665,6 +17263,7 @@ window.ToddlerLearningHub = {
     }
 
     if (primaryPointer.id !== e.pointerId) return;
+    wakeFromIdle();
     const coords = getCanvasCoords(e.clientX, e.clientY);
     const isFromDock = primaryPointer.isFromDock;
     const dockN = primaryPointer.dockN;
@@ -16828,6 +17427,7 @@ window.ToddlerLearningHub = {
       secondPointer.id = null;
     }
     if (primaryPointer.id !== e.pointerId) return;
+    wakeFromIdle();
 
     const targetId = primaryPointer.targetEntityId;
     primaryPointer.id = null;
@@ -16861,14 +17461,70 @@ window.ToddlerLearningHub = {
   // ---------------------------------------------------------------------------
   // MAIN ANIMATION LOOP (RAF-DRIVEN)
   // ---------------------------------------------------------------------------
+  function checkIsStageSettled(ground) {
+    if (primaryPointer.id !== null || secondPointer.id !== null) return false;
+    if (onboardingArc !== null) return false;
+    if (activeEquationPill !== null || equationBanners.length > 0 || milestoneBanner !== null) return false;
+    if (Math.abs(cameraZoom - targetCameraZoom) > 0.003 || Math.abs(cameraZoomVel) > 0.01) return false;
+    if (Math.abs(cameraShakeY) > 0.05 || Math.abs(cameraShakeVel) > 0.5) return false;
+    if (NB.Renderer && NB.Renderer.hasActiveParticles && NB.Renderer.hasActiveParticles()) return false;
+
+    for (let i = 0; i < entities.length; i++) {
+      const e = entities[i];
+      if (!e) continue;
+      if (e.state !== 'IDLE') return false;
+      if (Math.abs(e.vx) > 2 || Math.abs(e.vy) > 2) return false;
+      if (Math.abs(e.scaleY - 1.0) > 0.01 || Math.abs(e.tilt) > 0.01) return false;
+      if (Math.abs(e.accessoryLagX || 0) > 0.005 || Math.abs(e.accessoryLagY || 0) > 0.005) return false;
+      if ((e.gaitBlend || 0) > 0.01 || e.tapProgress > 0 || e.hintGlow) return false;
+      if ((e.splitBadgeAlpha || 0) > 0.01 || (e.removeBadgeAlpha || 0) > 0.01) return false;
+      const supY = (e.supportY !== undefined) ? e.supportY : ground;
+      if (Math.abs(e.y - supY) > 1.5) return false;
+    }
+    return true;
+  }
+
   function gameLoop(now) {
     if (!isOpen || !isBlocksActive()) {
       if (isOpen) stop();
       return;
     }
 
-    const dt = Math.min((now - lastTime) / 1000, 0.033);
+    if (isIdleThrottled && (now - lastRenderedAt) < 62) {
+      rAFId = requestFrame(gameLoop);
+      return;
+    }
+
+    const dt = Math.min(Math.max(0.001, (now - lastTime) / 1000), isIdleThrottled ? 0.08 : 0.033);
     lastTime = now;
+    lastRenderedAt = now;
+    renderedFrameCounter++;
+
+    // Auto-framing 2D camera zoom & micro-impulse shake
+    targetCameraZoom = computeTargetCameraZoom();
+    if (Math.abs(cameraZoom - targetCameraZoom) > 0.0005 || Math.abs(cameraZoomVel) > 0.0005) {
+      const [nextZ, nextZVel] = stepSpring(cameraZoom, cameraZoomVel, targetCameraZoom, 140, 24, dt);
+      cameraZoom = Math.max(0.30, Math.min(1.0, nextZ));
+      cameraZoomVel = nextZVel;
+    } else {
+      cameraZoom = targetCameraZoom;
+      cameraZoomVel = 0;
+    }
+
+    if (Math.abs(cameraShakeY) > 0.01 || Math.abs(cameraShakeVel) > 0.1) {
+      const [nextSY, nextSYVel] = stepSpring(cameraShakeY, cameraShakeVel, 0, 320, 24, dt);
+      cameraShakeY = Math.max(-6, Math.min(6, nextSY));
+      cameraShakeVel = nextSYVel;
+      if (Math.abs(cameraShakeY) < 0.04 && Math.abs(cameraShakeVel) < 0.4) {
+        cameraShakeY = 0;
+        cameraShakeVel = 0;
+      }
+    } else {
+      cameraShakeY = 0;
+      cameraShakeVel = 0;
+    }
+
+    applyZoomToMetrics();
 
     // Update challenge idle timer (for 8s auto-hint)
     if (currentMode === 'challenge' && !challengeGoalReached) {
@@ -16889,12 +17545,69 @@ window.ToddlerLearningHub = {
       }
     }
 
-    // Update equation pill timer
+    // Update hover equation pill timer
     if (activeEquationPill && activeEquationPill.timer !== undefined) {
       activeEquationPill.timer -= dt;
       if (activeEquationPill.timer <= 0) {
         activeEquationPill.alpha = Math.max(0, activeEquationPill.alpha - dt * 3);
         if (activeEquationPill.alpha <= 0) activeEquationPill = null;
+      }
+    }
+
+    // Step persistent rising equation banners (OutBack entrance -> hold -> fade out)
+    for (let bIdx = equationBanners.length - 1; bIdx >= 0; bIdx--) {
+      const bnr = equationBanners[bIdx];
+      bnr.age += dt;
+      bnr.y += (bnr.vy || -28) * dt;
+      if (bnr.age < 0.22) {
+        const t = bnr.age / 0.22;
+        const c1 = 1.70158;
+        const c3 = c1 + 1;
+        bnr.scale = 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
+        bnr.alpha = Math.min(1, t / 0.14);
+      } else if (bnr.age < 0.22 + bnr.holdDur) {
+        bnr.scale = 1.0;
+        bnr.alpha = 1.0;
+      } else {
+        const fT = (bnr.age - (0.22 + bnr.holdDur)) / (bnr.fadeDur || 0.45);
+        bnr.alpha = Math.max(0, 1.0 - fT);
+        bnr.scale = 1.0 - 0.06 * Math.min(1, fT);
+        if (bnr.alpha <= 0.01) {
+          equationBanners.splice(bIdx, 1);
+        }
+      }
+    }
+
+    // Step non-blocking milestone banner choreography
+    if (milestoneBanner) {
+      milestoneBanner.age += dt;
+      const enterDur = 0.28;
+      const holdDur = milestoneBanner.holdDur || 1.85;
+      const fadeDur = milestoneBanner.fadeDur || 0.45;
+      if (milestoneBanner.age < enterDur) {
+        const t = milestoneBanner.age / enterDur;
+        const c1 = 1.70158;
+        const c3 = c1 + 1;
+        milestoneBanner.scale = 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
+        milestoneBanner.alpha = Math.min(1, t * 2);
+        milestoneBanner.washAlpha = Math.sin(t * Math.PI * 0.5) * 0.16;
+        milestoneBanner.offsetY = (1 - t) * -10;
+      } else if (milestoneBanner.age < enterDur + holdDur) {
+        const hP = (milestoneBanner.age - enterDur) / holdDur;
+        milestoneBanner.scale = 1.0;
+        milestoneBanner.alpha = 1.0;
+        milestoneBanner.washAlpha = Math.max(0, 0.16 * (1 - hP * 1.4));
+        milestoneBanner.offsetY = 0;
+      } else {
+        const eT = Math.min(1, (milestoneBanner.age - enterDur - holdDur) / fadeDur);
+        const easeOut = 1 - Math.pow(1 - eT, 3);
+        milestoneBanner.offsetY = -18 * easeOut;
+        milestoneBanner.alpha = 1 - easeOut;
+        milestoneBanner.scale = 1.0 - 0.05 * easeOut;
+        milestoneBanner.washAlpha = 0;
+        if (eT >= 1 || milestoneBanner.alpha <= 0.01) {
+          milestoneBanner = null;
+        }
       }
     }
 
@@ -16992,7 +17705,7 @@ window.ToddlerLearningHub = {
 
           if (!e.morphInfo.starburstTriggered) {
             e.morphInfo.starburstTriggered = true;
-            const char = (NB.Data && NB.Data.getCharacter) ? NB.Data.getCharacter(e.n) : { primaryColor: '#facc15' };
+            const char = (NB.Data && NB.Data.getCharacter) ? NB.Data.getCharacter(e.n) : { primaryColor: '#facc15', name: '' };
             if (NB.Renderer && NB.Renderer.spawnBurst) {
               NB.Renderer.spawnBurst(e.x, e.y - bounds.height / 2, 'mergeStarburst', char.primaryColor);
             }
@@ -17004,14 +17717,22 @@ window.ToddlerLearningHub = {
               NB.Audio.playMergeFanfare(e.n);
             }
 
-            // Unlock newly built friend
-            if (e.n >= 6 && e.n <= 100 && !isUnlocked(e.n)) {
+            // First-time discovery celebration for 6..100 (even when nbUnlockAll is enabled)
+            const isFirstDiscovery = unlockedFriends.indexOf(e.n) === -1;
+            if (e.n >= 6 && e.n <= 100 && isFirstDiscovery) {
               unlockFriend(e.n);
               if (NB.Data && NB.Data.unlockCharacter) {
                 NB.Data.unlockCharacter(e.n);
               }
               if (NB.Audio && NB.Audio.playUnlockJingle && isBlocksActive()) {
                 NB.Audio.playUnlockJingle();
+              }
+              updateDock();
+              triggerMilestoneBanner('⭐ NEW FRIEND: ' + e.n + '!', char.primaryColor || '#f59e0b', char.name || '');
+            } else if (e.n >= 6 && e.n <= 100 && !isUnlocked(e.n)) {
+              unlockFriend(e.n);
+              if (NB.Data && NB.Data.unlockCharacter) {
+                NB.Data.unlockCharacter(e.n);
               }
               updateDock();
             }
@@ -17031,8 +17752,16 @@ window.ToddlerLearningHub = {
         }
       }
 
+      if (e.state === 'MORPHING' || e.state === 'STRETCH_SPLIT') {
+        const bMorph = getEntityBounds(e);
+        const halfWM = bMorph ? (bMorph.width / 2) : (bounds.width / 2);
+        e.x = clampEntityX(e.x, halfWM, stageWidth, 12);
+      }
+
       // State: DRAGGING (Ultra-smooth exponential smoothing + gradual lift blend)
       if (e.state === 'DRAGGING') {
+        e.supportEntityId = null;
+        e.supportY = ground;
         e.dragLiftBlend = Math.min(1, (e.dragLiftBlend || 0) + dt / 0.09);
         const rawLiftY = (primaryPointer.type === 'touch') ? -10 : -4;
         const liftY = rawLiftY * e.dragLiftBlend;
@@ -17048,6 +17777,17 @@ window.ToddlerLearningHub = {
         e.vx = (e.x - prevX) * invDt;
         e.vy = (e.y - prevY) * invDt;
 
+        // Subtle drag trail sparkles every >= 20px of motion
+        const trailDist = Math.hypot(e.x - (e.lastTrailX !== undefined ? e.lastTrailX : e.x), e.y - (e.lastTrailY !== undefined ? e.lastTrailY : e.y));
+        if (trailDist >= 20) {
+          e.lastTrailX = e.x;
+          e.lastTrailY = e.y;
+          if (NB.Renderer && NB.Renderer.spawnBurst) {
+            const dragChar = (NB.Data && NB.Data.getCharacter) ? NB.Data.getCharacter(e.n) : null;
+            NB.Renderer.spawnBurst(e.x, e.y - bounds.height * 0.4, 'dragTrail', dragChar ? dragChar.primaryColor : '#fef08a');
+          }
+        }
+
         // Velocity tilt
         const targetTilt = Math.max(-0.22, Math.min(0.22, e.vx * 0.00045));
         const [nextTilt, nextTiltVel] = stepSpring(e.tilt, e.tiltVel, targetTilt, TILT_STIFFNESS, TILT_DAMPING, dt);
@@ -17055,7 +17795,7 @@ window.ToddlerLearningHub = {
 
         // Ceiling clamp: prevent Numberlings from clipping above topSafeY
         const numberlingPad = metrics ? metrics.unitSize * 0.65 : 30;
-        const minAllowedY = topSafe + bounds.height + numberlingPad;
+        const minAllowedY = Math.min(ground, topSafe + bounds.height + numberlingPad);
         if (e.y < minAllowedY) {
           e.y = minAllowedY;
           e.vy = 0;
@@ -17063,35 +17803,89 @@ window.ToddlerLearningHub = {
 
         // Stage walls clamp
         const halfW = bounds.width / 2;
-        if (e.x < halfW + 12) { e.x = halfW + 12; e.vx = 0; }
-        if (e.x > stageWidth - halfW - 12) { e.x = stageWidth - halfW - 12; e.vx = 0; }
+        const clampedDragX = clampEntityX(e.x, halfW, stageWidth, 12);
+        if (clampedDragX !== e.x) { e.x = clampedDragX; e.vx = 0; }
       }
 
       // State: IDLE or CELEBRATING (free physical body)
       if (e.state === 'IDLE' || e.state === 'CELEBRATING') {
+        const prevY = e.y;
+        const prevVy = e.vy;
+
         // Gravity
         e.vy += GRAVITY * dt;
         e.y += e.vy * dt;
         e.x += e.vx * dt;
         e.vx *= Math.pow(0.85, dt * 60);
 
+        // Resolve physical support surface when Fall-Combine is OFF
+        let bestSupportY = ground;
+        let bestSupportId = null;
+        if (!fallCombineEnabled && e.state === 'IDLE') {
+          const bE = getEntityBounds(e);
+          for (let j = 0; j < entities.length; j++) {
+            const other = entities[j];
+            if (!other || other.id === e.id || other.state !== 'IDLE') continue;
+            // Cycle guard
+            let cur = other;
+            let createsCycle = false;
+            let g = 0;
+            while (cur && g < 12) {
+              if (cur.supportEntityId === e.id) { createsCycle = true; break; }
+              cur = cur.supportEntityId ? findEntity(cur.supportEntityId) : null;
+              g++;
+            }
+            if (createsCycle) continue;
+
+            const bOther = getEntityBounds(other);
+            if (!bOther) continue;
+            const surfaceY = other.y - (bOther.legH || 0) - bOther.rows * bOther.u;
+            const overlapX = Math.min(bE.right, bOther.right) - Math.max(bE.left, bOther.left);
+            const minOverlap = Math.min(bE.width, bOther.width) * 0.30;
+            const wasOnOther = (e.supportEntityId === other.id) && (prevY <= surfaceY + 22);
+            const fallingFromAbove = (e.vy >= -20) && (prevY <= surfaceY + Math.max(8, bOther.u * 0.45));
+            if (overlapX >= minOverlap && (wasOnOther || fallingFromAbove) && e.y >= surfaceY - 12 && surfaceY < bestSupportY) {
+              if (e.y >= surfaceY - 2 || wasOnOther) {
+                bestSupportY = surfaceY;
+                bestSupportId = other.id;
+              }
+            }
+          }
+          if (e.supportEntityId === bestSupportId && bestSupportId !== null && Math.abs(e.vy) < 25 && Math.abs(e.y - bestSupportY) < 22) {
+            e.y = bestSupportY;
+          }
+        }
+        e.supportY = bestSupportY;
+        e.supportEntityId = bestSupportId;
+
         // Ceiling clamp during high jump apex
         const numberlingPad = metrics ? metrics.unitSize * 0.65 : 30;
-        const minAllowedY = topSafe + bounds.height + numberlingPad;
+        const minAllowedY = Math.min(ground, topSafe + bounds.height + numberlingPad);
         if (e.y < minAllowedY) {
           e.y = minAllowedY;
           e.vy = Math.max(0, e.vy);
         }
 
-        // Ground Collision
-        if (e.y >= ground) {
-          e.y = ground;
-          if (e.vy > 60) {
-            e.scaleY = Math.max(0.74, Math.min(0.92, 1 - e.vy / 1500));
+        // Ground or Stacked-Block Surface Collision
+        const supportY = bestSupportY;
+        const wasRestingOnSupport = Math.abs(prevY - supportY) <= 1.5 && Math.abs(prevVy) <= 5;
+        if (e.y >= supportY) {
+          const impactVy = wasRestingOnSupport ? 0 : e.vy;
+          e.y = supportY;
+          if (impactVy > 60) {
+            e.scaleY = Math.max(0.74, Math.min(0.92, 1 - impactVy / 1500));
             e.scaleX = 1 / e.scaleY;
             if (NB.Audio && NB.Audio.playLand && isBlocksActive()) {
               NB.Audio.playLand(e.n);
             }
+          }
+          if (impactVy > 200) {
+            const puffChar = (NB.Data && NB.Data.getCharacter) ? NB.Data.getCharacter(e.n) : null;
+            if (NB.Renderer && NB.Renderer.spawnBurst) {
+              NB.Renderer.spawnBurst(e.x, supportY, 'landPuff', puffChar ? puffChar.primaryColor : null);
+            }
+            const impulse = Math.min(26, impactVy * 0.032) * (1 + Math.min(0.8, Math.sqrt(e.n) * 0.08));
+            cameraShakeVel += impulse;
           }
           e.vy = 0;
           e.vx = 0;
@@ -17145,8 +17939,31 @@ window.ToddlerLearningHub = {
 
         // Wall clamps
         const halfW = bounds.width / 2;
-        if (e.x < halfW + 12) { e.x = halfW + 12; e.vx = 0; }
-        if (e.x > stageWidth - halfW - 12) { e.x = stageWidth - halfW - 12; e.vx = 0; }
+        const clampedIdleX = clampEntityX(e.x, halfW, stageWidth, 12);
+        if (clampedIdleX !== e.x) { e.x = clampedIdleX; e.vx = 0; }
+      }
+
+      // Secondary inertia lag on hats/crowns/arms + walking shoe gait
+      const targetLagX = Math.max(-0.28, Math.min(0.28, -(e.vx || 0) * 0.00065));
+      const targetLagY = Math.max(-0.24, Math.min(0.24, -(e.vy || 0) * 0.00055));
+      const [nextLX, nextLXV] = stepSpring(e.accessoryLagX || 0, e.accessoryVelX || 0, targetLagX, 190, 14, dt);
+      const [nextLY, nextLYV] = stepSpring(e.accessoryLagY || 0, e.accessoryVelY || 0, targetLagY, 190, 14, dt);
+      e.accessoryLagX = nextLX;
+      e.accessoryVelX = nextLXV;
+      e.accessoryLagY = nextLY;
+      e.accessoryVelY = nextLYV;
+
+      const dxStep = e.x - (e.lastStepX !== undefined ? e.lastStepX : e.x);
+      e.lastStepX = e.x;
+      const horizSpeed = Math.abs(dxStep) / Math.max(dt, 0.001);
+      const supYForGait = (e.supportY !== undefined) ? e.supportY : ground;
+      const onSurfaceForWalk = (e.state === 'IDLE') && (Math.abs(e.y - supYForGait) < 6);
+      if (onSurfaceForWalk && horizSpeed > 12) {
+        const stepDir = dxStep >= 0 ? 1 : -1;
+        e.gaitPhase = (e.gaitPhase || 0) + stepDir * (Math.abs(dxStep) / Math.max(10, metrics ? metrics.unitSize * 0.35 : 16)) * Math.PI;
+        e.gaitBlend = Math.min(1, (e.gaitBlend || 0) + dt * 10);
+      } else {
+        e.gaitBlend = Math.max(0, (e.gaitBlend || 0) - dt * 8);
       }
     }
 
@@ -17167,17 +17984,17 @@ window.ToddlerLearningHub = {
       }
     }
 
-    // Gentle idle horizontal auto-spacing for resting blocks on ground
+    // Gentle idle horizontal auto-spacing for resting blocks on ground (carries stacked riders)
     if (getNbSettings().nbAutoSpace !== false && entities.length > 1) {
       for (let i = 0; i < entities.length; i++) {
         const a = entities[i];
-        if (a.state !== 'IDLE' || Math.abs(a.y - ground) > 2) continue;
+        if (a.state !== 'IDLE' || a.supportEntityId || Math.abs(a.y - ground) > 2) continue;
         if (a.splitImmunityTimer > 0 || a.spawnImmunityTimer > 0) continue;
         if (snapTarget && snapTarget.id === a.id) continue;
         const bA = getEntityBounds(a);
         for (let j = i + 1; j < entities.length; j++) {
           const b = entities[j];
-          if (b.state !== 'IDLE' || Math.abs(b.y - ground) > 2) continue;
+          if (b.state !== 'IDLE' || b.supportEntityId || Math.abs(b.y - ground) > 2) continue;
           if (b.splitImmunityTimer > 0 || b.spawnImmunityTimer > 0) continue;
           if (snapTarget && snapTarget.id === b.id) continue;
           const bB = getEntityBounds(b);
@@ -17187,11 +18004,41 @@ window.ToddlerLearningHub = {
           if (absDx < minSep) {
             const push = Math.min(140 * dt, (minSep - absDx) * 0.35);
             const dir = dx >= 0 ? 1 : -1;
-            a.x = Math.max(bA.width / 2 + 12, Math.min(stageWidth - bA.width / 2 - 12, a.x + dir * push));
-            b.x = Math.max(bB.width / 2 + 12, Math.min(stageWidth - bB.width / 2 - 12, b.x - dir * push));
+            const prevAX = a.x;
+            const prevBX = b.x;
+            a.x = clampEntityX(a.x + dir * push, bA.width / 2, stageWidth, 12);
+            b.x = clampEntityX(b.x - dir * push, bB.width / 2, stageWidth, 12);
+            const deltaAX = a.x - prevAX;
+            const deltaBX = b.x - prevBX;
+            if (Math.abs(deltaAX) > 0.001 || Math.abs(deltaBX) > 0.001) {
+              for (let k = 0; k < entities.length; k++) {
+                const rider = entities[k];
+                if (!rider || rider.state !== 'IDLE' || !rider.supportEntityId) continue;
+                let base = rider;
+                let rootId = null;
+                let guard = 0;
+                while (base && base.supportEntityId && guard < 12) {
+                  rootId = base.supportEntityId;
+                  base = findEntity(rootId);
+                  guard++;
+                }
+                if (rootId === a.id && Math.abs(deltaAX) > 0.001) rider.x += deltaAX;
+                else if (rootId === b.id && Math.abs(deltaBX) > 0.001) rider.x += deltaBX;
+              }
+            }
           }
         }
       }
+    }
+
+    // Idle settled detector -> throttles canvas FPS to ~15fps after > 5.0s settled
+    if (checkIsStageSettled(ground)) {
+      idleTimerSec += dt;
+      if (idleTimerSec >= 5.0) {
+        isIdleThrottled = true;
+      }
+    } else {
+      wakeFromIdle();
     }
 
     // Render Frame
@@ -17220,7 +18067,10 @@ window.ToddlerLearningHub = {
         removeModeActive: removeToolActive,
         onboardingArc: onboardingArc,
         snapPreview: snapPreviewObj,
-        equationPill: activeEquationPill
+        equationPill: activeEquationPill,
+        equationBanners: equationBanners,
+        milestoneBanner: milestoneBanner,
+        cameraShakeY: cameraShakeY
       };
 
       NB.Renderer.renderFrame(renderState, now);
@@ -17280,6 +18130,7 @@ window.ToddlerLearningHub = {
     // Challenge Actions
     if (challengeSpeakBtn) {
       challengeSpeakBtn.addEventListener('click', () => {
+        wakeFromIdle();
         const c = getCurrentChallenge();
         if (c && NB.Audio && NB.Audio.speak && isBlocksActive()) {
           NB.Audio.speak(c.prompt, 'high');
@@ -17288,11 +18139,13 @@ window.ToddlerLearningHub = {
     }
     if (challengeHintBtn) {
       challengeHintBtn.addEventListener('click', () => {
+        wakeFromIdle();
         triggerChallengeHint();
       });
     }
     if (challengeSkipBtn) {
       challengeSkipBtn.addEventListener('click', () => {
+        wakeFromIdle();
         advanceChallenge();
       });
     }
@@ -17307,6 +18160,7 @@ window.ToddlerLearningHub = {
 
     if (toolRemoveBtn) {
       toolRemoveBtn.addEventListener('click', () => {
+        wakeFromIdle();
         removeToolActive = !removeToolActive;
         toolRemoveBtn.classList.toggle('is-active', removeToolActive);
         toolRemoveBtn.setAttribute('aria-pressed', String(removeToolActive));
@@ -17326,6 +18180,7 @@ window.ToddlerLearningHub = {
 
     if (toolSplitBtn) {
       toolSplitBtn.addEventListener('click', () => {
+        wakeFromIdle();
         splitToolActive = !splitToolActive;
         toolSplitBtn.classList.toggle('is-active', splitToolActive);
         toolSplitBtn.setAttribute('aria-pressed', String(splitToolActive));
@@ -17342,6 +18197,7 @@ window.ToddlerLearningHub = {
 
     if (toolUnlockBtn) {
       toolUnlockBtn.addEventListener('click', () => {
+        wakeFromIdle();
         const allUnlocked = unlockedFriends.length >= 10;
         if (allUnlocked) {
           unlockedFriends = [...DEFAULT_UNLOCKED];
@@ -17358,6 +18214,7 @@ window.ToddlerLearningHub = {
 
     if (toolResetBtn) {
       toolResetBtn.addEventListener('click', () => {
+        wakeFromIdle();
         pushUndoSnapshot();
         if (NB.Audio && NB.Audio.playPickup && isBlocksActive()) {
           NB.Audio.playPickup();
@@ -17373,6 +18230,7 @@ window.ToddlerLearningHub = {
         });
 
         addTimer(() => {
+          wakeFromIdle();
           entities = [];
           if (currentMode === 'challenge') {
             const c = getCurrentChallenge();
@@ -17380,6 +18238,7 @@ window.ToddlerLearningHub = {
           } else {
             spawnStarterFriends();
           }
+          snapCameraZoomImmediate();
         }, 260);
       });
     }
@@ -17416,12 +18275,19 @@ window.ToddlerLearningHub = {
     // Window Resize / Layout Handling
     const handleResize = () => {
       if (!isOpen || !renderer) return;
+      wakeFromIdle();
       renderer.resize();
       metrics = renderer.getMetrics();
+      snapCameraZoomImmediate();
       const ground = metrics.groundY;
       entities.forEach(e => {
         if (e.state === 'IDLE') {
-          e.y = ground;
+          if (!e.supportEntityId) {
+            e.y = ground;
+            e.supportY = ground;
+          } else {
+            e.y = Math.min(ground, e.y);
+          }
         }
         const b = getEntityBounds(e);
         const halfW = b.width / 2;
@@ -17445,7 +18311,9 @@ window.ToddlerLearningHub = {
         }
       } else {
         if (isOpen && isBlocksActive() && !rAFId) {
+          wakeFromIdle();
           lastTime = nowMs();
+          lastRenderedAt = lastTime;
           rAFId = requestFrame(gameLoop);
         }
       }
@@ -17455,6 +18323,7 @@ window.ToddlerLearningHub = {
   function open() {
     init();
     isOpen = true;
+    wakeFromIdle();
     maxCap = getMaxCap();
 
     if (renderer) {
@@ -17467,6 +18336,7 @@ window.ToddlerLearningHub = {
         if (isOpen && renderer) {
           renderer.resize();
           metrics = renderer.getMetrics();
+          snapCameraZoomImmediate();
           updateDock();
         }
       });
@@ -17483,6 +18353,7 @@ window.ToddlerLearningHub = {
         spawnStarterFriends();
       }
     }
+    snapCameraZoomImmediate();
 
     // Paint one immediate frame synchronously to prevent blank flash on open
     if (NB.Renderer && NB.Renderer.renderFrame) {
@@ -17493,7 +18364,10 @@ window.ToddlerLearningHub = {
         removeModeActive: false,
         onboardingArc: onboardingArc,
         snapPreview: null,
-        equationPill: activeEquationPill
+        equationPill: activeEquationPill,
+        equationBanners: equationBanners,
+        milestoneBanner: milestoneBanner,
+        cameraShakeY: cameraShakeY
       }, nowMs());
     }
 
@@ -17532,6 +18406,7 @@ window.ToddlerLearningHub = {
     if (isNaN(n) || n < 1) n = 1;
     init();
     isOpen = true;
+    wakeFromIdle();
     maxCap = getMaxCap();
     if (n > maxCap) n = maxCap;
 
@@ -17545,6 +18420,7 @@ window.ToddlerLearningHub = {
         if (isOpen && renderer) {
           renderer.resize();
           metrics = renderer.getMetrics();
+          snapCameraZoomImmediate();
           updateDock();
         }
       });
@@ -17580,6 +18456,10 @@ window.ToddlerLearningHub = {
     onboardingTimer = 0;
     snapTarget = null;
     activeEquationPill = null;
+    equationBanners = [];
+    milestoneBanner = null;
+    cameraShakeY = 0;
+    cameraShakeVel = 0;
     splitToolActive = false;
     removeToolActive = false;
     dockTrashOver = false;
@@ -17603,6 +18483,10 @@ window.ToddlerLearningHub = {
     ent.scaleX = 0.8;
     ent.zOrder = 1;
     entities.push(ent);
+    snapCameraZoomImmediate();
+    ent.x = stageWidth * 0.5;
+    ent.y = ground;
+    ent.supportY = ground;
     lastInteractedEntityId = ent.id;
 
     // Paint one immediate frame synchronously to prevent blank flash on open
@@ -17614,7 +18498,10 @@ window.ToddlerLearningHub = {
         removeModeActive: false,
         onboardingArc: onboardingArc,
         snapPreview: null,
-        equationPill: activeEquationPill
+        equationPill: activeEquationPill,
+        equationBanners: equationBanners,
+        milestoneBanner: milestoneBanner,
+        cameraShakeY: 0
       }, nowMs());
     }
 
@@ -17668,7 +18555,11 @@ window.ToddlerLearningHub = {
         e.state = 'IDLE';
         e.morphInfo = null;
         e.stretchInfo = null;
-        if (metrics) e.y = metrics.groundY;
+        e.supportEntityId = null;
+        if (metrics) {
+          e.y = metrics.groundY;
+          e.supportY = metrics.groundY;
+        }
         e.vy = 0;
         e.vx = 0;
       }
@@ -17684,6 +18575,11 @@ window.ToddlerLearningHub = {
 
     snapTarget = null;
     activeEquationPill = null;
+    equationBanners = [];
+    milestoneBanner = null;
+    cameraShakeY = 0;
+    cameraShakeVel = 0;
+    wakeFromIdle();
     splitToolActive = false;
     removeToolActive = false;
     dockTrashOver = false;
@@ -17699,6 +18595,7 @@ window.ToddlerLearningHub = {
   }
 
   function applySettings() {
+    wakeFromIdle();
     maxCap = getMaxCap();
 
     // Trim excess entities if maxCap was reduced while large numbers are on stage
@@ -17726,12 +18623,14 @@ window.ToddlerLearningHub = {
       updateDock();
     }
     updateUndoButton();
+    snapCameraZoomImmediate();
   }
 
   function spawnFromDock(n, pointerEvent) {
     if (pointerEvent && pointerEvent.clientX !== undefined) {
       onDockPointerDown(pointerEvent);
     } else {
+      wakeFromIdle();
       pushUndoSnapshot();
       enforceStageCapacity();
       const ground = metrics ? metrics.groundY : 350;
@@ -17743,6 +18642,7 @@ window.ToddlerLearningHub = {
       ent.spawnImmunityTimer = 0.45;
       ent.zOrder = getHighestZOrder() + 1;
       entities.push(ent);
+      snapCameraZoomImmediate();
       lastInteractedEntityId = ent.id;
       onboardingArc = null;
 
@@ -17751,6 +18651,37 @@ window.ToddlerLearningHub = {
         if (NB.Audio.speakTap) NB.Audio.speakTap(n);
       }
     }
+  }
+
+  function getDiagnostics() {
+    return {
+      cameraZoom: cameraZoom,
+      targetCameraZoom: targetCameraZoom,
+      cameraShakeY: cameraShakeY,
+      isTrueScale: isTrueScaleEnabled(),
+      equationBanners: equationBanners.map(b => ({ ...b })),
+      activeEquationPill: activeEquationPill ? { ...activeEquationPill } : null,
+      milestoneBanner: milestoneBanner ? { ...milestoneBanner } : null,
+      isIdleThrottled: isIdleThrottled,
+      idleTimerSec: idleTimerSec,
+      renderedFrameCounter: renderedFrameCounter,
+      metrics: metrics ? { ...metrics } : null,
+      entities: entities.map(e => ({
+        id: e.id,
+        n: e.n,
+        x: e.x,
+        y: e.y,
+        vx: e.vx,
+        vy: e.vy,
+        state: e.state,
+        supportEntityId: e.supportEntityId,
+        supportY: e.supportY,
+        accessoryLagX: e.accessoryLagX,
+        accessoryLagY: e.accessoryLagY,
+        gaitBlend: e.gaitBlend,
+        gaitPhase: e.gaitPhase
+      }))
+    };
   }
 
   // ---------------------------------------------------------------------------
@@ -17763,7 +18694,8 @@ window.ToddlerLearningHub = {
     stop: stop,
     applySettings: applySettings,
     spawnFromDock: spawnFromDock,
-    undo: performUndo
+    undo: performUndo,
+    getDiagnostics: getDiagnostics
   };
 
   if (typeof document !== 'undefined') {
