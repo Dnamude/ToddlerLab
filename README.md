@@ -1154,19 +1154,6 @@
     gap: 2px !important;
     flex-shrink: 0;
   }
-  #view-blocks #nb-stage-tools,
-  #view-blocks .nb-stage-tools {
-    gap: 4px;
-    margin-right: 2px;
-    flex-wrap: nowrap;
-  }
-  #view-blocks .nb-tool-pill {
-    padding: 4px 7px;
-    font-size: 11px;
-    gap: 3px;
-    min-height: 36px;
-    white-space: nowrap;
-  }
 }
 
 /* --------------------------------------------------------------------------
@@ -1357,11 +1344,48 @@
   transform: translateY(-1px);
 }
 
+/* Remove Tool Active Crimson Glow */
+#view-blocks #nb-tool-remove.is-active {
+  background: #fef2f2;
+  border-color: #ef4444;
+  color: #b91c1c;
+  box-shadow: 0 0 0 2px #fee2e2, 0 0 12px rgba(239, 68, 68, 0.42), 0 3px 0 #dc2626;
+  transform: translateY(-1px);
+}
+
+/* Disabled Tool Pill (e.g., empty Undo stack) */
+#view-blocks .nb-tool-pill.is-disabled,
+#view-blocks .nb-tool-pill:disabled {
+  opacity: 0.42;
+  pointer-events: none;
+  filter: grayscale(0.4);
+}
+
+@media (max-width: 480px) {
+  #view-blocks #nb-stage-tools,
+  #view-blocks .nb-stage-tools {
+    align-self: center;
+    justify-content: center;
+    max-width: 100%;
+    gap: 4px;
+    margin-right: 0;
+    flex-wrap: nowrap;
+  }
+  #view-blocks .nb-tool-pill {
+    padding: 4px 6px;
+    font-size: 10.5px;
+    gap: 2.5px;
+    min-height: 36px;
+    white-space: nowrap;
+  }
+}
+
 /* --------------------------------------------------------------------------
    Tactile Spawner Dock & Tiles
    -------------------------------------------------------------------------- */
 #view-blocks #nb-dock,
 #view-blocks .nb-dock {
+  position: relative;
   z-index: 20;
   touch-action: none;
   flex-shrink: 0;
@@ -1371,6 +1395,34 @@
   -webkit-backdrop-filter: none;
   border-top: 2.5px solid #e2e8f0;
   box-shadow: 0 -4px 16px rgba(15, 23, 42, 0.08);
+  transition: background 0.16s ease, border-color 0.16s ease;
+}
+
+#view-blocks #nb-dock.is-trash-drop {
+  background: #fef2f2;
+  border-top-color: #ef4444;
+}
+
+#view-blocks .nb-dock-trash-banner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: rgba(254, 226, 226, 0.96);
+  color: #b91c1c;
+  font-weight: 900;
+  font-size: 15px;
+  letter-spacing: 0.01em;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.14s ease;
+  z-index: 30;
+}
+
+#view-blocks #nb-dock.is-trash-drop .nb-dock-trash-banner {
+  opacity: 1;
 }
 
 #view-blocks .nb-dock-tile {
@@ -1473,16 +1525,22 @@
    Responsive Dock Grid & Flex Layouts (Scroll-Free Guarantee)
    -------------------------------------------------------------------------- */
 
-/* Desktop & Tablet (>= 768px): Single Centered 10-Column Flex Row */
+/* Desktop & Tablet (>= 768px): Single Centered Flex Row (or 2 symmetric rows when dense) */
 @media (min-width: 768px) {
   #view-blocks #nb-dock-friends,
   #view-blocks .nb-dock-friends {
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     align-items: center;
     gap: 10px;
-    max-width: 820px;
+    max-width: 920px;
     margin: 0 auto;
+  }
+
+  #view-blocks #nb-dock-friends.is-dense {
+    max-width: 620px;
+    gap: 8px;
   }
 
   #view-blocks .nb-dock-tile {
@@ -1508,6 +1566,11 @@
     gap: 4px;
     max-width: 620px;
     margin: 0 auto;
+  }
+
+  #view-blocks #nb-dock-friends.is-dense {
+    flex-wrap: wrap;
+    max-width: 440px;
   }
 
   #view-blocks .nb-dock-tile {
@@ -1540,7 +1603,7 @@
   }
 }
 
-/* Portrait Mobile (< 768px and > 500px height): Symmetrical 5x2 Grid */
+/* Portrait Mobile (< 768px and > 500px height): Symmetrical 5x2 Grid (9x2 when dense) */
 @media (max-width: 767px) and (min-height: 501px) {
   #view-blocks #nb-dock-friends,
   #view-blocks .nb-dock-friends {
@@ -1549,6 +1612,21 @@
     gap: 6px;
     max-width: 380px;
     margin: 0 auto;
+  }
+
+  #view-blocks #nb-dock-friends.is-dense {
+    grid-template-columns: repeat(9, minmax(0, 1fr));
+    gap: 3px;
+  }
+
+  #view-blocks #nb-dock-friends.is-dense .nb-dock-tile {
+    min-height: 44px;
+    padding: 2px 1px;
+    border-radius: 11px;
+  }
+
+  #view-blocks #nb-dock-friends.is-dense .nb-dock-num {
+    font-size: 10.5px;
   }
 
   #view-blocks .nb-dock-tile {
@@ -1615,7 +1693,7 @@
                 </div>
 
                 <div data-view="numbers" class="menu-card border-b-8 border-teal-400 squish-btn">
-                    <span class="absolute top-2.5 right-3 bg-teal-100 text-teal-700 text-xs font-black px-2 py-0.5 rounded-full">1 to 20</span>
+                    <span id="menu-numbers-range-badge" class="absolute top-2.5 right-3 bg-teal-100 text-teal-700 text-xs font-black px-2 py-0.5 rounded-full">1 to 100</span>
                     <div class="menu-icon text-teal-600 font-black">123</div>
                     <span class="menu-title">Tap & Count</span>
                     <span class="menu-sub">Touch to Count!</span>
@@ -1868,15 +1946,17 @@
                     </div>
                 </div>
                 <div id="nb-stage-tools" class="nb-stage-tools">
-                    <button id="nb-tool-count" type="button" class="nb-tool-pill squish-btn" title="Count in Tap & Count"><span>🔢</span><span>Count</span></button>
+                    <button id="nb-tool-undo" type="button" class="nb-tool-pill squish-btn is-disabled" title="Undo Last Change" disabled><span>↩️</span><span>Undo</span></button>
+                    <button id="nb-tool-remove" type="button" class="nb-tool-pill squish-btn" aria-pressed="false" title="Tap a block to remove it"><span>🗑️</span><span>Remove</span></button>
                     <button id="nb-tool-split" type="button" class="nb-tool-pill squish-btn" aria-pressed="false"><span>🪄</span><span>Split</span></button>
-                    <button id="nb-tool-unlock" type="button" class="nb-tool-pill squish-btn" title="Unlock 1 to 10"><span>🔓</span><span>1–10</span></button>
+                    <button id="nb-tool-count" type="button" class="nb-tool-pill squish-btn" title="Count in Tap & Count"><span>🔢</span><span>Count</span></button>
                     <button id="nb-tool-reset" type="button" class="nb-tool-pill squish-btn" title="Reset Stage"><span>🧹</span><span>Reset</span></button>
                 </div>
             </div>
         </div>
         <div id="nb-dock" class="nb-dock" aria-label="Number Blocks Spawner">
             <div id="nb-dock-friends" class="nb-dock-friends"></div>
+            <div id="nb-dock-trash-banner" class="nb-dock-trash-banner" aria-hidden="true"><span>🗑️</span><span>Drop to Remove</span></div>
         </div>
     </div>
 
@@ -2341,6 +2421,9 @@
                             <div class="text-[11px] font-bold text-slate-500 leading-tight">Tap &amp; Count, Number Blocks, and Quiz counting pool</div>
                         </div>
                         <select id="opt-max-number" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0">
+                            <option value="100">1 to 100 (Full)</option>
+                            <option value="50">1 to 50</option>
+                            <option value="30">1 to 30</option>
                             <option value="20">1 to 20 (Advanced)</option>
                             <option value="10">1 to 10 (Beginner)</option>
                         </select>
@@ -2420,6 +2503,145 @@
                         <div class="toggle-slider"></div>
                     </label>
                 </div>
+            </div>
+
+            <!-- Number Blocks Game Options Section -->
+            <div id="nb-options-section" class="border-t pt-3 mt-0.5 flex flex-col gap-2">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-1.5">
+                        <span class="text-sm">🧱</span>
+                        <h3 class="text-xs font-black uppercase tracking-wider text-slate-700">Number Blocks Game Options</h3>
+                    </div>
+                    <span class="text-[11px] font-extrabold text-rose-600 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-100">Parent Controls</span>
+                </div>
+
+                <!-- Addition & Building Cap -->
+                <div class="flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80">
+                    <div class="flex flex-col">
+                        <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
+                            <span>📈</span><span>Max Addition &amp; Building Target</span>
+                        </div>
+                        <div class="text-[11px] font-bold text-slate-500 leading-tight">Control how high your child can add and count</div>
+                    </div>
+                    <select id="opt-nb-max-number" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0">
+                        <option value="100">Up to 100</option>
+                        <option value="50">Up to 50</option>
+                        <option value="30">Up to 30</option>
+                        <option value="20">Up to 20</option>
+                        <option value="10">Up to 10</option>
+                    </select>
+                </div>
+
+                <!-- Dock Spawner Preset -->
+                <div class="flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80">
+                    <div class="flex flex-col">
+                        <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
+                            <span>🧰</span><span>Dock Tray Numbers</span>
+                        </div>
+                        <div class="text-[11px] font-bold text-slate-500 leading-tight">Choose which blocks appear in the bottom tray</div>
+                    </div>
+                    <select id="opt-nb-dock-range" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0">
+                        <option value="1-10">1 to 10</option>
+                        <option value="place-value">1–9 + Tens (10–90)</option>
+                        <option value="tens-only">Tens Only (10–90)</option>
+                        <option value="1-5">1 to 5 (Starter)</option>
+                    </select>
+                </div>
+
+                <!-- Math Speech Announcements -->
+                <div class="flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80">
+                    <div class="flex flex-col">
+                        <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
+                            <span>🗣️</span><span>Math Voice Announcements</span>
+                        </div>
+                        <div class="text-[11px] font-bold text-slate-500 leading-tight">How additions and splits are spoken aloud</div>
+                    </div>
+                    <select id="opt-nb-speech-style" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0">
+                        <option value="math_and_fun">Equation + Fun Fact</option>
+                        <option value="math_only">Equation Only (2 + 3 = 5)</option>
+                        <option value="number_only">Result Number Only</option>
+                    </select>
+                </div>
+
+                <!-- Combine Snap Distance -->
+                <div class="flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80">
+                    <div class="flex flex-col">
+                        <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
+                            <span>🧲</span><span>Combine Magnet Range</span>
+                        </div>
+                        <div class="text-[11px] font-bold text-slate-500 leading-tight">How close blocks must be before they snap together</div>
+                    </div>
+                    <select id="opt-nb-snap-mode" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0">
+                        <option value="easy">Wide / Forgiving</option>
+                        <option value="normal">Balanced (Default)</option>
+                        <option value="close">Close Touch Only</option>
+                    </select>
+                </div>
+
+                <!-- Max Stage Blocks -->
+                <div class="flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80">
+                    <div class="flex flex-col">
+                        <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
+                            <span>🎭</span><span>Max Blocks on Stage</span>
+                        </div>
+                        <div class="text-[11px] font-bold text-slate-500 leading-tight">Keep the play area uncluttered</div>
+                    </div>
+                    <select id="opt-nb-max-blocks" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0">
+                        <option value="6">6 Blocks</option>
+                        <option value="8">8 Blocks</option>
+                        <option value="10">10 Blocks</option>
+                        <option value="12">12 Blocks</option>
+                        <option value="16">16 Blocks</option>
+                    </select>
+                </div>
+
+                <!-- Combine When Falling on Top -->
+                <label class="flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80 cursor-pointer">
+                    <div class="flex flex-col">
+                        <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
+                            <span>⬇️</span><span>Combine When Landing on Top</span>
+                        </div>
+                        <div class="text-[11px] font-bold text-slate-500 leading-tight">Falling blocks automatically add together when they stack</div>
+                    </div>
+                    <input id="opt-nb-fall-combine" type="checkbox">
+                    <div class="toggle-slider"></div>
+                </label>
+
+                <!-- Show Big Floating Equations -->
+                <label class="flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80 cursor-pointer">
+                    <div class="flex flex-col">
+                        <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
+                            <span>➕</span><span>Show Equation Banners</span>
+                        </div>
+                        <div class="text-[11px] font-bold text-slate-500 leading-tight">Display animated 2 + 3 = 5 math pills when combining</div>
+                    </div>
+                    <input id="opt-nb-show-equations" type="checkbox">
+                    <div class="toggle-slider"></div>
+                </label>
+
+                <!-- Auto-Space Idle Blocks -->
+                <label class="flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80 cursor-pointer">
+                    <div class="flex flex-col">
+                        <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
+                            <span>↔️</span><span>Gentle Auto-Space Blocks</span>
+                        </div>
+                        <div class="text-[11px] font-bold text-slate-500 leading-tight">Nudge resting characters apart so none stay hidden behind others</div>
+                    </div>
+                    <input id="opt-nb-auto-space" type="checkbox">
+                    <div class="toggle-slider"></div>
+                </label>
+
+                <!-- Unlock All Dock Blocks -->
+                <label class="flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80 cursor-pointer">
+                    <div class="flex flex-col">
+                        <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
+                            <span>🔓</span><span>Unlock All Dock Numbers</span>
+                        </div>
+                        <div class="text-[11px] font-bold text-slate-500 leading-tight">Let your child spawn any tray number right away</div>
+                    </div>
+                    <input id="opt-nb-unlock-all" type="checkbox">
+                    <div class="toggle-slider"></div>
+                </label>
             </div>
 
             <!-- Gemini Voice / Cloud TTS Section -->
@@ -2548,6 +2770,26 @@ function cleanStrayTextNodes() {
 }
 cleanStrayTextNodes();
 window.addEventListener('DOMContentLoaded', cleanStrayTextNodes);
+
+// Number-to-words helper (1..100) shared across Tap & Count, Look & Find, and Number Blocks
+window.tlhNumberToWords = function tlhNumberToWords(n) {
+    const val = Math.round(Number(n) || 0);
+    if (val === 0) return 'Zero';
+    if (val < 0 || val > 999) return String(val);
+    const ones = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten',
+        'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen'];
+    const tens = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
+    if (val === 100) return 'One Hundred';
+    if (val < 20) return ones[val];
+    if (val < 100) {
+        const t = Math.floor(val / 10);
+        const u = val % 10;
+        return u === 0 ? tens[t] : `${tens[t]}-${ones[u]}`;
+    }
+    const h = Math.floor(val / 100);
+    const rem = val % 100;
+    return rem === 0 ? `${ones[h]} Hundred` : `${ones[h]} Hundred ${tlhNumberToWords(rem)}`;
+};
 
 // scratch/data.js
 const GAMES = {
@@ -2782,7 +3024,25 @@ const GAMES = {
         { num: 17, word: 'Seventeen', emoji: '✏️', item: 'Pencils' },
         { num: 18, word: 'Eighteen', emoji: '🌸', item: 'Flowers' },
         { num: 19, word: 'Nineteen', emoji: '🐝', item: 'Bumblebees' },
-        { num: 20, word: 'Twenty', emoji: '🌟', item: 'Gold Stars' }
+        { num: 20, word: 'Twenty', emoji: '🌟', item: 'Gold Stars' },
+        ...(() => {
+            const themes = [
+                { emoji: '🚀', item: 'Rockets' }, { emoji: '🧩', item: 'Puzzle Pieces' },
+                { emoji: '🌈', item: 'Rainbows' }, { emoji: '💎', item: 'Gems' },
+                { emoji: '🦋', item: 'Butterflies' }, { emoji: '🎈', item: 'Balloons' },
+                { emoji: '🐢', item: 'Turtles' }, { emoji: '🌻', item: 'Sunflowers' },
+                { emoji: '⚽', item: 'Soccer Balls' }, { emoji: '🍓', item: 'Strawberries' },
+                { emoji: '🐳', item: 'Whales' }, { emoji: '🎨', item: 'Paint Palettes' },
+                { emoji: '🦄', item: 'Unicorns' }, { emoji: '🚂', item: 'Trains' },
+                { emoji: '🍎', item: 'Apples' }, { emoji: '⭐', item: 'Stars' }
+            ];
+            const extra = [];
+            for (let n = 21; n <= 100; n++) {
+                const t = themes[(n - 21) % themes.length];
+                extra.push({ num: n, word: window.tlhNumberToWords(n), emoji: t.emoji, item: t.item });
+            }
+            return extra;
+        })()
     ],
 
     shapes: [
@@ -5268,11 +5528,20 @@ const DEFAULT_SETTINGS = {
     autoSpin3D: true,         // Auto-rotate 3D shapes & 3D planets when idle
     requireHoldHome: false,   // Toddler Lock: require double-tap on Home button to exit a game
     speechRate: 'normal',     // 'slow' (0.82), 'normal' (0.96), 'fast' (1.10)
-    maxNumber: 20,            // 10 (1-10 Beginner) or 20 (1-20 Advanced)
+    maxNumber: 100,           // 10, 20, 30, 50, or 100
     phonicsDetail: 'full',    // 'full' ("A! A says ah! ah, Apple!") or 'simple' ("A! Apple!")
     minimizeMenuHeader: false, // Minimize upper title banner on Main Menu to just show cards
     showSolarCredits: false,  // Display NASA telescope & mission source badge on Solar System photos
-    dragSpeed: 'normal'       // 1-finger drag sensitivity for shapes, visuals & 3D models ('slow': 0.55x, 'normal': 1.0x, 'fast': 1.75x)
+    dragSpeed: 'normal',      // 1-finger drag sensitivity for shapes, visuals & 3D models ('slow': 0.55x, 'normal': 1.0x, 'fast': 1.75x)
+    nbDockRange: '1-10',      // '1-10', 'place-value', 'tens-only', '1-5'
+    nbUnlockAll: true,        // Unlock all dock spawner tiles by default
+    nbSpeechStyle: 'math_and_fun', // 'math_and_fun', 'math_only', 'number_only'
+    nbFallCombine: true,      // Combine blocks automatically when one lands on top of another
+    nbSnapMode: 'normal',     // 'easy', 'normal', 'close'
+    nbShowEquations: true,    // Show floating animated equation pills (e.g. 2 + 3 = 5)
+    nbAutoSpace: true,        // Gently nudge resting blocks apart horizontally
+    nbMaxBlocks: 10,          // Maximum simultaneous characters on stage (6..16)
+    _nbV2Upgraded: true
 };
 
 const GAME_OPEN_TITLES = {
@@ -5300,7 +5569,14 @@ const app = {
     settings: (() => {
         try {
             const saved = localStorage.getItem('tlh_isolated_v3_settings');
-            if (saved) return Object.assign({}, DEFAULT_SETTINGS, JSON.parse(saved));
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                if (!parsed._nbV2Upgraded) {
+                    if (!parsed.maxNumber || parsed.maxNumber <= 20) parsed.maxNumber = 100;
+                    parsed._nbV2Upgraded = true;
+                }
+                return Object.assign({}, DEFAULT_SETTINGS, parsed);
+            }
         } catch (e) {}
         return Object.assign({}, DEFAULT_SETTINGS);
     })(),
@@ -7140,7 +7416,9 @@ const numberGame = {
     },
 
     applyMaxNumberSetting() {
-        const max = (typeof app !== 'undefined' && app.settings && app.settings.maxNumber) ? app.settings.maxNumber : 20;
+        const max = (typeof app !== 'undefined' && app.settings && app.settings.maxNumber) ? app.settings.maxNumber : 100;
+        const badge = document.getElementById('menu-numbers-range-badge');
+        if (badge) badge.textContent = `1 to ${max}`;
         document.querySelectorAll('#number-controls .tray-btn').forEach(btn => {
             const num = parseInt(btn.dataset.num, 10);
             if (num > max) {
@@ -7206,11 +7484,23 @@ const numberGame = {
             btnHeight = '2.85rem';
             btnFont = '1.55rem';
             btnRadius = '1rem';
-        } else {
+        } else if (numData.num <= 20) {
             btnWidth = '2.55rem';
             btnHeight = '2.55rem';
             btnFont = '1.35rem';
             btnRadius = '0.85rem';
+            isSmallBadge = true;
+        } else if (numData.num <= 40) {
+            btnWidth = '2.2rem';
+            btnHeight = '2.2rem';
+            btnFont = '1.15rem';
+            btnRadius = '0.75rem';
+            isSmallBadge = true;
+        } else {
+            btnWidth = '1.85rem';
+            btnHeight = '1.85rem';
+            btnFont = '0.95rem';
+            btnRadius = '0.6rem';
             isSmallBadge = true;
         }
 
@@ -7382,17 +7672,26 @@ const numberGame = {
             if (instrEl) instrEl.textContent = `Counting: ${stepNum} of ${numData.num}`;
 
             const startTime = Date.now();
-            const minStepMs = 550;
+            const minStepMs = numData.num > 60 ? 170 : (numData.num > 25 ? 270 : 550);
 
             const next = () => {
                 if (curSeqToken !== this.autoSeqToken || app.currentView !== 'numbers') return;
                 const elapsed = Date.now() - startTime;
-                const waitMs = Math.max(120, minStepMs - elapsed + 120);
+                const waitMs = Math.max(numData.num > 25 ? 60 : 120, minStepMs - elapsed + (numData.num > 25 ? 40 : 120));
                 const t = setTimeout(step, waitMs);
                 this.autoTimers.push(t);
             };
 
-            app.speak(String(stepNum), null, next);
+            soundFX.playCountStep(stepNum);
+            if (numData.num > 30) {
+                if (stepNum <= 10 || stepNum % 10 === 0 || stepNum === numData.num) {
+                    app.speak(String(stepNum));
+                }
+                const t = setTimeout(next, minStepMs);
+                this.autoTimers.push(t);
+            } else {
+                app.speak(String(stepNum), null, next);
+            }
         };
 
         step();
@@ -7401,6 +7700,30 @@ const numberGame = {
     updateTenFrame(activeCount, total) {
         const tf = document.getElementById('number-ten-frame');
         tf.innerHTML = '';
+        if (total > 20) {
+            const numTens = Math.ceil(total / 10);
+            const grid = document.createElement('div');
+            grid.className = 'flex flex-wrap items-center justify-center gap-1.5 max-w-full';
+            for (let t = 0; t < numTens; t++) {
+                const startVal = t * 10 + 1;
+                const endVal = Math.min(total, (t + 1) * 10);
+                const filledInTen = Math.max(0, Math.min(10, activeCount - t * 10));
+                const totalInTen = endVal - startVal + 1;
+                const isComplete = filledInTen >= totalInTen && activeCount >= endVal;
+                const pill = document.createElement('div');
+                pill.className = `px-2 py-1 rounded-xl border-2 text-[11px] font-black transition-all duration-150 ${
+                    isComplete
+                        ? 'bg-teal-600 text-white border-teal-700 shadow-sm'
+                        : filledInTen > 0
+                        ? 'bg-teal-100 text-teal-800 border-teal-400'
+                        : 'bg-white text-slate-400 border-slate-200'
+                }`;
+                pill.textContent = filledInTen > 0 ? `${Math.min(activeCount, endVal)}/${endVal}` : `${endVal}`;
+                grid.appendChild(pill);
+            }
+            tf.appendChild(grid);
+            return;
+        }
         const numFrames = total <= 10 ? 1 : 2;
 
         for (let f = 0; f < numFrames; f++) {
@@ -7460,7 +7783,7 @@ const quizGame = {
             sub: `${p.words[0].e} ${p.words[0].w}`,
             prompt: `Can you find the letter ${p.letter}?`
         }));
-        const maxNum = (typeof app !== 'undefined' && app.settings && app.settings.maxNumber) ? app.settings.maxNumber : 20;
+        const maxNum = (typeof app !== 'undefined' && app.settings && app.settings.maxNumber) ? app.settings.maxNumber : 100;
         const numbersPool = GAMES.numbers.filter(n => n.num <= maxNum).map(n => ({
             cat: 'numbers',
             label: `Number ${n.num}`,
@@ -9477,7 +9800,25 @@ window.addEventListener('DOMContentLoaded', () => {
         const optDragSpeed = document.getElementById('opt-drag-speed');
         if (optDragSpeed) optDragSpeed.value = s.dragSpeed || 'normal';
         const optMaxNum = document.getElementById('opt-max-number');
-        if (optMaxNum) optMaxNum.value = String(s.maxNumber || 20);
+        if (optMaxNum) optMaxNum.value = String(s.maxNumber || 100);
+        const optNbMaxNum = document.getElementById('opt-nb-max-number');
+        if (optNbMaxNum) optNbMaxNum.value = String(s.maxNumber || 100);
+        const optNbDock = document.getElementById('opt-nb-dock-range');
+        if (optNbDock) optNbDock.value = s.nbDockRange || '1-10';
+        const optNbSpeech = document.getElementById('opt-nb-speech-style');
+        if (optNbSpeech) optNbSpeech.value = s.nbSpeechStyle || 'math_and_fun';
+        const optNbSnap = document.getElementById('opt-nb-snap-mode');
+        if (optNbSnap) optNbSnap.value = s.nbSnapMode || 'normal';
+        const optNbMaxBlocks = document.getElementById('opt-nb-max-blocks');
+        if (optNbMaxBlocks) optNbMaxBlocks.value = String(s.nbMaxBlocks || 10);
+        const optNbFall = document.getElementById('opt-nb-fall-combine');
+        if (optNbFall) optNbFall.checked = s.nbFallCombine !== false;
+        const optNbEq = document.getElementById('opt-nb-show-equations');
+        if (optNbEq) optNbEq.checked = s.nbShowEquations !== false;
+        const optNbSpace = document.getElementById('opt-nb-auto-space');
+        if (optNbSpace) optNbSpace.checked = s.nbAutoSpace !== false;
+        const optNbUnlock = document.getElementById('opt-nb-unlock-all');
+        if (optNbUnlock) optNbUnlock.checked = s.nbUnlockAll !== false;
         const optPhonics = document.getElementById('opt-phonics-detail');
         if (optPhonics) optPhonics.value = s.phonicsDetail || 'full';
         const optConfetti = document.getElementById('opt-confetti-enabled');
@@ -9499,7 +9840,14 @@ window.addEventListener('DOMContentLoaded', () => {
             testStatus.classList.add('hidden');
             testStatus.textContent = '';
         }
-        if (voiceModal) voiceModal.classList.remove('hidden');
+        if (voiceModal) {
+            voiceModal.classList.remove('hidden');
+            if (app.currentView === 'blocks') {
+                requestAnimationFrame(() => {
+                    document.getElementById('nb-options-section')?.scrollIntoView({ block: 'start', behavior: 'instant' });
+                });
+            }
+        }
     };
     const closeVoiceModal = () => {
         saveVoiceInputsToStorage();
@@ -9538,6 +9886,46 @@ window.addEventListener('DOMContentLoaded', () => {
     });
     document.getElementById('opt-max-number')?.addEventListener('change', (e) => {
         app.settings.maxNumber = parseInt(e.target.value, 10);
+        const nbMax = document.getElementById('opt-nb-max-number');
+        if (nbMax) nbMax.value = String(app.settings.maxNumber);
+        app.saveSettings();
+    });
+    document.getElementById('opt-nb-max-number')?.addEventListener('change', (e) => {
+        app.settings.maxNumber = parseInt(e.target.value, 10);
+        const maxEl = document.getElementById('opt-max-number');
+        if (maxEl) maxEl.value = String(app.settings.maxNumber);
+        app.saveSettings();
+    });
+    document.getElementById('opt-nb-dock-range')?.addEventListener('change', (e) => {
+        app.settings.nbDockRange = e.target.value;
+        app.saveSettings();
+    });
+    document.getElementById('opt-nb-speech-style')?.addEventListener('change', (e) => {
+        app.settings.nbSpeechStyle = e.target.value;
+        app.saveSettings();
+    });
+    document.getElementById('opt-nb-snap-mode')?.addEventListener('change', (e) => {
+        app.settings.nbSnapMode = e.target.value;
+        app.saveSettings();
+    });
+    document.getElementById('opt-nb-max-blocks')?.addEventListener('change', (e) => {
+        app.settings.nbMaxBlocks = parseInt(e.target.value, 10) || 10;
+        app.saveSettings();
+    });
+    document.getElementById('opt-nb-fall-combine')?.addEventListener('change', (e) => {
+        app.settings.nbFallCombine = e.target.checked;
+        app.saveSettings();
+    });
+    document.getElementById('opt-nb-show-equations')?.addEventListener('change', (e) => {
+        app.settings.nbShowEquations = e.target.checked;
+        app.saveSettings();
+    });
+    document.getElementById('opt-nb-auto-space')?.addEventListener('change', (e) => {
+        app.settings.nbAutoSpace = e.target.checked;
+        app.saveSettings();
+    });
+    document.getElementById('opt-nb-unlock-all')?.addEventListener('change', (e) => {
+        app.settings.nbUnlockAll = e.target.checked;
         app.saveSettings();
     });
     document.getElementById('opt-phonics-detail')?.addEventListener('change', (e) => {
@@ -10373,11 +10761,75 @@ window.ToddlerLearningHub = {
       shadow: '#c2410c',
       border: '#ea580c',
       borderWidthScale: 1.2
+    }),
+    30: Object.freeze({
+      light: '#fef08a',
+      base: '#facc15',
+      deep: '#eab308',
+      shadow: '#854d0e',
+      border: '#ca8a04',
+      borderWidthScale: 1.15
+    }),
+    40: Object.freeze({
+      light: '#bbf7d0',
+      base: '#4ade80',
+      deep: '#16a34a',
+      shadow: '#14532d',
+      border: '#15803d',
+      borderWidthScale: 1.15
+    }),
+    50: Object.freeze({
+      light: '#a5f3fc',
+      base: '#22d3ee',
+      deep: '#0891b2',
+      shadow: '#164e63',
+      border: '#0284c7',
+      borderWidthScale: 1.15
+    }),
+    60: Object.freeze({
+      light: '#c7d2fe',
+      base: '#818cf8',
+      deep: '#4f46e5',
+      shadow: '#312e81',
+      border: '#4338ca',
+      borderWidthScale: 1.15
+    }),
+    70: Object.freeze({
+      light: '#e9d5ff',
+      base: '#c084fc',
+      deep: '#9333ea',
+      shadow: '#581c87',
+      border: '#7e22ce',
+      borderWidthScale: 1.15
+    }),
+    80: Object.freeze({
+      light: '#fbcfe8',
+      base: '#f472b6',
+      deep: '#db2777',
+      shadow: '#831843',
+      border: '#be185d',
+      borderWidthScale: 1.15
+    }),
+    90: Object.freeze({
+      light: '#f1f5f9',
+      base: '#cbd5e1',
+      deep: '#94a3b8',
+      shadow: '#334155',
+      border: '#475569',
+      borderWidthScale: 1.15
+    }),
+    100: Object.freeze({
+      light: '#fecaca',
+      base: '#ef4444',
+      deep: '#b91c1c',
+      shadow: '#7f1d1d',
+      border: '#f59e0b',
+      borderWidthScale: 1.35
     })
   });
 
   // =========================================================================
-  // 3. NUMBER NAMES & CORE CHARACTER SPECS (1..20)
+  // 3. NUMBER NAMES & CORE CHARACTER SPECS (1..100)
   // =========================================================================
 
   const NUMBER_NAMES = Object.freeze({
@@ -10403,10 +10855,17 @@ window.ToddlerLearningHub = {
     20: 'Twenty'
   });
 
+  function numberToWords(n) {
+    const val = Math.round(Number(n) || 0);
+    if (NUMBER_NAMES[val]) return NUMBER_NAMES[val];
+    if (typeof window.tlhNumberToWords === 'function') return window.tlhNumberToWords(val);
+    return String(val);
+  }
+
   const CHARACTER_CACHE = new Map();
 
   function buildCharacter(n) {
-    if (n < 1 || n > 20) return null;
+    if (n < 1 || n > 100) return null;
 
     if (n === 1) {
       return Object.freeze({
@@ -10808,12 +11267,165 @@ window.ToddlerLearningHub = {
       });
     }
 
+    // 21..29: Big Twenty (4x5) + unit character on the right
+    if (n >= 21 && n <= 29) {
+      const unitN = n - 20;
+      const unitChar = getCharacter(unitN);
+      const name = numberToWords(n);
+      const unitWord = numberToWords(unitN);
+      const cols = 4 + unitChar.cols;
+      const rows = Math.max(5, unitChar.rows);
+      const unitScale = unitChar.cols >= 3 ? 0.60 : 0.64;
+      const cells = [];
+      for (let r = 0; r < 5; r++) {
+        for (let c = 0; c < 4; c++) {
+          cells.push({ col: c, row: r, palette: PALETTES[20], pip: false, starBtn: false });
+        }
+      }
+      unitChar.cells.forEach(uc => {
+        cells.push({
+          col: uc.col + 4,
+          row: uc.row,
+          palette: uc.palette,
+          pip: !!uc.pip,
+          starBtn: !!uc.starBtn
+        });
+      });
+      cells.sort((a, b) => (a.row === b.row ? a.col - b.col : a.row - b.row));
+
+      return Object.freeze({
+        n,
+        name,
+        cols,
+        rows,
+        unitScale,
+        primaryColor: unitChar.primaryColor,
+        cells: Object.freeze(cells.map(c => Object.freeze(c))),
+        face: Object.freeze({ type: 'bigCompound', unitN, tens: 20, anchorCol: 2.0, anchorRow: 4.42 }),
+        tapAnim: 'dance20',
+        mergeLine: `${name}! Twenty and ${unitWord} make ${name}!`,
+        tapLines: Object.freeze([
+          `${name}! Twenty plus ${unitWord} equals ${name}!`,
+          `I am ${name}! Two tens and ${unitWord}!`
+        ]),
+        splitBonds: Object.freeze([
+          [20, unitN],
+          [Math.ceil(n / 2), Math.floor(n / 2)]
+        ]),
+        lockedHint: ''
+      });
+    }
+
+    // 100: One Hundred (10x10 Super Square checkerboard!)
+    if (n === 100) {
+      const cells100 = [];
+      const altPal = Object.freeze({
+        light: '#fde68a',
+        base: '#f87171',
+        deep: '#dc2626',
+        shadow: '#991b1b',
+        border: '#b91c1c',
+        borderWidthScale: 1.0
+      });
+      for (let r = 0; r < 10; r++) {
+        for (let c = 0; c < 10; c++) {
+          const isEdge = (r === 0 || r === 9 || c === 0 || c === 9);
+          const pal = isEdge ? PALETTES[100] : ((r + c) % 2 === 0 ? PALETTES[1] : altPal);
+          cells100.push(Object.freeze({ col: c, row: r, palette: pal, pip: false, starBtn: false }));
+        }
+      }
+      return Object.freeze({
+        n: 100,
+        name: 'One Hundred',
+        cols: 10,
+        rows: 10,
+        unitScale: 0.45,
+        primaryColor: '#ef4444',
+        cells: Object.freeze(cells100),
+        face: Object.freeze({ type: 'hundredHero', anchorCol: 5.0, anchorRow: 8.6 }),
+        tapAnim: 'rocket10',
+        mergeLine: 'One Hundred! Ten Tens make One Hundred!',
+        tapLines: Object.freeze([
+          'One Hundred! A giant ten-by-ten square!',
+          'Ten tens make One Hundred! Hooray!',
+          'Count by tens to One Hundred!'
+        ]),
+        splitBonds: Object.freeze([[50, 50], [90, 10], [80, 20], [70, 30]]),
+        lockedHint: ''
+      });
+    }
+
+    // 30..99: Decade Tens (cols = t x 10) + optional ones column on the right
+    if (n >= 30 && n <= 99) {
+      const t = Math.floor(n / 10);
+      const u = n % 10;
+      const decade = t * 10;
+      const name = numberToWords(n);
+      const decadeWord = numberToWords(decade);
+      const unitWord = u > 0 ? numberToWords(u) : '';
+      const decadePal = PALETTES[decade] || PALETTES[10];
+      const cols = t + (u > 0 ? 1 : 0);
+      const rows = 10;
+      const unitScale = cols <= 4 ? 0.54 : (cols <= 6 ? 0.49 : (cols <= 8 ? 0.46 : 0.43));
+      const cells = [];
+
+      for (let r = 0; r < 10; r++) {
+        for (let c = 0; c < t; c++) {
+          cells.push(Object.freeze({ col: c, row: r, palette: decadePal, pip: false, starBtn: false }));
+        }
+      }
+      if (u > 0) {
+        const unitPal = PALETTES[u] || PALETTES[1];
+        for (let r = 0; r < u; r++) {
+          cells.push(Object.freeze({ col: t, row: r, palette: unitPal, pip: u === 6, starBtn: u === 5 && r === 4 }));
+        }
+      }
+
+      const bonds = u === 0
+        ? [[Math.floor(t / 2) * 10, (t - Math.floor(t / 2)) * 10], [decade - 10, 10], [Math.ceil(n / 2), Math.floor(n / 2)]]
+        : [[decade, u], [Math.ceil(n / 2), Math.floor(n / 2)]];
+
+      return Object.freeze({
+        n,
+        name,
+        cols,
+        rows,
+        unitScale,
+        primaryColor: (u > 0 && PALETTES[u]) ? PALETTES[u].base : decadePal.base,
+        cells: Object.freeze(cells),
+        face: Object.freeze({
+          type: u === 0 ? 'decadeHero' : 'bigCompound',
+          decade,
+          unitN: u,
+          anchorCol: t / 2,
+          anchorRow: 8.85
+        }),
+        tapAnim: u === 0 ? 'rocket10' : 'dance20',
+        mergeLine: u === 0
+          ? `${name}! ${t} Tens make ${name}!`
+          : `${name}! ${decadeWord} plus ${unitWord} makes ${name}!`,
+        tapLines: Object.freeze(
+          u === 0
+            ? [
+                `${name}! ${t} rows of Ten!`,
+                `Count by tens with me to ${name}!`
+              ]
+            : [
+                `${name}! ${decadeWord} and ${unitWord} make ${name}!`,
+                `I am ${name}! ${t} tens and ${u} ones!`
+              ]
+        ),
+        splitBonds: Object.freeze(bonds),
+        lockedHint: ''
+      });
+    }
+
     return null;
   }
 
   function getCharacter(n) {
     const num = Math.round(Number(n));
-    if (num < 1 || num > 20) return null;
+    if (num < 1 || num > 100) return null;
     if (!CHARACTER_CACHE.has(num)) {
       const charObj = buildCharacter(num);
       if (charObj) CHARACTER_CACHE.set(num, charObj);
@@ -10821,7 +11433,7 @@ window.ToddlerLearningHub = {
     return CHARACTER_CACHE.get(num) || null;
   }
 
-  // Pre-seed 1..20
+  // Pre-seed 1..20 eagerly; 21..100 build on demand in <1ms and cache cleanly
   for (let i = 1; i <= 20; i++) {
     getCharacter(i);
   }
@@ -10950,17 +11562,83 @@ window.ToddlerLearningHub = {
       spawn: Object.freeze([10, 5]),
       prompt: 'Ten plus Five! Can you build Fifteen?',
       hintText: 'Drag Ten and Five together to make Fifteen!'
+    }),
+    Object.freeze({
+      id: 13,
+      type: 'merge',
+      target: 25,
+      splitParts: null,
+      maxRequired: 30,
+      spawn: Object.freeze([20, 5]),
+      prompt: 'Twenty plus Five! Build Twenty-Five!',
+      hintText: 'Put Twenty and Five together!'
+    }),
+    Object.freeze({
+      id: 14,
+      type: 'merge',
+      target: 30,
+      splitParts: null,
+      maxRequired: 30,
+      spawn: Object.freeze([20, 10]),
+      prompt: 'Twenty plus Ten! Build Thirty!',
+      hintText: 'Drag Twenty and Ten together to make Thirty!'
+    }),
+    Object.freeze({
+      id: 15,
+      type: 'merge',
+      target: 50,
+      splitParts: null,
+      maxRequired: 50,
+      spawn: Object.freeze([30, 20]),
+      prompt: 'Thirty plus Twenty! Build Super Fifty!',
+      hintText: 'Stack Thirty and Twenty to make Fifty!'
+    }),
+    Object.freeze({
+      id: 16,
+      type: 'split',
+      target: 50,
+      splitParts: null,
+      maxRequired: 50,
+      spawn: Object.freeze([50]),
+      prompt: 'Share Super Fifty! Split Fifty apart!',
+      hintText: 'Tap Split then tap Fifty!'
+    }),
+    Object.freeze({
+      id: 17,
+      type: 'merge',
+      target: 75,
+      splitParts: null,
+      maxRequired: 100,
+      spawn: Object.freeze([50, 25]),
+      prompt: 'Fifty plus Twenty-Five! Build Seventy-Five!',
+      hintText: 'Combine Fifty and Twenty-Five!'
+    }),
+    Object.freeze({
+      id: 18,
+      type: 'merge',
+      target: 100,
+      splitParts: null,
+      maxRequired: 100,
+      spawn: Object.freeze([50, 50]),
+      prompt: 'Fifty plus Fifty! Build One Hundred!',
+      hintText: 'Combine Fifty and Fifty for One Hundred!'
     })
   ]);
 
   function getChallenges(maxCap) {
-    const cap = (typeof maxCap === 'number' && maxCap > 0) ? maxCap : 20;
+    const cap = (typeof maxCap === 'number' && maxCap > 0) ? maxCap : 100;
     return CHALLENGES.filter(c => c.maxRequired <= cap);
   }
 
   function getAdaptiveStepMs(sum) {
     const s = Math.max(1, Math.round(Number(sum) || 1));
-    return s <= 4 ? 120 : s <= 7 ? 90 : s <= 10 ? 68 : 44;
+    if (s <= 4) return 115;
+    if (s <= 7) return 85;
+    if (s <= 10) return 65;
+    if (s <= 20) return 40;
+    if (s <= 40) return 24;
+    if (s <= 70) return 16;
+    return 11;
   }
 
   function getWarmupPhrases() {
@@ -10983,6 +11661,13 @@ window.ToddlerLearningHub = {
   // =========================================================================
 
   function getUnlocked() {
+    const tlh = (window.ToddlerLearningHub || {});
+    const settings = (tlh.app && tlh.app.settings) || (typeof window.app !== 'undefined' && window.app && window.app.settings) || null;
+    if (!settings || settings.nbUnlockAll !== false) {
+      const fullSet = new Set();
+      for (let i = 1; i <= 100; i++) fullSet.add(i);
+      return fullSet;
+    }
     const set = new Set([1, 2, 3, 4, 5]);
     const raw = safeGetStorage(STORAGE_KEYS.unlocked);
     if (raw) {
@@ -10991,7 +11676,7 @@ window.ToddlerLearningHub = {
         if (Array.isArray(arr)) {
           arr.forEach(val => {
             const num = Number(val);
-            if (num >= 1 && num <= 20) set.add(num);
+            if (num >= 1 && num <= 100) set.add(num);
           });
         }
       } catch (e) {}
@@ -11007,7 +11692,7 @@ window.ToddlerLearningHub = {
 
   function unlockCharacter(n) {
     const num = Number(n);
-    if (num < 1 || num > 20) return false;
+    if (num < 1 || num > 100) return false;
     const current = getUnlocked();
     if (current.has(num)) return false;
     current.add(num);
@@ -11017,7 +11702,7 @@ window.ToddlerLearningHub = {
 
   function unlockAll() {
     const all = [];
-    for (let i = 1; i <= 20; i++) all.push(i);
+    for (let i = 1; i <= 100; i++) all.push(i);
     safeSetStorage(STORAGE_KEYS.unlocked, JSON.stringify(all));
   }
 
@@ -11042,6 +11727,7 @@ window.ToddlerLearningHub = {
   NB.Data = Object.freeze({
     STORAGE_KEYS,
     PALETTES,
+    numberToWords,
     getCharacter,
     CHALLENGES,
     getChallenges,
@@ -11152,6 +11838,12 @@ window.ToddlerLearningHub = {
   }
 
   // --- Woody Marimba Synth Bar ---
+  function getScaleFreq(step1Based) {
+    const s = Math.max(1, Math.round(Number(step1Based) || 1));
+    if (s <= SCALE_FREQS.length) return SCALE_FREQS[s - 1];
+    return SCALE_FREQS[7 + ((s - 1) % 12)] || 523.25;
+  }
+
   function playMarimbaNote(step1Based, delaySec) {
     if (!isSfxEnabled()) return;
     const sfx = getSoundFX();
@@ -11159,8 +11851,8 @@ window.ToddlerLearningHub = {
     if (!ctx) return;
     const out = getOutputNode(ctx);
 
-    const step = Math.max(1, Math.min(20, Math.round(Number(step1Based) || 1)));
-    const freq = SCALE_FREQS[step - 1] || 261.63;
+    const step = Math.max(1, Math.min(100, Math.round(Number(step1Based) || 1)));
+    const freq = getScaleFreq(step);
     const t = ctx.currentTime + Math.max(0, Number(delaySec) || 0);
 
     try {
@@ -11219,7 +11911,7 @@ window.ToddlerLearningHub = {
   }
 
   function playCountNote(stepIndex, totalSteps) {
-    const step = (stepIndex === 0) ? 1 : Math.max(1, Math.min(20, Math.round(Number(stepIndex) || 1)));
+    const step = (stepIndex === 0) ? 1 : Math.max(1, Math.min(100, Math.round(Number(stepIndex) || 1)));
     playMarimbaNote(step, 0);
   }
 
@@ -11239,7 +11931,7 @@ window.ToddlerLearningHub = {
     if (sfx && typeof sfx.playSlide === 'function') {
       sfx.playSlide(290, 560, 0.085, 'sine', 0.24);
     }
-    const val = Math.max(1, Math.min(20, Math.round(Number(n) || 1)));
+    const val = Math.max(1, Math.min(100, Math.round(Number(n) || 1)));
     playMarimbaNote(val, 0.015);
   }
 
@@ -11290,7 +11982,7 @@ window.ToddlerLearningHub = {
     if (sfx && typeof sfx.playSlide === 'function') {
       sfx.playSlide(175, 92, 0.09, 'triangle', 0.26);
     }
-    const val = Math.max(1, Math.min(20, Math.round(Number(n) || 1)));
+    const val = Math.max(1, Math.min(100, Math.round(Number(n) || 1)));
     playMarimbaNote(val, 0.02);
   }
 
@@ -11301,7 +11993,7 @@ window.ToddlerLearningHub = {
     if (!ctx) return;
     const out = getOutputNode(ctx);
 
-    const total = Math.max(1, Math.min(20, Math.round(Number(sum) || 1)));
+    const total = Math.max(1, Math.min(100, Math.round(Number(sum) || 1)));
 
     try {
       const t = ctx.currentTime;
@@ -11334,8 +12026,8 @@ window.ToddlerLearningHub = {
         osc.stop(n.time + n.dur + 0.03);
       });
 
-      // Filtered rocket whoosh on 10 or 20
-      if ((total === 10 || total === 20) && typeof sfx.playNoise === 'function') {
+      // Filtered rocket whoosh on multiples of 10 and 100
+      if ((total % 10 === 0 || total === 100) && typeof sfx.playNoise === 'function') {
         sfx.playNoise(0.45, 'bandpass', 650, 1.5, 0.28, 0.16);
       }
     } catch (e) {}
@@ -11382,10 +12074,49 @@ window.ToddlerLearningHub = {
       // Playful cork-pop
       sfx.playSlide(680, 310, 0.11, 'sine', 0.36);
     }
-    const a = Math.max(1, Math.min(20, Math.round(Number(partA) || 1)));
-    const b = Math.max(1, Math.min(20, Math.round(Number(partB) || 1)));
+    const a = Math.max(1, Math.min(100, Math.round(Number(partA) || 1)));
+    const b = Math.max(1, Math.min(100, Math.round(Number(partB) || 1)));
     playMarimbaNote(a, 0.04);
     playMarimbaNote(b, 0.12);
+  }
+
+  function playUndoSound() {
+    if (!isSfxEnabled()) return;
+    const sfx = getSoundFX();
+    const ctx = ensureAudioCtx(sfx);
+    if (!ctx) return;
+    const out = getOutputNode(ctx);
+    try {
+      const t = ctx.currentTime;
+      const notes = [
+        { freq: 783.99, time: t, dur: 0.09 },
+        { freq: 587.33, time: t + 0.055, dur: 0.13 }
+      ];
+      notes.forEach(n => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(n.freq, n.time);
+        gain.gain.setValueAtTime(0.0001, n.time);
+        gain.gain.linearRampToValueAtTime(0.24, n.time + 0.006);
+        gain.gain.exponentialRampToValueAtTime(0.0001, n.time + n.dur);
+        osc.connect(gain);
+        gain.connect(out);
+        trackNode(osc);
+        osc.start(n.time);
+        osc.stop(n.time + n.dur + 0.02);
+      });
+    } catch (e) {}
+  }
+
+  function playRemovePop() {
+    if (!isSfxEnabled()) return;
+    const sfx = getSoundFX();
+    if (sfx && typeof sfx.playSlide === 'function') {
+      sfx.playSlide(480, 180, 0.11, 'sine', 0.30);
+    } else {
+      playUndoSound();
+    }
   }
 
   function playUnlockJingle() {
@@ -11551,25 +12282,72 @@ window.ToddlerLearningHub = {
     speak("Let's build and count!", 'high');
   }
 
+  function getSpeechStyle() {
+    const tlh = getTLH();
+    const settings = (tlh && tlh.app && tlh.app.settings) || (typeof window.app !== 'undefined' && window.app && window.app.settings) || null;
+    return (settings && settings.nbSpeechStyle) || 'math_and_fun';
+  }
+
+  function toWords(n) {
+    if (typeof numberToWords === 'function') return numberToWords(n);
+    if (NB.Data && typeof NB.Data.numberToWords === 'function') return NB.Data.numberToWords(n);
+    return String(n);
+  }
+
   function speakMerge(a, b, sum, isFirstInSession) {
-    const total = Math.max(1, Math.min(20, Math.round(Number(sum) || 1)));
+    const left = Math.max(1, Math.round(Number(a) || 1));
+    const right = Math.max(1, Math.round(Number(b) || 1));
+    const total = Math.max(1, Math.min(100, Math.round(Number(sum) || (left + right))));
+    const wA = toWords(left);
+    const wB = toWords(right);
+    const wTotal = toWords(total);
+    const style = getSpeechStyle();
+
+    if (style === 'number_only') {
+      speak(`${wTotal}!`, 'high');
+      return;
+    }
+
+    const eqLine = `${wA} plus ${wB} equals ${wTotal}!`;
+    if (style === 'math_only') {
+      speak(eqLine, 'high');
+      return;
+    }
+
     const char = getCharacter(total);
-    const line = char ? char.mergeLine : (total + '!');
-    speak(line, 'high');
+    let flavor = '';
+    if (char && char.mergeLine) {
+      const bangIdx = char.mergeLine.indexOf('!');
+      if (bangIdx !== -1 && bangIdx < char.mergeLine.length - 1) {
+        const tail = char.mergeLine.slice(bangIdx + 1).trim();
+        if (tail && !tail.toLowerCase().includes('plus') && tail.length <= 36) {
+          flavor = ' ' + tail;
+        }
+      }
+    }
+    speak(eqLine + flavor, 'high');
   }
 
   function speakSplit(whole, partA, partB) {
     const w = Math.round(Number(whole) || 0);
     const a = Math.round(Number(partA) || 0);
     const b = Math.round(Number(partB) || 0);
-    speak(`${w} is ${a} and ${b}!`, 'high');
+    const style = getSpeechStyle();
+    const wWhole = toWords(w);
+    const wA = toWords(a);
+    const wB = toWords(b);
+    if (style === 'number_only') {
+      speak(`${wA} and ${wB}!`, 'high');
+    } else {
+      speak(`${wWhole} splits into ${wA} and ${wB}!`, 'high');
+    }
   }
 
   function speakTap(n) {
-    const num = Math.max(1, Math.min(20, Math.round(Number(n) || 1)));
+    const num = Math.max(1, Math.min(100, Math.round(Number(n) || 1)));
     const char = getCharacter(num);
     if (!char || !char.tapLines || char.tapLines.length === 0) {
-      speak(String(num), 'tap');
+      speak(toWords(num), 'tap');
       return;
     }
     const idx = (tapIndexMap[num] || 0) % char.tapLines.length;
@@ -11577,11 +12355,15 @@ window.ToddlerLearningHub = {
     speak(char.tapLines[idx], 'tap');
   }
 
-  function speakSupernova(maxCap) {
-    if (maxCap === 10) {
+  function speakSupernova(maxCap, a, b, sum) {
+    const cap = Math.round(Number(maxCap) || 100);
+    const wCap = toWords(cap);
+    if (a && b && sum && getSpeechStyle() !== 'number_only') {
+      speak(`${toWords(a)} plus ${toWords(b)} is ${toWords(sum)}, bigger than ${wCap}!`, 'high');
+    } else if (cap === 10) {
       speak('Whoa, bigger than Ten! Fireworks!', 'high');
     } else {
-      speak('Whoa, super big number! Twenty is our biggest rocket!', 'high');
+      speak(`Whoa, bigger than ${wCap}! Adjust limit in Options!`, 'high');
     }
   }
 
@@ -11598,6 +12380,8 @@ window.ToddlerLearningHub = {
     playMergeFanfare,
     playSplitReady,
     playSplitPop,
+    playUndoSound,
+    playRemovePop,
     playUnlockJingle,
     playHighFiveBounce,
     playLockedClueChime,
@@ -11914,6 +12698,7 @@ window.ToddlerLearningHub = {
     if (n === 6) return u * 0.24;
     if (n === 7) return u * 0.42;
     if (n === 20) return u * 0.68;
+    if (n === 100 || (n >= 30 && n % 10 === 0)) return u * 0.56;
     return 0;
   }
 
@@ -11939,7 +12724,20 @@ window.ToddlerLearningHub = {
       case 18: return { armColor: '#be185d', legColor: '#be185d', shoeStyle: 'standard', gloveStyle: 'mitt' };
       case 19: return { armColor: '#334155', legColor: '#334155', shoeStyle: 'standard', gloveStyle: 'mitt' };
       case 20: return { armColor: '#c2410c', legColor: '#c2410c', shoeStyle: 'twoToneOrange', gloveStyle: 'white20' };
-      default: return { armColor: '#334155', legColor: '#334155', shoeStyle: 'standard', gloveStyle: 'mitt' };
+      default: {
+        const decColorMap = {
+          20: '#c2410c', 30: '#a16207', 40: '#14532d', 50: '#0369a1',
+          60: '#312e81', 70: '#6b21a8', 80: '#9d174d', 90: '#334155', 100: '#991b1b'
+        };
+        const decade = Math.floor((Math.max(1, n) || 1) / 10) * 10;
+        const c = decColorMap[decade] || '#334155';
+        return {
+          armColor: c,
+          legColor: c,
+          shoeStyle: n === 100 ? 'rocket10' : 'standard',
+          gloveStyle: (n === 100 || n % 10 === 0) ? 'starWhite10' : 'mitt'
+        };
+      }
     }
   }
 
@@ -12537,17 +13335,18 @@ window.ToddlerLearningHub = {
     if (n >= 11 && n <= 19 && n !== 12) shoulderRow = 3.15;
     if (n === 12) shoulderRow = 2.15;
     if (n === 20) shoulderRow = 3.15;
+    if (n > 20) shoulderRow = char.rows >= 8 ? char.rows - 3.6 : 3.05;
 
     const armW = Math.max(2.2, u * 0.13);
 
     // Left Arm
     const leftEdgeX = findCellEdgeX(char, shoulderRow, false, u) + 2;
     const leftShoulderY = -legH - shoulderRow * u;
-    let leftUpFactor = (n === 1 || n === 6 || n === 7 || n === 3 || n === 10 || n === 20) ? -1 : 0.35;
+    let leftUpFactor = (n === 1 || n === 6 || n === 7 || n === 3 || n === 10 || n === 20 || n === 100 || (n >= 30 && n % 10 === 0)) ? -1 : 0.35;
     if (n === 7) leftUpFactor = -1.35;
     if (n === 1) leftUpFactor = -0.85;
     const waveL = idleWave * (u * 0.09) + tapBoost * (u * 0.14);
-    const armReachL = (n === 10 || n === 20) ? 0.42 : (n === 7 ? 0.38 : 0.36);
+    const armReachL = (n === 10 || n === 20 || n >= 30) ? 0.44 : (n === 7 ? 0.38 : 0.36);
     const leftHandX = leftEdgeX - u * armReachL;
     const leftHandY = leftShoulderY + leftUpFactor * (u * 0.32) + waveL;
     const leftCtrlX = leftEdgeX - u * 0.24;
@@ -12566,12 +13365,17 @@ window.ToddlerLearningHub = {
     ctx.restore();
 
     // Right Arm (Note: for n === 5, Five's High-Five arm & giant star hand render in Front pass or arm behind + hand in front)
-    const rightRow = (n >= 11 && n <= 19 && n !== 12 && (n - 10) < 4) ? Math.min(shoulderRow, (n - 10) * 0.55) : shoulderRow;
+    const unitMod10 = n % 10;
+    const rightRow = (n >= 11 && n <= 19 && n !== 12 && (n - 10) < 4)
+      ? Math.min(shoulderRow, (n - 10) * 0.55)
+      : (n > 20 && n < 100 && unitMod10 > 0 && unitMod10 < 5)
+      ? Math.max(0.65, unitMod10 * 0.55)
+      : shoulderRow;
     const rightEdgeX = findCellEdgeX(char, rightRow, true, u) - 2;
     const rightShoulderY = -legH - rightRow * u;
 
     if (n !== 5) {
-      let rightUpFactor = (n === 1 || n === 6 || n === 7 || n === 3 || n === 10 || n === 20) ? -1 : 0.35;
+      let rightUpFactor = (n === 1 || n === 6 || n === 7 || n === 3 || n === 10 || n === 20 || n === 100 || (n >= 30 && n % 10 === 0)) ? -1 : 0.35;
       if (n === 7) rightUpFactor = -1.35;
       if (n === 1) rightUpFactor = -0.35;
       const waveR = -idleWave * (u * 0.09) - tapBoost * (u * 0.14);
@@ -13297,6 +14101,55 @@ window.ToddlerLearningHub = {
       ctx.restore();
     }
 
+    // 30..90 Decades & 21..99 Big Compounds
+    else if (faceDef.type === 'decadeHero' || faceDef.type === 'bigCompound') {
+      const eyeR = Math.max(4.5, u * 0.23);
+      const eyeSpacing = Math.max(eyeR * 1.45, u * 0.55);
+      const eyeY = -u * 0.04;
+      const rim = char.primaryColor || '#dc2626';
+
+      if (faceDef.type === 'decadeHero') {
+        // Golden Star Crown centered on top of the decade tower
+        ctx.save();
+        ctx.translate(0, -u * 0.65);
+        drawStar(ctx, 0, -u * 0.24, 5, u * 0.42, u * 0.20, '#facc15', '#b45309', Math.max(1.2, u * 0.04));
+        ctx.restore();
+      } else if (faceDef.tens === 20) {
+        // Classy mini hat rim for 21..29
+        drawRoundRect(ctx, -u * 0.72, -u * 0.64, u * 1.44, u * 0.14, u * 0.06);
+        ctx.fillStyle = '#1e293b';
+        ctx.fill();
+        drawRoundRect(ctx, -u * 0.42, -u * 0.96, u * 0.84, u * 0.36, u * 0.06);
+        ctx.fillStyle = '#0f172a';
+        ctx.fill();
+      }
+
+      drawPupilEye(ctx, -eyeSpacing, eyeY, eyeR, blinkY, pOffsetX, pOffsetY, rim, isAnticipating, 0.24);
+      drawPupilEye(ctx, eyeSpacing, eyeY, eyeR, blinkY, pOffsetX, pOffsetY, rim, isAnticipating, 0.24);
+      drawOpenSmile(ctx, 0, eyeY + eyeR + u * 0.22, Math.max(u * 0.65, eyeR * 2.1), rim, isAnticipating);
+    }
+
+    // 100: One Hundred Super Square Hero
+    else if (faceDef.type === 'hundredHero') {
+      const eyeR = Math.max(5.5, u * 0.32);
+      const eyeSpacing = Math.max(eyeR * 1.55, u * 0.92);
+      const eyeY = 0;
+
+      // Golden Crown above 10x10 top row
+      ctx.save();
+      ctx.translate(0, -u * 1.45);
+      drawStar(ctx, -u * 0.6, 0, 5, u * 0.28, u * 0.14, '#facc15', '#b45309', 1.4);
+      drawStar(ctx, 0, -u * 0.12, 5, u * 0.42, u * 0.20, '#fde047', '#b45309', 1.6);
+      drawStar(ctx, u * 0.6, 0, 5, u * 0.28, u * 0.14, '#facc15', '#b45309', 1.4);
+      ctx.restore();
+
+      drawStar(ctx, -eyeSpacing, eyeY, 5, eyeR * 1.95, eyeR * 0.95, '#facc15', '#b45309', 1.5);
+      drawStar(ctx, eyeSpacing, eyeY, 5, eyeR * 1.95, eyeR * 0.95, '#facc15', '#b45309', 1.5);
+      drawPupilEye(ctx, -eyeSpacing, eyeY, eyeR, blinkY, pOffsetX, pOffsetY, '#dc2626', isAnticipating, 0.24);
+      drawPupilEye(ctx, eyeSpacing, eyeY, eyeR, blinkY, pOffsetX, pOffsetY, '#dc2626', isAnticipating, 0.24);
+      drawOpenSmile(ctx, 0, eyeY + eyeR + u * 0.34, Math.max(u * 0.95, eyeR * 2.4), '#dc2626', isAnticipating);
+    }
+
     ctx.restore();
   }
 
@@ -13308,17 +14161,18 @@ window.ToddlerLearningHub = {
     const headgearH = getHeadgearHeight(char.n, u);
     const totalH = char.rows * u;
     const bob = Math.sin(nowMs * 0.0032 + entity.id * 1.5) * 3.5;
-    const numY = -legH - totalH - headgearH - (u * 0.44) + bob;
+    const numY = -legH - totalH - headgearH - Math.max(12, u * 0.46) + bob;
 
     ctx.save();
-    ctx.font = '700 ' + Math.round(u * 0.60) + "px 'Fredoka', 'Nunito', sans-serif";
+    const fontPx = Math.max(16, Math.round(u * 0.62));
+    ctx.font = '700 ' + fontPx + "px 'Fredoka', 'Nunito', sans-serif";
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
 
     const text = String(entity.n);
 
     // Crisp White Sticker Stroke
-    ctx.lineWidth = 6;
+    ctx.lineWidth = Math.max(4.5, Math.min(6, fontPx * 0.26));
     ctx.lineJoin = 'round';
     ctx.strokeStyle = '#ffffff';
     ctx.strokeText(text, 0, numY);
@@ -13330,8 +14184,42 @@ window.ToddlerLearningHub = {
   }
 
   // --------------------------------------------------------------------------
-  // Split Badge [<>] & Taffy-Stretch Tether
+  // Split Badge [<>] & Remove Badge [✕] & Taffy-Stretch Tether
   // --------------------------------------------------------------------------
+  function drawRemoveBadge(ctx, badgeRect, alpha) {
+    if (alpha <= 0.01) return;
+    ctx.save();
+    ctx.globalAlpha = alpha;
+
+    const { cx, cy, r } = badgeRect;
+
+    ctx.beginPath();
+    ctx.arc(cx, cy + 2, r + 1.5, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(220, 38, 38, 0.18)';
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.96)';
+    ctx.fill();
+
+    ctx.lineWidth = 2.5;
+    ctx.strokeStyle = '#ef4444';
+    ctx.stroke();
+
+    const s = Math.max(5.5, r * 0.34);
+    ctx.beginPath();
+    ctx.moveTo(cx - s, cy - s);
+    ctx.lineTo(cx + s, cy + s);
+    ctx.moveTo(cx + s, cy - s);
+    ctx.lineTo(cx - s, cy + s);
+    ctx.lineWidth = 3;
+    ctx.lineCap = 'round';
+    ctx.strokeStyle = '#dc2626';
+    ctx.stroke();
+
+    ctx.restore();
+  }
   function drawSplitBadge(ctx, badgeRect, alpha) {
     if (alpha <= 0.01) return;
     ctx.save();
@@ -13705,6 +14593,18 @@ window.ToddlerLearningHub = {
     };
   }
 
+  function getRemoveBadgeRect(entity, metrics) {
+    const m = metrics || cachedMetrics;
+    const bounds = getEntityBounds(entity, m);
+    if (!bounds) return { cx: 0, cy: 0, r: 20 };
+
+    return {
+      cx: Math.max(24, bounds.left - 14),
+      cy: Math.max(m.topSafeY + 24, bounds.top + 8),
+      r: 20
+    };
+  }
+
   function spawnBurst(x, y, presetOrColors, maybeCount, maybeKind) {
     const tlh = window.ToddlerLearningHub;
     const settings = (tlh && tlh.app && tlh.app.settings) || (typeof app !== 'undefined' && app.settings);
@@ -13818,6 +14718,7 @@ window.ToddlerLearningHub = {
     else if (char.n === 6) topReach = 0.28;
     else if (char.n === 7) topReach = 0.44;
     else if (char.n === 20) topReach = 0.70;
+    else if (char.n === 100 || (char.n >= 30 && char.n % 10 === 0)) topReach = 0.56;
     const bottomReach = 0.24; // legH
 
     const spanW = char.cols + leftReach + rightReach;
@@ -13867,7 +14768,7 @@ window.ToddlerLearningHub = {
   const quizCardCache = new Map();
 
   function getQuizCardHTML(n) {
-    n = Math.max(1, Math.min(20, Math.round(Number(n) || 1)));
+    n = Math.max(1, Math.min(100, Math.round(Number(n) || 1)));
     if (quizCardCache.has(n)) {
       return quizCardCache.get(n);
     }
@@ -14124,6 +15025,15 @@ window.ToddlerLearningHub = {
         const badgeRect = getSplitBadgeRect(ent, metrics);
         drawSplitBadge(ctx2d, badgeRect, ent.splitBadgeAlpha);
       }
+
+      // Contextual Remove Badge [✕] (shown when entity was tapped or Remove mode is active)
+      const rmAlpha = (renderState && renderState.removeModeActive)
+        ? 0.95
+        : (ent.removeBadgeAlpha || 0);
+      if (ent.n >= 1 && rmAlpha > 0.01) {
+        const rmRect = getRemoveBadgeRect(ent, metrics);
+        drawRemoveBadge(ctx2d, rmRect, rmAlpha);
+      }
     }
 
     // 9. 120-Slot Pooled Particle Engine Update & Draw
@@ -14164,6 +15074,7 @@ window.ToddlerLearningHub = {
     getLayoutMetrics: getMetrics,
     getEntityBounds: getEntityBounds,
     getSplitBadgeRect: getSplitBadgeRect,
+    getRemoveBadgeRect: getRemoveBadgeRect,
     renderFrame: renderFrame,
     spawnBurst: spawnBurst,
     renderDockIcon: renderDockIcon,
@@ -14189,12 +15100,12 @@ window.ToddlerLearningHub = {
   };
 
   const DEFAULT_UNLOCKED = [1, 2, 3, 4, 5];
-  const MAX_STAGE_ACTORS = 8;
+  const MAX_STAGE_ACTORS = 10;
+  const MAX_UNDO_HISTORY = 25;
 
   // Spring & Physics Constants (Harmonized with Visual Tech Lead Spec)
   const GRAVITY = 1650;          // px/s^2
-  const DRAG_STIFFNESS = 420;    // spring stiffness for drag follow
-  const DRAG_DAMPING = 28;       // spring damping for drag follow
+  const DRAG_SMOOTH_RATE = 42;   // frame-rate independent exponential smoothing
   const TILT_STIFFNESS = 260;    // spring stiffness for velocity tilt
   const TILT_DAMPING = 22;       // spring damping for velocity tilt
   const SQUASH_STIFFNESS = 380;  // spring stiffness for landing squash recovery
@@ -14251,6 +15162,8 @@ window.ToddlerLearningHub = {
   let challengeStarsEl = null;
   let challengeHintBtn = null;
   let challengeSkipBtn = null;
+  let toolUndoBtn = null;
+  let toolRemoveBtn = null;
   let toolSplitBtn = null;
   let toolUnlockBtn = null;
   let toolResetBtn = null;
@@ -14262,10 +15175,16 @@ window.ToddlerLearningHub = {
 
   let entities = [];
   let nextEntityId = 1;
+  let undoStack = [];
+  let gestureStartSnapshot = null;
+  let lastCountAudioAt = 0;
+  let currentDockKey = '';
 
   let unlockedFriends = [...DEFAULT_UNLOCKED];
   let challengeStars = 0;
   let splitToolActive = false;
+  let removeToolActive = false;
+  let dockTrashOver = false;
   let currentMode = 'play'; // 'play' | 'challenge'
   let activeChallengeIndex = 0;
   let challengeGoalReached = false;
@@ -14283,7 +15202,7 @@ window.ToddlerLearningHub = {
 
   let rAFId = null;
   let lastTime = 0;
-  let maxCap = 20;
+  let maxCap = 100;
 
   // Pointer Tracking
   const primaryPointer = {
@@ -14336,7 +15255,7 @@ window.ToddlerLearningHub = {
         if (raw) {
           const arr = JSON.parse(raw);
           if (Array.isArray(arr)) {
-            const set = new Set([...DEFAULT_UNLOCKED, ...arr.map(Number).filter(n => n >= 1 && n <= 10)]);
+            const set = new Set([...DEFAULT_UNLOCKED, ...arr.map(Number).filter(n => n >= 1 && n <= 100)]);
             return Array.from(set).sort((a, b) => a - b);
           }
         }
@@ -14357,7 +15276,16 @@ window.ToddlerLearningHub = {
     }
   }
 
+  function getNbSettings() {
+    const tlh = getTLH();
+    if (tlh && tlh.app && tlh.app.settings) return tlh.app.settings;
+    if (typeof window !== 'undefined' && window.app && window.app.settings) return window.app.settings;
+    return {};
+  }
+
   function isUnlocked(n) {
+    const s = getNbSettings();
+    if (s.nbUnlockAll !== false) return true;
     return unlockedFriends.indexOf(n) !== -1;
   }
 
@@ -14454,11 +15382,35 @@ window.ToddlerLearningHub = {
   }
 
   function getMaxCap() {
-    const tlh = getTLH();
-    if (tlh && tlh.app && tlh.app.settings && tlh.app.settings.maxNumber === 10) {
-      return 10;
+    const s = getNbSettings();
+    const m = Number(s.maxNumber);
+    if (!isNaN(m) && m >= 10) return Math.min(100, Math.round(m));
+    return 100;
+  }
+
+  function getMaxStageActors() {
+    const s = getNbSettings();
+    const m = Number(s.nbMaxBlocks);
+    if (!isNaN(m) && m >= 4) return Math.min(20, Math.round(m));
+    return MAX_STAGE_ACTORS;
+  }
+
+  function getDockNumbers() {
+    const s = getNbSettings();
+    const cap = getMaxCap();
+    const range = s.nbDockRange || '1-10';
+    let list;
+    if (range === '1-5') {
+      list = [1, 2, 3, 4, 5];
+    } else if (range === 'tens-only') {
+      list = [10, 20, 30, 40, 50, 60, 70, 80, 90];
+    } else if (range === 'place-value') {
+      list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 30, 40, 50, 60, 70, 80, 90];
+    } else {
+      list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     }
-    return 20;
+    const filtered = list.filter(n => n <= cap);
+    return filtered.length > 0 ? filtered : [1];
   }
 
   function getHighestZOrder() {
@@ -14516,6 +15468,139 @@ window.ToddlerLearningHub = {
     };
   }
 
+  function getRemoveBadgeRect(entity) {
+    if (NB.Renderer && NB.Renderer.getRemoveBadgeRect && metrics) {
+      return NB.Renderer.getRemoveBadgeRect(entity, metrics);
+    }
+    const b = getEntityBounds(entity);
+    const topSafe = metrics ? metrics.topSafeY : 20;
+    return {
+      cx: Math.max(24, b.left - 14),
+      cy: Math.max(topSafe + 24, b.top + 8),
+      r: 20
+    };
+  }
+
+  // ---------------------------------------------------------------------------
+  // UNDO HISTORY STACK & REMOVE HELPERS
+  // ---------------------------------------------------------------------------
+  function captureSnapshot() {
+    const ground = metrics ? metrics.groundY : 350;
+    const items = [];
+    for (let i = 0; i < entities.length; i++) {
+      const e = entities[i];
+      if (e.state === 'POOFING_OUT') continue;
+      items.push({
+        n: e.n,
+        x: e.x,
+        y: Math.min(ground, e.y),
+        zOrder: e.zOrder || 1
+      });
+    }
+    return {
+      items: items,
+      mode: currentMode,
+      lastId: lastInteractedEntityId
+    };
+  }
+
+  function updateUndoButton() {
+    if (!toolUndoBtn) return;
+    const empty = undoStack.length === 0;
+    toolUndoBtn.disabled = empty;
+    toolUndoBtn.classList.toggle('is-disabled', empty);
+  }
+
+  function pushUndoSnapshot(snap) {
+    const record = snap || captureSnapshot();
+    undoStack.push(record);
+    if (undoStack.length > MAX_UNDO_HISTORY) {
+      undoStack.shift();
+    }
+    updateUndoButton();
+  }
+
+  function performUndo() {
+    if (undoStack.length === 0) return false;
+    const snap = undoStack.pop();
+    updateUndoButton();
+
+    primaryPointer.id = null;
+    primaryPointer.isFromDock = false;
+    primaryPointer.draggedEntity = null;
+    secondPointer.id = null;
+    snapTarget = null;
+    activeEquationPill = null;
+    dockTrashOver = false;
+    if (dockEl) dockEl.classList.remove('is-trash-drop');
+
+    const ground = metrics ? metrics.groundY : 350;
+    entities = snap.items.map(item => {
+      const ent = createEntity(item.n, item.x, ground, 'IDLE');
+      ent.zOrder = item.zOrder || 1;
+      ent.scaleY = 1.12;
+      ent.scaleX = 0.89;
+      ent.splitImmunityTimer = 0.65;
+      return ent;
+    });
+    lastInteractedEntityId = entities.length > 0 ? entities[entities.length - 1].id : null;
+
+    if (NB.Audio && isBlocksActive()) {
+      if (NB.Audio.playUndoSound) NB.Audio.playUndoSound();
+    }
+    return true;
+  }
+
+  function removeEntity(ent, skipUndoPush) {
+    if (!ent || ent.state === 'POOFING_OUT') return;
+    if (!skipUndoPush) {
+      pushUndoSnapshot();
+    }
+    if (snapTarget && snapTarget.id === ent.id) {
+      snapTarget = null;
+    }
+    ent.state = 'POOFING_OUT';
+    ent.poofProgress = 0.001;
+    ent.splitBadgeAlpha = 0;
+    ent.removeBadgeAlpha = 0;
+    activeEquationPill = null;
+    const b = getEntityBounds(ent);
+    if (NB.Renderer && NB.Renderer.spawnBurst) {
+      NB.Renderer.spawnBurst(ent.x, ent.y - (b ? b.height / 2 : 24), 'poofOut', null);
+    }
+    if (NB.Audio && isBlocksActive() && NB.Audio.playRemovePop) {
+      NB.Audio.playRemovePop();
+    }
+  }
+
+  function findOpenStageX(n) {
+    const stageWidth = metrics ? metrics.width : 400;
+    const char = (NB.Data && NB.Data.getCharacter) ? NB.Data.getCharacter(n) : { cols: 1, unitScale: 1.0 };
+    const u = (char.unitScale || 1.0) * (metrics ? metrics.unitSize : 48);
+    const halfW = (char.cols * u) / 2;
+    const minX = halfW + 20;
+    const maxX = Math.max(minX, stageWidth - halfW - 20);
+
+    const live = entities.filter(e => e.state !== 'POOFING_OUT');
+    if (live.length === 0) return stageWidth * 0.5;
+
+    let bestX = stageWidth * 0.5;
+    let bestClearance = -1;
+    for (let i = 0; i < 9; i++) {
+      const candX = minX + ((maxX - minX) * i) / 8;
+      let nearestDist = Infinity;
+      for (let j = 0; j < live.length; j++) {
+        const d = Math.abs(candX - live[j].x);
+        if (d < nearestDist) nearestDist = d;
+      }
+      if (nearestDist > bestClearance) {
+        bestClearance = nearestDist;
+        bestX = candX;
+      }
+    }
+    return bestX;
+  }
+
   // ---------------------------------------------------------------------------
   // ENTITY MANAGEMENT & RECYCLING
   // ---------------------------------------------------------------------------
@@ -14553,6 +15638,12 @@ window.ToddlerLearningHub = {
       tapProgress: 0,
       splitBadgeAlpha: 0,
       splitBadgeTimer: 0,
+      removeBadgeAlpha: 0,
+      removeBadgeTimer: 0,
+      dragLiftBlend: 0,
+      splitImmunityTimer: 0,
+      spawnImmunityTimer: 0,
+      fallOriginSnap: null,
       poofProgress: 0,
       hintGlow: false,
       lookTarget: null,
@@ -14563,8 +15654,9 @@ window.ToddlerLearningHub = {
   }
 
   function enforceStageCapacity() {
+    const capActors = getMaxStageActors();
     const active = entities.filter(e => e.state !== 'POOFING_OUT');
-    if (active.length < MAX_STAGE_ACTORS) return;
+    if (active.length < capActors) return;
 
     // Count occurrences of each number to find duplicates
     const counts = {};
@@ -14613,14 +15705,18 @@ window.ToddlerLearningHub = {
     dockFriendsEl.innerHTML = '';
 
     const isShortLandscape = metrics ? (metrics.height < 500) : false;
-    const iconSize = isShortLandscape ? 32 : 40;
+    const dockNums = getDockNumbers();
+    const s = getNbSettings();
+    currentDockKey = `${s.nbDockRange || '1-10'}:${s.maxNumber || 100}:${s.nbUnlockAll !== false}`;
+    dockFriendsEl.classList.toggle('is-dense', dockNums.length > 10);
 
-    for (let n = 1; n <= 10; n++) {
+    for (let idx = 0; idx < dockNums.length; idx++) {
+      const n = dockNums[idx];
       const btn = document.createElement('button');
       btn.type = 'button';
       btn.className = 'nb-dock-tile squish-btn';
       btn.dataset.n = String(n);
-      if (n === 1) {
+      if (n === 1 || (dockNums[0] === n && n === 10)) {
         btn.classList.add('is-hero');
       }
 
@@ -14641,7 +15737,8 @@ window.ToddlerLearningHub = {
   function updateDock() {
     if (!dockFriendsEl) return;
     const isShortLandscape = metrics ? (metrics.height < 500) : false;
-    const iconSize = isShortLandscape ? 32 : 40;
+    const isDenseMobile = dockFriendsEl.classList.contains('is-dense') && (metrics ? metrics.width < 768 : false);
+    const iconSize = isDenseMobile ? 24 : (isShortLandscape ? 32 : 40);
     const dprKey = Math.round(Math.min(window.devicePixelRatio || 1, 3) * 100);
 
     const tiles = dockFriendsEl.querySelectorAll('.nb-dock-tile');
@@ -14683,8 +15780,11 @@ window.ToddlerLearningHub = {
     return [bond[0], bond[1]];
   }
 
-  function performSplit(entity, partA, partB) {
+  function performSplit(entity, partA, partB, skipUndoPush) {
     if (!entity) return;
+    if (!skipUndoPush) {
+      pushUndoSnapshot();
+    }
     const parentN = entity.n;
     const parentX = entity.x;
     const parentY = entity.y;
@@ -14709,6 +15809,7 @@ window.ToddlerLearningHub = {
     entityA.vy = -340;
     entityA.scaleX = 1.15;
     entityA.scaleY = 0.87;
+    entityA.splitImmunityTimer = 0.65;
     entityA.zOrder = getHighestZOrder() + 1;
 
     const entityB = createEntity(partB, clampedXB, parentY, 'IDLE');
@@ -14716,6 +15817,7 @@ window.ToddlerLearningHub = {
     entityB.vy = -340;
     entityB.scaleX = 1.15;
     entityB.scaleY = 0.87;
+    entityB.splitImmunityTimer = 0.65;
     entityB.zOrder = getHighestZOrder() + 2;
 
     entities.push(entityA, entityB);
@@ -14731,8 +15833,9 @@ window.ToddlerLearningHub = {
     }
 
     // Equation pill
+    const s = getNbSettings();
     const topSafe = metrics ? metrics.topSafeY : 20;
-    activeEquationPill = {
+    activeEquationPill = s.nbShowEquations === false ? null : {
       x: parentX,
       y: Math.max(topSafe + 24, parentY - boundsHeight - 24),
       mode: 'split',
@@ -14741,7 +15844,7 @@ window.ToddlerLearningHub = {
       sumN: partB,
       alpha: 1.0,
       scale: 1.0,
-      timer: 1.6
+      timer: 1.8
     };
 
     // Challenge check
@@ -14753,6 +15856,8 @@ window.ToddlerLearningHub = {
   // ---------------------------------------------------------------------------
   function performMerge(entityA, entityB) {
     const sum = entityA.n + entityB.n;
+    const leftN = entityA.n;
+    const rightN = entityB.n;
     const targetX = entityB.x;
     const ground = metrics ? metrics.groundY : 350;
 
@@ -14852,17 +15957,25 @@ window.ToddlerLearningHub = {
     entities.push(entityC);
     lastInteractedEntityId = entityC.id;
 
+    // Announce addition equation immediately as morph begins so math feedback feels instant
+    const isFirstInSession = !firstMergeSessionMap.has(sum);
+    firstMergeSessionMap.add(sum);
+    if (NB.Audio && NB.Audio.speakMerge && isBlocksActive()) {
+      NB.Audio.speakMerge(leftN, rightN, sum, isFirstInSession);
+    }
+
+    const s = getNbSettings();
     const topSafe = metrics ? metrics.topSafeY : 20;
-    activeEquationPill = {
+    activeEquationPill = s.nbShowEquations === false ? null : {
       x: targetX,
       y: Math.max(topSafe + 24, boundsC.top - 28),
       mode: 'merge',
-      leftN: entityA.n,
-      rightN: entityB.n,
+      leftN: leftN,
+      rightN: rightN,
       sumN: sum,
       alpha: 1.0,
       scale: 1.0,
-      timer: (entityC.morphInfo.totalDuration / 1000) + 1.2
+      timer: (entityC.morphInfo.totalDuration / 1000) + 1.4
     };
 
     snapTarget = null;
@@ -14871,6 +15984,7 @@ window.ToddlerLearningHub = {
   function performSupernovaBounce(entityA, entityB) {
     const midX = (entityA.x + entityB.x) / 2;
     const midY = (entityA.y + entityB.y) / 2 - 40;
+    const sum = entityA.n + entityB.n;
 
     if (NB.Renderer && NB.Renderer.spawnBurst) {
       NB.Renderer.spawnBurst(midX, midY, 'highFive', null);
@@ -14881,11 +15995,7 @@ window.ToddlerLearningHub = {
     }
     if (NB.Audio && isBlocksActive()) {
       if (NB.Audio.playHighFiveBounce) NB.Audio.playHighFiveBounce();
-      if (maxCap === 10) {
-        NB.Audio.speak("Whoa, bigger than Ten! Fireworks!", 'high');
-      } else {
-        NB.Audio.speak("Whoa, super big number! Twenty is our biggest rocket!", 'high');
-      }
+      if (NB.Audio.speakSupernova) NB.Audio.speakSupernova(maxCap, entityA.n, entityB.n, sum);
     }
 
     entityA.state = 'IDLE';
@@ -14893,6 +16003,7 @@ window.ToddlerLearningHub = {
     entityA.vy = -360;
     entityA.scaleX = 1.18;
     entityA.scaleY = 0.82;
+    entityA.splitImmunityTimer = 0.65;
     entityA.expression = 'happy';
 
     entityB.state = 'IDLE';
@@ -14900,19 +16011,21 @@ window.ToddlerLearningHub = {
     entityB.vy = -360;
     entityB.scaleX = 1.18;
     entityB.scaleY = 0.82;
+    entityB.splitImmunityTimer = 0.65;
     entityB.expression = 'happy';
 
+    const s = getNbSettings();
     const topSafe = metrics ? metrics.topSafeY : 20;
-    activeEquationPill = {
+    activeEquationPill = s.nbShowEquations === false ? null : {
       x: midX,
       y: Math.max(topSafe + 24, midY - 30),
       mode: 'boom',
       leftN: entityA.n,
       rightN: entityB.n,
-      sumN: entityA.n + entityB.n,
+      sumN: sum,
       alpha: 1.0,
       scale: 1.0,
-      timer: 1.5
+      timer: 1.7
     };
 
     snapTarget = null;
@@ -15128,7 +16241,12 @@ window.ToddlerLearningHub = {
     let closest = null;
     let minEdgeDist = Infinity;
     const u = metrics ? metrics.unitSize : 48;
-    const snapEnterDist = Math.max(68, 1.35 * u);
+    const snapMode = getNbSettings().nbSnapMode || 'normal';
+    const snapEnterDist = snapMode === 'easy'
+      ? Math.max(88, 1.75 * u)
+      : snapMode === 'close'
+      ? Math.max(44, 0.85 * u)
+      : Math.max(68, 1.35 * u);
 
     for (let i = 0; i < entities.length; i++) {
       const other = entities[i];
@@ -15184,7 +16302,9 @@ window.ToddlerLearningHub = {
     primaryPointer.draggedEntity = null;
     primaryPointer.hasMoved = false;
     primaryPointer.isSplitBadgeHit = false;
+    primaryPointer.isRemoveBadgeHit = false;
     primaryPointer.targetEntityId = null;
+    gestureStartSnapshot = captureSnapshot();
 
     try {
       tile.setPointerCapture(e.pointerId);
@@ -15201,6 +16321,38 @@ window.ToddlerLearningHub = {
     const py = coords.y;
 
     if (primaryPointer.id === null) {
+      // 0. Check Remove [✕] Badge hit when visible or Remove Mode active
+      for (let i = entities.length - 1; i >= 0; i--) {
+        const ent = entities[i];
+        if (ent.state === 'POOFING_OUT' || ent.state === 'MORPHING') continue;
+        if (removeToolActive || ent.removeBadgeAlpha > 0.1) {
+          const rm = getRemoveBadgeRect(ent);
+          const dist = Math.hypot(px - rm.cx, py - rm.cy);
+          if (dist <= rm.r + 14) {
+            primaryPointer.id = e.pointerId;
+            primaryPointer.type = e.pointerType || 'touch';
+            primaryPointer.startClientX = e.clientX;
+            primaryPointer.startClientY = e.clientY;
+            primaryPointer.startX = px;
+            primaryPointer.startY = py;
+            primaryPointer.currentX = px;
+            primaryPointer.currentY = py;
+            primaryPointer.grabOffsetX = 0;
+            primaryPointer.grabOffsetY = 0;
+            primaryPointer.startTime = nowMs();
+            primaryPointer.targetEntityId = ent.id;
+            primaryPointer.isSplitBadgeHit = false;
+            primaryPointer.isRemoveBadgeHit = true;
+            primaryPointer.isFromDock = false;
+            primaryPointer.hasMoved = false;
+            primaryPointer.draggedEntity = null;
+            gestureStartSnapshot = null;
+            try { canvasEl.setPointerCapture(e.pointerId); } catch (err) {}
+            return;
+          }
+        }
+      }
+
       // 1. Check Split Badge hit first (only for n >= 2 with splitBadgeAlpha > 0.1)
       for (let i = entities.length - 1; i >= 0; i--) {
         const ent = entities[i];
@@ -15222,9 +16374,11 @@ window.ToddlerLearningHub = {
             primaryPointer.targetEntityId = ent.id;
             lastInteractedEntityId = ent.id;
             primaryPointer.isSplitBadgeHit = true;
+            primaryPointer.isRemoveBadgeHit = false;
             primaryPointer.isFromDock = false;
             primaryPointer.hasMoved = false;
             primaryPointer.draggedEntity = null;
+            gestureStartSnapshot = null;
             try { canvasEl.setPointerCapture(e.pointerId); } catch (err) {}
             return;
           }
@@ -15260,9 +16414,11 @@ window.ToddlerLearningHub = {
           primaryPointer.targetEntityId = ent.id;
           lastInteractedEntityId = ent.id;
           primaryPointer.isSplitBadgeHit = false;
+          primaryPointer.isRemoveBadgeHit = false;
           primaryPointer.isFromDock = false;
           primaryPointer.hasMoved = false;
           primaryPointer.draggedEntity = null;
+          gestureStartSnapshot = captureSnapshot();
           try { canvasEl.setPointerCapture(e.pointerId); } catch (err) {}
           return;
         }
@@ -15307,17 +16463,24 @@ window.ToddlerLearningHub = {
 
     if (primaryPointer.id !== e.pointerId) return;
 
+    const latestEv = (typeof e.getCoalescedEvents === 'function')
+      ? (e.getCoalescedEvents().slice(-1)[0] || e)
+      : e;
+    const clientX = latestEv.clientX;
+    const clientY = latestEv.clientY;
+
     // Handle Dock Drag Spawn
     if (primaryPointer.isFromDock) {
-      const travel = Math.hypot(e.clientX - primaryPointer.startClientX, e.clientY - primaryPointer.startClientY);
-      if (travel >= 10 && !primaryPointer.draggedEntity) {
-        // Pointer moved >= 10px: spawn block immediately in DRAGGING state right under finger!
+      const travel = Math.hypot(clientX - primaryPointer.startClientX, clientY - primaryPointer.startClientY);
+      if (travel >= 7 && !primaryPointer.draggedEntity) {
+        // Pointer moved >= 7px: spawn block immediately in DRAGGING state right under finger!
         enforceStageCapacity();
-        const coords = getCanvasCoords(e.clientX, e.clientY);
+        const coords = getCanvasCoords(clientX, clientY);
         const ground = metrics ? metrics.groundY : 350;
         const tempBounds = getEntityBounds({ n: primaryPointer.dockN, x: coords.x, y: ground });
         const grabOffY = Math.min(32, (tempBounds ? tempBounds.height : 48) * 0.35);
         const ent = createEntity(primaryPointer.dockN, coords.x, Math.min(ground, coords.y + grabOffY), 'DRAGGING');
+        ent.dragLiftBlend = 0;
         ent.zOrder = getHighestZOrder() + 1;
         entities.push(ent);
         primaryPointer.draggedEntity = ent;
@@ -15334,9 +16497,15 @@ window.ToddlerLearningHub = {
       }
     }
 
-    const coords = getCanvasCoords(e.clientX, e.clientY);
+    const coords = getCanvasCoords(clientX, clientY);
     primaryPointer.currentX = coords.x;
     primaryPointer.currentY = coords.y;
+
+    if (primaryPointer.isRemoveBadgeHit) {
+      const travel = Math.hypot(coords.x - primaryPointer.startX, coords.y - primaryPointer.startY);
+      if (travel >= 12) primaryPointer.hasMoved = true;
+      return;
+    }
 
     // Handle Split Badge Stretch
     if (primaryPointer.isSplitBadgeHit) {
@@ -15400,11 +16569,13 @@ window.ToddlerLearningHub = {
     if (!ent) return;
 
     const travel = Math.hypot(coords.x - primaryPointer.startX, coords.y - primaryPointer.startY);
-    if (travel >= 12 && !primaryPointer.hasMoved) {
+    if (travel >= 6 && !primaryPointer.hasMoved) {
       primaryPointer.hasMoved = true;
       ent.state = 'DRAGGING';
+      ent.dragLiftBlend = 0;
       ent.zOrder = getHighestZOrder() + 1;
       ent.splitBadgeAlpha = 0;
+      ent.removeBadgeAlpha = 0;
       onboardingArc = null;
 
       if (NB.Audio && NB.Audio.playPickup && isBlocksActive()) {
@@ -15413,6 +16584,16 @@ window.ToddlerLearningHub = {
     }
 
     if (ent.state === 'DRAGGING') {
+      // Trash zone highlight when dragged over bottom dock
+      if (dockEl) {
+        const dockRect = dockEl.getBoundingClientRect();
+        const overDock = clientY >= dockRect.top - 10;
+        if (overDock !== dockTrashOver) {
+          dockTrashOver = overDock;
+          dockEl.classList.toggle('is-trash-drop', overDock);
+        }
+      }
+
       // Live pupil tracking for surrounding characters
       const bounds = getEntityBounds(ent);
       for (let i = 0; i < entities.length; i++) {
@@ -15423,20 +16604,25 @@ window.ToddlerLearningHub = {
 
       // Magnetic Snap Detection (uses ent's actual bounds center so preview, pill, and drop match)
       const u = metrics ? metrics.unitSize : 48;
-      const snapExitDist = Math.max(82, 1.60 * u);
+      const snapMode = getNbSettings().nbSnapMode || 'normal';
+      const snapExitDist = snapMode === 'easy'
+        ? Math.max(104, 2.0 * u)
+        : snapMode === 'close'
+        ? Math.max(58, 1.05 * u)
+        : Math.max(82, 1.60 * u);
 
       if (snapTarget) {
         // Check hysteresis exit
         const bSnap = getEntityBounds(snapTarget);
         const curDist = Math.max(0, Math.hypot(bounds.centerX - bSnap.centerX, bounds.centerY - bSnap.centerY) - (bounds.width + bSnap.width) / 2);
-        if (curDist > snapExitDist) {
+        if (curDist > snapExitDist || dockTrashOver) {
           snapTarget.expression = 'happy';
           snapTarget = null;
           activeEquationPill = null;
         }
       }
 
-      if (!snapTarget) {
+      if (!snapTarget && !dockTrashOver) {
         const candidate = findSnapTarget(ent);
         if (candidate) {
           snapTarget = candidate;
@@ -15447,7 +16633,7 @@ window.ToddlerLearningHub = {
         }
       }
 
-      if (snapTarget) {
+      if (snapTarget && getNbSettings().nbShowEquations !== false) {
         const sum = ent.n + snapTarget.n;
         const bOther = getEntityBounds(snapTarget);
         const topSafe = metrics ? metrics.topSafeY : 20;
@@ -15463,6 +16649,8 @@ window.ToddlerLearningHub = {
           scale: 1.0,
           timer: 0.5
         };
+      } else if (dockTrashOver) {
+        activeEquationPill = null;
       }
     }
   }
@@ -15482,30 +16670,37 @@ window.ToddlerLearningHub = {
     const dockN = primaryPointer.dockN;
     const wasMoved = primaryPointer.hasMoved;
     const isBadgeHit = primaryPointer.isSplitBadgeHit;
+    const isRemoveBadgeHit = primaryPointer.isRemoveBadgeHit;
     const targetId = primaryPointer.targetEntityId;
+    const dragSnap = gestureStartSnapshot;
+    const wasOverTrash = dockTrashOver || (dockEl ? e.clientY >= dockEl.getBoundingClientRect().top - 10 : false);
 
-    // Reset primary pointer
+    // Reset primary pointer & trash highlight
     primaryPointer.id = null;
     primaryPointer.isFromDock = false;
     primaryPointer.draggedEntity = null;
+    primaryPointer.isSplitBadgeHit = false;
+    primaryPointer.isRemoveBadgeHit = false;
+    gestureStartSnapshot = null;
+    dockTrashOver = false;
+    if (dockEl) dockEl.classList.remove('is-trash-drop');
 
     // Clear look targets when dragging stops
     for (let i = 0; i < entities.length; i++) {
       entities[i].lookTarget = null;
     }
 
-    // 1. Dock tap without drag (released < 10px): spawn block hopping on floor!
+    // 1. Dock tap without drag (released < 7px): spawn block in an open slot!
     if (isFromDock && !wasMoved) {
+      pushUndoSnapshot(dragSnap);
       enforceStageCapacity();
-      const stageWidth = metrics ? metrics.width : 400;
       const ground = metrics ? metrics.groundY : 350;
-
-      // Find open spot
-      const spawnX = stageWidth * (0.25 + Math.random() * 0.5);
+      const spawnX = findOpenStageX(dockN);
       const ent = createEntity(dockN, spawnX, ground, 'IDLE');
       ent.vy = -420;
       ent.scaleY = 1.18;
       ent.scaleX = 0.85;
+      ent.spawnImmunityTimer = 0.45;
       ent.zOrder = getHighestZOrder() + 1;
       entities.push(ent);
       lastInteractedEntityId = ent.id;
@@ -15514,6 +16709,15 @@ window.ToddlerLearningHub = {
       if (NB.Audio && isBlocksActive()) {
         if (NB.Audio.playPickup) NB.Audio.playPickup();
         if (NB.Audio.speakTap) NB.Audio.speakTap(dockN);
+      }
+      return;
+    }
+
+    // 1b. Remove [✕] Badge tap
+    if (isRemoveBadgeHit) {
+      const ent = findEntity(targetId);
+      if (ent && !wasMoved) {
+        removeEntity(ent);
       }
       return;
     }
@@ -15530,6 +16734,8 @@ window.ToddlerLearningHub = {
           ent.scaleY = 0.90;
           ent.splitBadgeAlpha = 1.0;
           ent.splitBadgeTimer = 5.0;
+          ent.removeBadgeAlpha = 1.0;
+          ent.removeBadgeTimer = 5.0;
           activeEquationPill = null;
         } else if (!wasMoved) {
           // Tap on [↔] badge: 1-Tap Split!
@@ -15546,12 +16752,14 @@ window.ToddlerLearningHub = {
 
     if (!wasMoved) {
       // It was a tap on character body!
-      if (splitToolActive && ent.n >= 2) {
+      if (removeToolActive) {
+        removeEntity(ent);
+      } else if (splitToolActive && ent.n >= 2) {
         // Split tool is active: 1-Tap Split!
         const [pA, pB] = getNextSplitBond(ent.n);
         performSplit(ent, pA, pB);
       } else {
-        // Normal Tap -> Joy Tap! NEVER accidentally splits!
+        // Normal Tap -> Joy Tap! Shows both Split (n >= 2) and Remove [✕] badges cleanly
         ent.vy = -480;
         ent.scaleY = 1.20;
         ent.scaleX = 0.84;
@@ -15567,25 +16775,44 @@ window.ToddlerLearningHub = {
           NB.Renderer.spawnBurst(ent.x, ent.y - b.height / 2, 'tapSparkle', null);
         }
 
-        // Reveal contextual [↔] Split Badge for 5.0s on characters >= 2
         if (ent.n >= 2) {
           ent.splitBadgeAlpha = 1.0;
           ent.splitBadgeTimer = 5.0;
         }
+        ent.removeBadgeAlpha = 1.0;
+        ent.removeBadgeTimer = 5.0;
       }
     } else if (ent.state === 'DRAGGING') {
-      // Drag release
+      if (wasOverTrash) {
+        // Dragged onto dock trash zone -> remove this specific block
+        if (isFromDock) {
+          removeEntity(ent, true);
+        } else {
+          if (dragSnap) pushUndoSnapshot(dragSnap);
+          removeEntity(ent, true);
+        }
+        return;
+      }
+
+      // Drag release on stage
       if (!snapTarget) {
         snapTarget = findSnapTarget(ent);
       }
       if (snapTarget) {
         const sum = ent.n + snapTarget.n;
+        if (dragSnap) pushUndoSnapshot(dragSnap);
         if (sum > maxCap) {
           performSupernovaBounce(ent, snapTarget);
         } else {
           performMerge(ent, snapTarget);
         }
       } else {
+        const ground = metrics ? metrics.groundY : 350;
+        if (ent.y < ground - 8) {
+          ent.fallOriginSnap = dragSnap;
+        } else if (dragSnap) {
+          pushUndoSnapshot(dragSnap);
+        }
         ent.state = 'IDLE';
         activeEquationPill = null;
         if (snapTarget) {
@@ -15606,8 +16833,13 @@ window.ToddlerLearningHub = {
     primaryPointer.id = null;
     primaryPointer.isFromDock = false;
     primaryPointer.draggedEntity = null;
+    primaryPointer.isSplitBadgeHit = false;
+    primaryPointer.isRemoveBadgeHit = false;
     primaryPointer.grabOffsetX = 0;
     primaryPointer.grabOffsetY = 0;
+    gestureStartSnapshot = null;
+    dockTrashOver = false;
+    if (dockEl) dockEl.classList.remove('is-trash-drop');
 
     for (let i = 0; i < entities.length; i++) {
       entities[i].lookTarget = null;
@@ -15670,10 +16902,15 @@ window.ToddlerLearningHub = {
     const stageWidth = metrics ? metrics.width : 400;
     const topSafe = metrics ? metrics.topSafeY : 20;
     const ground = metrics ? metrics.groundY : 350;
+    const fallCombineEnabled = getNbSettings().nbFallCombine !== false;
+    let pendingFallCombine = null;
 
     for (let i = entities.length - 1; i >= 0; i--) {
       const e = entities[i];
       const bounds = getEntityBounds(e);
+
+      if (e.splitImmunityTimer > 0) e.splitImmunityTimer = Math.max(0, e.splitImmunityTimer - dt);
+      if (e.spawnImmunityTimer > 0) e.spawnImmunityTimer = Math.max(0, e.spawnImmunityTimer - dt);
 
       // Fade split badge timer
       if (e.splitBadgeTimer > 0) {
@@ -15683,6 +16920,16 @@ window.ToddlerLearningHub = {
         }
       } else if (e.splitBadgeAlpha > 0) {
         e.splitBadgeAlpha = Math.max(0, e.splitBadgeAlpha - dt * 2.5);
+      }
+
+      // Fade remove badge timer
+      if (e.removeBadgeTimer > 0) {
+        e.removeBadgeTimer -= dt;
+        if (e.removeBadgeTimer <= 0) {
+          e.removeBadgeAlpha = Math.max(0, e.removeBadgeAlpha - dt * 2.5);
+        }
+      } else if (e.removeBadgeAlpha > 0) {
+        e.removeBadgeAlpha = Math.max(0, e.removeBadgeAlpha - dt * 2.5);
       }
 
       // Tap animation progress
@@ -15721,11 +16968,10 @@ window.ToddlerLearningHub = {
           const step = Math.min(e.morphInfo.sum, Math.floor(p2Elapsed / e.morphInfo.stepMs) + 1);
           e.morphInfo.activeStepIndex = step - 1;
           if (step > e.morphInfo.litCount) {
-            for (let k = e.morphInfo.litCount + 1; k <= step; k++) {
-              if (NB.Audio && isBlocksActive()) {
-                if (NB.Audio.playCountNote) NB.Audio.playCountNote(k, e.morphInfo.sum);
-                else if (NB.Audio.playMarimbaNote) NB.Audio.playMarimbaNote(k);
-              }
+            if (NB.Audio && isBlocksActive() && (now - lastCountAudioAt >= 42 || step === e.morphInfo.sum)) {
+              lastCountAudioAt = now;
+              if (NB.Audio.playCountNote) NB.Audio.playCountNote(step, e.morphInfo.sum);
+              else if (NB.Audio.playMarimbaNote) NB.Audio.playMarimbaNote(step);
             }
             e.morphInfo.litCount = step;
           }
@@ -15758,9 +17004,12 @@ window.ToddlerLearningHub = {
               NB.Audio.playMergeFanfare(e.n);
             }
 
-            // Unlock friend in dock if 6..10
-            if (e.n >= 6 && e.n <= 10 && !isUnlocked(e.n)) {
+            // Unlock newly built friend
+            if (e.n >= 6 && e.n <= 100 && !isUnlocked(e.n)) {
               unlockFriend(e.n);
+              if (NB.Data && NB.Data.unlockCharacter) {
+                NB.Data.unlockCharacter(e.n);
+              }
               if (NB.Audio && NB.Audio.playUnlockJingle && isBlocksActive()) {
                 NB.Audio.playUnlockJingle();
               }
@@ -15768,19 +17017,12 @@ window.ToddlerLearningHub = {
             }
           }
         } else if (elapsed < e.morphInfo.totalDuration) {
-          // Beat 4: Celebrate / Idle (upward launch stretch)
+          // Beat 4: Celebrate / Idle (upward launch stretch; math equation already spoken immediately on merge)
           if (e.state === 'MORPHING') {
             e.state = 'CELEBRATING';
             e.vy = -420;
             e.scaleY = 1.16;
             e.scaleX = 1 / 1.16;
-
-            const isFirstInSession = !firstMergeSessionMap.has(e.n);
-            firstMergeSessionMap.add(e.n);
-            if (NB.Audio && NB.Audio.speakMerge && isBlocksActive()) {
-              NB.Audio.speakMerge(e.morphInfo.sourceA, e.morphInfo.sourceB, e.n, isFirstInSession);
-            }
-
             checkChallengeGoal('merge', { target: e.n });
           }
         } else {
@@ -15789,17 +17031,22 @@ window.ToddlerLearningHub = {
         }
       }
 
-      // State: DRAGGING
+      // State: DRAGGING (Ultra-smooth exponential smoothing + gradual lift blend)
       if (e.state === 'DRAGGING') {
-        const liftY = (primaryPointer.type === 'touch') ? -10 : -4;
+        e.dragLiftBlend = Math.min(1, (e.dragLiftBlend || 0) + dt / 0.09);
+        const rawLiftY = (primaryPointer.type === 'touch') ? -10 : -4;
+        const liftY = rawLiftY * e.dragLiftBlend;
         const targetX = primaryPointer.currentX + (primaryPointer.grabOffsetX || 0);
         const targetY = Math.min(ground, primaryPointer.currentY + (primaryPointer.grabOffsetY || 0) + liftY);
 
-        // Drag follow spring
-        const [nextX, nextVx] = stepSpring(e.x, e.vx, targetX, DRAG_STIFFNESS, DRAG_DAMPING, dt);
-        const [nextY, nextVy] = stepSpring(e.y, e.vy, targetY, DRAG_STIFFNESS, DRAG_DAMPING, dt);
-        e.x = nextX; e.vx = nextVx;
-        e.y = nextY; e.vy = nextVy;
+        const alpha = 1 - Math.exp(-DRAG_SMOOTH_RATE * dt);
+        const prevX = e.x;
+        const prevY = e.y;
+        e.x = prevX + (targetX - prevX) * alpha;
+        e.y = prevY + (targetY - prevY) * alpha;
+        const invDt = 1 / Math.max(dt, 0.001);
+        e.vx = (e.x - prevX) * invDt;
+        e.vy = (e.y - prevY) * invDt;
 
         // Velocity tilt
         const targetTilt = Math.max(-0.22, Math.min(0.22, e.vx * 0.00045));
@@ -15849,6 +17096,11 @@ window.ToddlerLearningHub = {
           e.vy = 0;
           e.vx = 0;
 
+          if (e.fallOriginSnap) {
+            pushUndoSnapshot(e.fallOriginSnap);
+            e.fallOriginSnap = null;
+          }
+
           if (e.state === 'CELEBRATING' && (!e.morphInfo || now - e.morphInfo.startTime >= e.morphInfo.totalDuration)) {
             e.state = 'IDLE';
             e.morphInfo = null;
@@ -15866,10 +17118,79 @@ window.ToddlerLearningHub = {
         e.tilt = nextTilt;
         e.tiltVel = nextTiltVel;
 
+        // Gravity Stack-Combine: falling block landing on top of another settled/idle block combines automatically!
+        if (
+          fallCombineEnabled &&
+          e.state === 'IDLE' &&
+          !pendingFallCombine &&
+          e.vy > 35 &&
+          e.y < ground - 2 &&
+          (!e.splitImmunityTimer || e.splitImmunityTimer <= 0) &&
+          (!e.spawnImmunityTimer || e.spawnImmunityTimer <= 0)
+        ) {
+          const bE = getEntityBounds(e);
+          for (let j = 0; j < entities.length; j++) {
+            const other = entities[j];
+            if (!other || other.id === e.id || other.state !== 'IDLE') continue;
+            if ((other.splitImmunityTimer && other.splitImmunityTimer > 0) || (other.spawnImmunityTimer && other.spawnImmunityTimer > 0)) continue;
+            const bOther = getEntityBounds(other);
+            const overlapX = Math.min(bE.right, bOther.right) - Math.max(bE.left, bOther.left);
+            const minReqOverlap = Math.min(bE.width, bOther.width) * 0.25;
+            if (overlapX >= minReqOverlap && bE.bottom >= bOther.top - 10 && bE.bottom <= bOther.bottom + 14 && bE.centerY < bOther.centerY) {
+              pendingFallCombine = { falling: e, target: other };
+              break;
+            }
+          }
+        }
+
         // Wall clamps
         const halfW = bounds.width / 2;
         if (e.x < halfW + 12) { e.x = halfW + 12; e.vx = 0; }
         if (e.x > stageWidth - halfW - 12) { e.x = stageWidth - halfW - 12; e.vx = 0; }
+      }
+    }
+
+    // Execute deferred gravity fall-combine outside the physics loop so splicing is 100% safe
+    if (pendingFallCombine) {
+      const falling = pendingFallCombine.falling;
+      const target = pendingFallCombine.target;
+      if (findEntity(falling.id) && findEntity(target.id)) {
+        const sum = falling.n + target.n;
+        if (sum > maxCap) {
+          falling.fallOriginSnap = null;
+          performSupernovaBounce(falling, target);
+        } else {
+          pushUndoSnapshot(falling.fallOriginSnap || captureSnapshot());
+          falling.fallOriginSnap = null;
+          performMerge(falling, target);
+        }
+      }
+    }
+
+    // Gentle idle horizontal auto-spacing for resting blocks on ground
+    if (getNbSettings().nbAutoSpace !== false && entities.length > 1) {
+      for (let i = 0; i < entities.length; i++) {
+        const a = entities[i];
+        if (a.state !== 'IDLE' || Math.abs(a.y - ground) > 2) continue;
+        if (a.splitImmunityTimer > 0 || a.spawnImmunityTimer > 0) continue;
+        if (snapTarget && snapTarget.id === a.id) continue;
+        const bA = getEntityBounds(a);
+        for (let j = i + 1; j < entities.length; j++) {
+          const b = entities[j];
+          if (b.state !== 'IDLE' || Math.abs(b.y - ground) > 2) continue;
+          if (b.splitImmunityTimer > 0 || b.spawnImmunityTimer > 0) continue;
+          if (snapTarget && snapTarget.id === b.id) continue;
+          const bB = getEntityBounds(b);
+          const dx = a.x - b.x;
+          const minSep = (bA.width + bB.width) * 0.5 + 14;
+          const absDx = Math.abs(dx);
+          if (absDx < minSep) {
+            const push = Math.min(140 * dt, (minSep - absDx) * 0.35);
+            const dir = dx >= 0 ? 1 : -1;
+            a.x = Math.max(bA.width / 2 + 12, Math.min(stageWidth - bA.width / 2 - 12, a.x + dir * push));
+            b.x = Math.max(bB.width / 2 + 12, Math.min(stageWidth - bB.width / 2 - 12, b.x - dir * push));
+          }
+        }
       }
     }
 
@@ -15896,6 +17217,7 @@ window.ToddlerLearningHub = {
         entities: entities,
         metrics: metrics,
         splitModeActive: splitToolActive,
+        removeModeActive: removeToolActive,
         onboardingArc: onboardingArc,
         snapPreview: snapPreviewObj,
         equationPill: activeEquationPill
@@ -15929,10 +17251,13 @@ window.ToddlerLearningHub = {
     challengeStarsEl = document.getElementById('nb-challenge-stars');
     challengeHintBtn = document.getElementById('nb-challenge-hint-btn');
     challengeSkipBtn = document.getElementById('nb-challenge-skip-btn');
+    toolUndoBtn = document.getElementById('nb-tool-undo');
+    toolRemoveBtn = document.getElementById('nb-tool-remove');
     toolSplitBtn = document.getElementById('nb-tool-split');
     toolUnlockBtn = document.getElementById('nb-tool-unlock');
     toolResetBtn = document.getElementById('nb-tool-reset');
     toolCountBtn = document.getElementById('nb-tool-count');
+    updateUndoButton();
 
     if (canvasEl && hudOverlayEl && NB.Renderer && NB.Renderer.init) {
       renderer = NB.Renderer.init(canvasEl, hudOverlayEl);
@@ -15973,11 +17298,44 @@ window.ToddlerLearningHub = {
     }
 
     // Stage Tools
+    if (toolUndoBtn) {
+      toolUndoBtn.addEventListener('click', () => {
+        if (NB.Audio && NB.Audio.unlock) NB.Audio.unlock();
+        performUndo();
+      });
+    }
+
+    if (toolRemoveBtn) {
+      toolRemoveBtn.addEventListener('click', () => {
+        removeToolActive = !removeToolActive;
+        toolRemoveBtn.classList.toggle('is-active', removeToolActive);
+        toolRemoveBtn.setAttribute('aria-pressed', String(removeToolActive));
+        if (removeToolActive && splitToolActive) {
+          splitToolActive = false;
+          if (toolSplitBtn) {
+            toolSplitBtn.classList.remove('is-active');
+            toolSplitBtn.setAttribute('aria-pressed', 'false');
+          }
+        }
+        if (NB.Audio && NB.Audio.unlock) NB.Audio.unlock();
+        if (removeToolActive && NB.Audio && NB.Audio.speak && isBlocksActive()) {
+          NB.Audio.speak('Tap any block to remove it!', 'high');
+        }
+      });
+    }
+
     if (toolSplitBtn) {
       toolSplitBtn.addEventListener('click', () => {
         splitToolActive = !splitToolActive;
         toolSplitBtn.classList.toggle('is-active', splitToolActive);
         toolSplitBtn.setAttribute('aria-pressed', String(splitToolActive));
+        if (splitToolActive && removeToolActive) {
+          removeToolActive = false;
+          if (toolRemoveBtn) {
+            toolRemoveBtn.classList.remove('is-active');
+            toolRemoveBtn.setAttribute('aria-pressed', 'false');
+          }
+        }
         if (NB.Audio && NB.Audio.unlock) NB.Audio.unlock();
       });
     }
@@ -16000,6 +17358,7 @@ window.ToddlerLearningHub = {
 
     if (toolResetBtn) {
       toolResetBtn.addEventListener('click', () => {
+        pushUndoSnapshot();
         if (NB.Audio && NB.Audio.playPickup && isBlocksActive()) {
           NB.Audio.playPickup();
         }
@@ -16131,6 +17490,7 @@ window.ToddlerLearningHub = {
         entities: entities,
         metrics: metrics,
         splitModeActive: splitToolActive,
+        removeModeActive: false,
         onboardingArc: onboardingArc,
         snapPreview: null,
         equationPill: activeEquationPill
@@ -16221,9 +17581,16 @@ window.ToddlerLearningHub = {
     snapTarget = null;
     activeEquationPill = null;
     splitToolActive = false;
+    removeToolActive = false;
+    dockTrashOver = false;
+    if (dockEl) dockEl.classList.remove('is-trash-drop');
     if (toolSplitBtn) {
       toolSplitBtn.classList.remove('is-active');
       toolSplitBtn.setAttribute('aria-pressed', 'false');
+    }
+    if (toolRemoveBtn) {
+      toolRemoveBtn.classList.remove('is-active');
+      toolRemoveBtn.setAttribute('aria-pressed', 'false');
     }
 
     const stageWidth = metrics ? metrics.width : 400;
@@ -16244,6 +17611,7 @@ window.ToddlerLearningHub = {
         entities: entities,
         metrics: metrics,
         splitModeActive: splitToolActive,
+        removeModeActive: false,
         onboardingArc: onboardingArc,
         snapPreview: null,
         equationPill: activeEquationPill
@@ -16317,46 +17685,62 @@ window.ToddlerLearningHub = {
     snapTarget = null;
     activeEquationPill = null;
     splitToolActive = false;
+    removeToolActive = false;
+    dockTrashOver = false;
+    if (dockEl) dockEl.classList.remove('is-trash-drop');
     if (toolSplitBtn) {
       toolSplitBtn.classList.remove('is-active');
       toolSplitBtn.setAttribute('aria-pressed', 'false');
+    }
+    if (toolRemoveBtn) {
+      toolRemoveBtn.classList.remove('is-active');
+      toolRemoveBtn.setAttribute('aria-pressed', 'false');
     }
   }
 
   function applySettings() {
     maxCap = getMaxCap();
 
-    if (maxCap === 10) {
-      // Downgraded 20 -> 10 while entities n > 10 are on stage:
-      // immediately split them live into 10 and n - 10!
-      const highEntities = entities.filter(e => e.n > 10 && e.state !== 'POOFING_OUT');
-      highEntities.forEach(ent => {
-        performSplit(ent, 10, ent.n - 10);
-      });
+    // Trim excess entities if maxCap was reduced while large numbers are on stage
+    const highEntities = entities.filter(e => e.n > maxCap && e.state !== 'POOFING_OUT');
+    highEntities.forEach(ent => {
+      if (ent.n <= maxCap * 2 && ent.n - maxCap >= 1) {
+        performSplit(ent, maxCap, ent.n - maxCap, true);
+      } else {
+        ent.n = maxCap;
+      }
+    });
 
-      if (currentMode === 'challenge') {
-        const c = getCurrentChallenge();
-        if (c && c.maxRequired > 10) {
-          advanceChallenge();
-        }
+    if (currentMode === 'challenge') {
+      const c = getCurrentChallenge();
+      if (c && c.maxRequired > maxCap) {
+        advanceChallenge();
       }
     }
 
-    updateDock();
+    const s = getNbSettings();
+    const desiredKey = `${s.nbDockRange || '1-10'}:${s.maxNumber || 100}:${s.nbUnlockAll !== false}`;
+    if (desiredKey !== currentDockKey) {
+      initDock();
+    } else {
+      updateDock();
+    }
+    updateUndoButton();
   }
 
   function spawnFromDock(n, pointerEvent) {
     if (pointerEvent && pointerEvent.clientX !== undefined) {
       onDockPointerDown(pointerEvent);
     } else {
+      pushUndoSnapshot();
       enforceStageCapacity();
-      const stageWidth = metrics ? metrics.width : 400;
       const ground = metrics ? metrics.groundY : 350;
-      const spawnX = stageWidth * (0.25 + Math.random() * 0.5);
+      const spawnX = findOpenStageX(n);
       const ent = createEntity(n, spawnX, ground, 'IDLE');
       ent.vy = -420;
       ent.scaleY = 1.18;
       ent.scaleX = 0.85;
+      ent.spawnImmunityTimer = 0.45;
       ent.zOrder = getHighestZOrder() + 1;
       entities.push(ent);
       lastInteractedEntityId = ent.id;
@@ -16378,7 +17762,8 @@ window.ToddlerLearningHub = {
     openWithNumber: openWithNumber,
     stop: stop,
     applySettings: applySettings,
-    spawnFromDock: spawnFromDock
+    spawnFromDock: spawnFromDock,
+    undo: performUndo
   };
 
   if (typeof document !== 'undefined') {
