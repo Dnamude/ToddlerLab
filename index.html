@@ -857,6 +857,26 @@
             transform: translateX(20px);
         }
 
+        /* Collapsible Settings Disclosures & Per-Game Submenu Cards */
+        details.settings-disclosure > summary {
+            list-style: none;
+        }
+        details.settings-disclosure > summary::-webkit-details-marker {
+            display: none;
+        }
+        details.settings-disclosure .disclosure-chevron {
+            display: inline-block;
+            transition: transform 0.18s ease;
+        }
+        details.settings-disclosure:not([open]) .disclosure-chevron {
+            transform: rotate(-90deg);
+        }
+        .game-submenu-trigger.is-current-game {
+            border-color: #6366f1;
+            background-color: #eef2ff;
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+        }
+
         .count-item-btn {
             width: 4.4rem;
             height: 4.4rem;
@@ -2318,137 +2338,476 @@
         </div>
     </div>
 
-    <!-- VOICE & AUDIO SETTINGS MODAL -->
-        <div id="voice-settings-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
-        <div class="bg-white rounded-3xl max-w-lg w-full p-4 sm:p-6 shadow-2xl border-4 border-indigo-200 flex flex-col gap-3.5 max-h-[92vh] overflow-y-auto">
-            <div class="flex items-center justify-between border-b pb-3 flex-shrink-0">
-                <div class="flex items-center gap-2.5">
-                    <span class="text-3xl">⚙️</span>
-                    <div>
-                        <h2 class="text-xl sm:text-2xl font-black text-slate-800 leading-tight">Options & Voice Settings</h2>
-                        <p class="text-xs text-slate-500 font-bold">App Features, Toddler Controls & Speech Audio</p>
+    <!-- VOICE & AUDIO SETTINGS MODAL (Main Settings + 12 Per-Game Submenus) -->
+    <div id="voice-settings-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
+        <div id="voice-settings-card" class="bg-white rounded-3xl max-w-lg w-full p-4 sm:p-6 shadow-2xl border-4 border-indigo-200 flex flex-col gap-3.5 max-h-[92vh] overflow-y-auto overflow-x-hidden">
+            <div class="flex items-center justify-between border-b pb-3 flex-shrink-0 gap-2">
+                <div class="flex items-center gap-2.5 min-w-0">
+                    <span id="settings-modal-icon" class="text-3xl flex-shrink-0">⚙️</span>
+                    <div class="min-w-0">
+                        <h2 id="settings-modal-title" class="text-xl sm:text-2xl font-black text-slate-800 leading-tight truncate">Options &amp; Voice Settings</h2>
+                        <p id="settings-modal-subtitle" class="text-xs text-slate-500 font-bold truncate">Main Audio, Gemini Speech &amp; Per-Game Submenus</p>
                     </div>
                 </div>
-                <button id="voice-modal-close-x" class="text-slate-400 hover:text-slate-700 text-2xl font-black p-1 squish-btn" title="Close">✕</button>
+                <button id="voice-modal-close-x" type="button" class="text-slate-400 hover:text-slate-700 text-2xl font-black p-1 squish-btn flex-shrink-0" title="Close">✕</button>
             </div>
 
-            <!-- Game & Audio Options Section -->
-            <div class="flex flex-col gap-2">
-                <div class="flex items-center gap-1.5 mb-0.5">
-                    <span class="text-sm">🎛️</span>
-                    <h3 class="text-xs font-black uppercase tracking-wider text-slate-700">Game & Audio Options</h3>
+            <!-- MAIN SETTINGS VIEW (Global Audio, Gemini Speech API & 12-Game Submenu Directory) -->
+            <div id="settings-main-view" class="flex flex-col gap-3.5">
+                <!-- 1. Per-Game Submenus Directory (Click Into Any Game) -->
+                <details id="settings-sec-games" class="settings-disclosure flex flex-col gap-2" open>
+                    <summary class="flex items-center justify-between cursor-pointer select-none py-0.5">
+                        <div class="flex items-center gap-1.5 min-w-0">
+                            <span class="text-sm">🎮</span>
+                            <h3 class="text-xs font-black uppercase tracking-wider text-slate-700 truncate">Game Settings Submenus</h3>
+                        </div>
+                        <div class="flex items-center gap-1.5 flex-shrink-0">
+                            <span class="text-[10px] font-extrabold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full border border-indigo-100">Click Into Any Game</span>
+                            <span class="disclosure-chevron text-slate-400 font-black text-xs px-1">▾</span>
+                        </div>
+                    </summary>
+                    <div id="settings-game-grid" class="grid grid-cols-2 gap-2 pt-1.5">
+                        <button type="button" data-open-submenu="letters" class="game-submenu-trigger min-w-0 p-2.5 rounded-2xl bg-slate-50 hover:bg-indigo-50/70 border-2 border-slate-200 hover:border-indigo-300 text-left flex items-center justify-between gap-1.5 squish-btn transition-colors">
+                            <div class="flex items-center gap-2 min-w-0">
+                                <span class="text-xl leading-none flex-shrink-0">🔤</span>
+                                <div class="min-w-0">
+                                    <div class="text-xs font-black text-slate-800 truncate">Phonics A–Z</div>
+                                    <div id="submenu-summary-letters" class="text-[10px] font-bold text-slate-500 truncate">Full • Aa • 3 Bubbles</div>
+                                </div>
+                            </div>
+                            <span class="text-indigo-500 font-black text-base leading-none flex-shrink-0">›</span>
+                        </button>
+                        <button type="button" data-open-submenu="numbers" class="game-submenu-trigger min-w-0 p-2.5 rounded-2xl bg-slate-50 hover:bg-indigo-50/70 border-2 border-slate-200 hover:border-indigo-300 text-left flex items-center justify-between gap-1.5 squish-btn transition-colors">
+                            <div class="flex items-center gap-2 min-w-0">
+                                <span class="text-xl leading-none flex-shrink-0">🔢</span>
+                                <div class="min-w-0">
+                                    <div class="text-xs font-black text-slate-800 truncate">Tap &amp; Count</div>
+                                    <div id="submenu-summary-numbers" class="text-[10px] font-bold text-slate-500 truncate">1–100 • Tap Mode</div>
+                                </div>
+                            </div>
+                            <span class="text-indigo-500 font-black text-base leading-none flex-shrink-0">›</span>
+                        </button>
+                        <button type="button" data-open-submenu="blocks" class="game-submenu-trigger min-w-0 p-2.5 rounded-2xl bg-slate-50 hover:bg-indigo-50/70 border-2 border-slate-200 hover:border-indigo-300 text-left flex items-center justify-between gap-1.5 squish-btn transition-colors">
+                            <div class="flex items-center gap-2 min-w-0">
+                                <span class="text-xl leading-none flex-shrink-0">🧱</span>
+                                <div class="min-w-0">
+                                    <div class="text-xs font-black text-slate-800 truncate">Number Blocks</div>
+                                    <div id="submenu-summary-blocks" class="text-[10px] font-bold text-slate-500 truncate">Max 100 • 1–10 Tray</div>
+                                </div>
+                            </div>
+                            <span class="text-indigo-500 font-black text-base leading-none flex-shrink-0">›</span>
+                        </button>
+                        <button type="button" data-open-submenu="quiz" class="game-submenu-trigger min-w-0 p-2.5 rounded-2xl bg-slate-50 hover:bg-indigo-50/70 border-2 border-slate-200 hover:border-indigo-300 text-left flex items-center justify-between gap-1.5 squish-btn transition-colors">
+                            <div class="flex items-center gap-2 min-w-0">
+                                <span class="text-xl leading-none flex-shrink-0">🕵️</span>
+                                <div class="min-w-0">
+                                    <div class="text-xs font-black text-slate-800 truncate">Look &amp; Find</div>
+                                    <div id="submenu-summary-quiz" class="text-[10px] font-bold text-slate-500 truncate">3 Choices • All Cats</div>
+                                </div>
+                            </div>
+                            <span class="text-indigo-500 font-black text-base leading-none flex-shrink-0">›</span>
+                        </button>
+                        <button type="button" data-open-submenu="shapes" class="game-submenu-trigger min-w-0 p-2.5 rounded-2xl bg-slate-50 hover:bg-indigo-50/70 border-2 border-slate-200 hover:border-indigo-300 text-left flex items-center justify-between gap-1.5 squish-btn transition-colors">
+                            <div class="flex items-center gap-2 min-w-0">
+                                <span class="text-xl leading-none flex-shrink-0">🔺</span>
+                                <div class="min-w-0">
+                                    <div class="text-xs font-black text-slate-800 truncate">2D Shapes</div>
+                                    <div id="submenu-summary-shapes" class="text-[10px] font-bold text-slate-500 truncate">All 12 • Name Only</div>
+                                </div>
+                            </div>
+                            <span class="text-indigo-500 font-black text-base leading-none flex-shrink-0">›</span>
+                        </button>
+                        <button type="button" data-open-submenu="shapes3d" class="game-submenu-trigger min-w-0 p-2.5 rounded-2xl bg-slate-50 hover:bg-indigo-50/70 border-2 border-slate-200 hover:border-indigo-300 text-left flex items-center justify-between gap-1.5 squish-btn transition-colors">
+                            <div class="flex items-center gap-2 min-w-0">
+                                <span class="text-xl leading-none flex-shrink-0">🧊</span>
+                                <div class="min-w-0">
+                                    <div class="text-xs font-black text-slate-800 truncate">3D Shapes</div>
+                                    <div id="submenu-summary-shapes3d" class="text-[10px] font-bold text-slate-500 truncate">All 10 • Auto-Spin</div>
+                                </div>
+                            </div>
+                            <span class="text-indigo-500 font-black text-base leading-none flex-shrink-0">›</span>
+                        </button>
+                        <button type="button" data-open-submenu="colors" class="game-submenu-trigger min-w-0 p-2.5 rounded-2xl bg-slate-50 hover:bg-indigo-50/70 border-2 border-slate-200 hover:border-indigo-300 text-left flex items-center justify-between gap-1.5 squish-btn transition-colors">
+                            <div class="flex items-center gap-2 min-w-0">
+                                <span class="text-xl leading-none flex-shrink-0">🎨</span>
+                                <div class="min-w-0">
+                                    <div class="text-xs font-black text-slate-800 truncate">Colors &amp; Mix</div>
+                                    <div id="submenu-summary-colors" class="text-[10px] font-bold text-slate-500 truncate">Explore • 10 Colors</div>
+                                </div>
+                            </div>
+                            <span class="text-indigo-500 font-black text-base leading-none flex-shrink-0">›</span>
+                        </button>
+                        <button type="button" data-open-submenu="animals" class="game-submenu-trigger min-w-0 p-2.5 rounded-2xl bg-slate-50 hover:bg-indigo-50/70 border-2 border-slate-200 hover:border-indigo-300 text-left flex items-center justify-between gap-1.5 squish-btn transition-colors">
+                            <div class="flex items-center gap-2 min-w-0">
+                                <span class="text-xl leading-none flex-shrink-0">🦁</span>
+                                <div class="min-w-0">
+                                    <div class="text-xs font-black text-slate-800 truncate">Animals</div>
+                                    <div id="submenu-summary-animals" class="text-[10px] font-bold text-slate-500 truncate">All 18 • Name+Sound</div>
+                                </div>
+                            </div>
+                            <span class="text-indigo-500 font-black text-base leading-none flex-shrink-0">›</span>
+                        </button>
+                        <button type="button" data-open-submenu="fruits" class="game-submenu-trigger min-w-0 p-2.5 rounded-2xl bg-slate-50 hover:bg-indigo-50/70 border-2 border-slate-200 hover:border-indigo-300 text-left flex items-center justify-between gap-1.5 squish-btn transition-colors">
+                            <div class="flex items-center gap-2 min-w-0">
+                                <span class="text-xl leading-none flex-shrink-0">🍓</span>
+                                <div class="min-w-0">
+                                    <div class="text-xs font-black text-slate-800 truncate">Yummy Foods</div>
+                                    <div id="submenu-summary-fruits" class="text-[10px] font-bold text-slate-500 truncate">5 Bites • All 14</div>
+                                </div>
+                            </div>
+                            <span class="text-indigo-500 font-black text-base leading-none flex-shrink-0">›</span>
+                        </button>
+                        <button type="button" data-open-submenu="things" class="game-submenu-trigger min-w-0 p-2.5 rounded-2xl bg-slate-50 hover:bg-indigo-50/70 border-2 border-slate-200 hover:border-indigo-300 text-left flex items-center justify-between gap-1.5 squish-btn transition-colors">
+                            <div class="flex items-center gap-2 min-w-0">
+                                <span class="text-xl leading-none flex-shrink-0">🚒</span>
+                                <div class="min-w-0">
+                                    <div class="text-xs font-black text-slate-800 truncate">Vehicles &amp; Things</div>
+                                    <div id="submenu-summary-things" class="text-[10px] font-bold text-slate-500 truncate">All 14 • Name+Sound</div>
+                                </div>
+                            </div>
+                            <span class="text-indigo-500 font-black text-base leading-none flex-shrink-0">›</span>
+                        </button>
+                        <button type="button" data-open-submenu="opposites" class="game-submenu-trigger min-w-0 p-2.5 rounded-2xl bg-slate-50 hover:bg-indigo-50/70 border-2 border-slate-200 hover:border-indigo-300 text-left flex items-center justify-between gap-1.5 squish-btn transition-colors">
+                            <div class="flex items-center gap-2 min-w-0">
+                                <span class="text-xl leading-none flex-shrink-0">🐘</span>
+                                <div class="min-w-0">
+                                    <div class="text-xs font-black text-slate-800 truncate">Opposites</div>
+                                    <div id="submenu-summary-opposites" class="text-[10px] font-bold text-slate-500 truncate">All 20 • Single Word</div>
+                                </div>
+                            </div>
+                            <span class="text-indigo-500 font-black text-base leading-none flex-shrink-0">›</span>
+                        </button>
+                        <button type="button" data-open-submenu="solar" class="game-submenu-trigger min-w-0 p-2.5 rounded-2xl bg-slate-50 hover:bg-indigo-50/70 border-2 border-slate-200 hover:border-indigo-300 text-left flex items-center justify-between gap-1.5 squish-btn transition-colors">
+                            <div class="flex items-center gap-2 min-w-0">
+                                <span class="text-xl leading-none flex-shrink-0">🪐</span>
+                                <div class="min-w-0">
+                                    <div class="text-xs font-black text-slate-800 truncate">Solar System</div>
+                                    <div id="submenu-summary-solar" class="text-[10px] font-bold text-slate-500 truncate">Photo • 14 • 1x</div>
+                                </div>
+                            </div>
+                            <span class="text-indigo-500 font-black text-base leading-none flex-shrink-0">›</span>
+                        </button>
+                    </div>
+                </details>
+
+                <!-- 2. Gemini 3.8 Natural Voice & API Key Section -->
+                <details id="settings-sec-gemini" class="settings-disclosure border-t pt-3 flex flex-col gap-2.5" open>
+                    <summary class="flex items-center justify-between cursor-pointer select-none py-0.5 gap-2">
+                        <div class="flex items-center gap-1.5 min-w-0">
+                            <span class="text-sm">🎙️</span>
+                            <h3 class="text-xs font-black uppercase tracking-wider text-slate-700 truncate">Gemini 3.8 Natural Voice &amp; API Key</h3>
+                        </div>
+                        <div class="flex items-center gap-1.5 flex-shrink-0">
+                            <span id="canvas-key-badge" class="text-[10px] font-extrabold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full border border-indigo-100">Canvas Key Auto-Detected</span>
+                            <span class="disclosure-chevron text-slate-400 font-black text-xs px-1">▾</span>
+                        </div>
+                    </summary>
+
+                    <div class="flex flex-col gap-3 pt-2">
+                        <div class="flex flex-col gap-1.5">
+                            <input id="gemini-api-key-input" type="password" placeholder="AIzaSy... (Paste Gemini API Key)"
+                                   class="w-full px-3.5 py-2.5 rounded-xl border-2 border-slate-300 font-mono text-sm focus:border-indigo-500 focus:outline-none bg-slate-50">
+                            <p class="text-[11px] text-slate-500 font-semibold leading-tight">
+                                💡 Optional: Gemini natural voices provide expressive storytelling. If left blank, natural device speech works 100% offline!
+                            </p>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div class="flex flex-col gap-1 min-w-0">
+                                <label class="text-xs font-black uppercase tracking-wider text-slate-700">TTS Model</label>
+                                <select id="gemini-tts-model-select" class="w-full px-3 py-2 rounded-xl border-2 border-slate-300 font-bold text-sm bg-slate-50 focus:border-indigo-500 focus:outline-none truncate">
+                                    <option value="gemini-3.8-flash-tts">gemini-3.8-flash-tts (Expressive Studio)</option>
+                                    <option value="gemini-3.8-flash-lite-tts">gemini-3.8-flash-lite-tts (Low Latency)</option>
+                                </select>
+                            </div>
+
+                            <div class="flex flex-col gap-1 min-w-0">
+                                <label class="text-xs font-black uppercase tracking-wider text-slate-700">Voice Persona</label>
+                                <select id="gemini-tts-voice-select" class="w-full px-3 py-2 rounded-xl border-2 border-slate-300 font-bold text-sm bg-slate-50 focus:border-indigo-500 focus:outline-none truncate">
+                                    <option value="Kore">Kore (Warm Storyteller — Default)</option>
+                                    <option value="Puck">Puck (Playful & Energetic Buddy)</option>
+                                    <option value="Aoede">Aoede (Melodic Educator)</option>
+                                    <option value="Leda">Leda (Bright & Cheerful)</option>
+                                    <option value="Fenrir">Fenrir (Friendly Deep Voice)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Pre-Cache Speed / API Tier Selector -->
+                        <div class="flex flex-col gap-1 min-w-0">
+                            <label class="text-xs font-black uppercase tracking-wider text-slate-700">Pre-Cache Speed / API Tier</label>
+                            <select id="precache-tier-select" class="w-full px-3 py-2 rounded-xl border-2 border-slate-300 font-bold text-xs sm:text-sm bg-slate-50 focus:border-indigo-500 focus:outline-none truncate">
+                                <option value="tier2_turbo">🚀 Tier 2 Turbo (~90 RPM • 3x Parallel — Default)</option>
+                                <option value="tier2_max">⚡ Tier 2 Max (~180 RPM • 5x Parallel)</option>
+                                <option value="tier1_safe">🐢 Tier 1 Safe (~8 RPM • 1x Serial)</option>
+                            </select>
+                        </div>
+
+                        <div id="voice-test-status" class="hidden text-xs font-bold text-center py-2 px-3 rounded-xl transition-all duration-200"></div>
+                        <div class="flex flex-wrap items-center gap-2 pt-1">
+                            <button id="voice-test-btn" type="button" class="flex-1 bg-indigo-100 hover:bg-indigo-200 text-indigo-800 font-black px-4 py-2.5 rounded-xl text-sm squish-btn flex items-center justify-center gap-1.5">
+                                <span>🔊</span><span>Test Voice Sample</span>
+                                <div class="audio-vis-pill" title="Audio Activity"><span class="vis-bar bar-1"></span><span class="vis-bar bar-2"></span><span class="vis-bar bar-3"></span><span class="vis-bar bar-4"></span></div>
+                            </button>
+                            <button id="voice-precache-btn" type="button" class="flex-1 bg-amber-100 hover:bg-amber-200 text-amber-900 font-black px-4 py-2.5 rounded-xl text-sm squish-btn flex items-center justify-center gap-1.5">
+                                <span>⚡</span><span id="voice-precache-label">Pre-cache Core Words</span>
+                                <div class="audio-vis-pill" title="Audio Activity"><span class="vis-bar bar-1"></span><span class="vis-bar bar-2"></span><span class="vis-bar bar-3"></span><span class="vis-bar bar-4"></span></div>
+                            </button>
+                        </div>
+
+                        <div id="precache-progress-box" class="hidden flex flex-col gap-1.5 bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-amber-900 font-bold">
+                            <div class="flex justify-between items-center">
+                                <span id="precache-progress-text">Pre-caching audio...</span>
+                                <span id="precache-progress-num">0%</span>
+                            </div>
+                            <div class="w-full bg-amber-200 rounded-full h-2.5 overflow-hidden">
+                                <div id="precache-progress-bar" class="bg-amber-600 h-full w-0 transition-all duration-150"></div>
+                            </div>
+                            <div class="flex items-center justify-between pt-1">
+                                <span id="precache-tier-sub" class="text-[10px] text-amber-800 font-medium">Tier 2 Turbo (~90 RPM • 3x Parallel) • Runs in background</span>
+                                <div class="flex items-center gap-1.5">
+                                    <button id="precache-modal-pause-btn" type="button" class="px-2.5 py-1 bg-amber-200 hover:bg-amber-300 text-amber-900 rounded-lg text-[11px] font-black squish-btn">⏸️ Pause</button>
+                                    <button id="precache-modal-cancel-btn" type="button" class="px-2.5 py-1 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-lg text-[11px] font-black squish-btn">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </details>
+
+                <!-- 3. Main Audio & Global App Controls (Only App-Wide Controls Live Here) -->
+                <details id="settings-sec-global" class="settings-disclosure border-t pt-3 flex flex-col gap-2" open>
+                    <summary class="flex items-center justify-between cursor-pointer select-none py-0.5">
+                        <div class="flex items-center gap-1.5">
+                            <span class="text-sm">🎛️</span>
+                            <h3 class="text-xs font-black uppercase tracking-wider text-slate-700">Main Audio &amp; App Controls</h3>
+                        </div>
+                        <span class="disclosure-chevron text-slate-400 font-black text-xs px-1">▾</span>
+                    </summary>
+
+                    <div class="grid grid-cols-1 gap-2 pt-2">
+                        <!-- Announce Game When Opened -->
+                        <label class="toggle-switch flex items-center justify-between p-2.5 rounded-2xl bg-indigo-50/70 hover:bg-indigo-50 border border-indigo-200 cursor-pointer">
+                            <div class="pr-2 min-w-0">
+                                <div class="text-xs font-black text-indigo-950 flex items-center gap-1.5">
+                                    <span>📢</span><span>Announce Game When Opened</span>
+                                </div>
+                                <div class="text-[11px] font-bold text-slate-500 leading-tight">Speak the game name &amp; intro when opening a game</div>
+                            </div>
+                            <input id="opt-announce-open" type="checkbox">
+                            <div class="toggle-slider"></div>
+                        </label>
+
+                        <!-- Voice & Speech (TTS) -->
+                        <label class="toggle-switch flex items-center justify-between p-2.5 rounded-2xl bg-slate-50 hover:bg-slate-100 border border-slate-200 cursor-pointer">
+                            <div class="pr-2 min-w-0">
+                                <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
+                                    <span>🗣️</span><span>Voice &amp; Speech (TTS)</span>
+                                </div>
+                                <div class="text-[11px] font-bold text-slate-500 leading-tight">Read words, letters, numbers, and prompts aloud</div>
+                            </div>
+                            <input id="opt-voice-enabled" type="checkbox">
+                            <div class="toggle-slider"></div>
+                        </label>
+
+                        <!-- Sound Effects (SFX) -->
+                        <label class="toggle-switch flex items-center justify-between p-2.5 rounded-2xl bg-slate-50 hover:bg-slate-100 border border-slate-200 cursor-pointer">
+                            <div class="pr-2 min-w-0">
+                                <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
+                                    <span>🔊</span><span>Sound Effects (SFX)</span>
+                                </div>
+                                <div class="text-[11px] font-bold text-slate-500 leading-tight">Play chimes, pops, marimba, animal sounds &amp; fanfare</div>
+                            </div>
+                            <input id="opt-sfx-enabled" type="checkbox">
+                            <div class="toggle-slider"></div>
+                        </label>
+
+                        <!-- iOS Silent Mode Bypass Active Badge -->
+                        <div class="flex items-center gap-2 p-2 rounded-xl bg-indigo-50 border border-indigo-200 text-indigo-900 text-xs font-extrabold">
+                            <span>🔔</span>
+                            <span>iOS Silent Mode Bypass: Active (Sound effects &amp; Gemini Voice play even if iPhone silent switch is on)</span>
+                        </div>
+
+                        <!-- Voice Volume -->
+                        <div class="flex items-center justify-between p-2.5 rounded-2xl bg-slate-50 border border-slate-200 gap-2">
+                            <div class="min-w-0">
+                                <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
+                                    <span>🔊</span><span>Voice Volume</span>
+                                </div>
+                                <div class="text-[11px] font-bold text-slate-500 leading-tight">Loudness for spoken counting, words &amp; prompts</div>
+                            </div>
+                            <div class="flex items-center gap-2 flex-shrink-0">
+                                <input id="opt-voice-volume" type="range" min="0" max="1" step="0.05" value="1" class="w-24 accent-indigo-600 cursor-pointer">
+                                <span id="opt-voice-volume-label" class="text-[11px] font-black text-indigo-700 w-9 text-right">100%</span>
+                            </div>
+                        </div>
+
+                        <!-- Sound Effects Volume -->
+                        <div class="flex items-center justify-between p-2.5 rounded-2xl bg-slate-50 border border-slate-200 gap-2">
+                            <div class="min-w-0">
+                                <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
+                                    <span>🎵</span><span>Sound Effects Volume</span>
+                                </div>
+                                <div class="text-[11px] font-bold text-slate-500 leading-tight">Loudness for chimes, pops, marimba &amp; fanfare</div>
+                            </div>
+                            <div class="flex items-center gap-2 flex-shrink-0">
+                                <input id="opt-sfx-volume" type="range" min="0" max="1" step="0.05" value="0.85" class="w-24 accent-indigo-600 cursor-pointer">
+                                <span id="opt-sfx-volume-label" class="text-[11px] font-black text-indigo-700 w-9 text-right">85%</span>
+                            </div>
+                        </div>
+
+                        <!-- Speech Speed -->
+                        <div class="flex items-center justify-between p-2.5 rounded-2xl bg-slate-50 border border-slate-200 gap-2">
+                            <div class="min-w-0">
+                                <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
+                                    <span>🐢</span><span>Speech Speed</span>
+                                </div>
+                                <div class="text-[11px] font-bold text-slate-500 leading-tight">Pacing for spoken words and prompts</div>
+                            </div>
+                            <select id="opt-speech-rate" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0 max-w-[148px] sm:max-w-none truncate">
+                                <option value="slow">🐢 Slow (0.82x)</option>
+                                <option value="normal">🚶 Normal (0.96x)</option>
+                                <option value="fast">🐇 Fast (1.10x)</option>
+                            </select>
+                        </div>
+
+                        <!-- Drag & Spin Speed -->
+                        <div class="flex items-center justify-between p-2.5 rounded-2xl bg-slate-50 border border-slate-200 gap-2">
+                            <div class="min-w-0">
+                                <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
+                                    <span>🖐️</span><span>Drag &amp; Spin Speed</span>
+                                </div>
+                                <div class="text-[11px] font-bold text-slate-500 leading-tight">Long-press drag &amp; 3D spin sensitivity</div>
+                            </div>
+                            <select id="opt-drag-speed" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0 max-w-[148px] sm:max-w-none truncate">
+                                <option value="slow">🐢 Slow (0.55x)</option>
+                                <option value="normal">🖐️ Normal (1.0x)</option>
+                                <option value="fast">⚡ Fast (1.75x)</option>
+                            </select>
+                        </div>
+
+                        <!-- Confetti & Celebration Effects -->
+                        <label class="toggle-switch flex items-center justify-between p-2.5 rounded-2xl bg-slate-50 hover:bg-slate-100 border border-slate-200 cursor-pointer">
+                            <div class="pr-2 min-w-0">
+                                <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
+                                    <span>🎉</span><span>Celebration Confetti</span>
+                                </div>
+                                <div class="text-[11px] font-bold text-slate-500 leading-tight">Master switch for celebratory confetti bursts</div>
+                            </div>
+                            <input id="opt-confetti-enabled" type="checkbox">
+                            <div class="toggle-slider"></div>
+                        </label>
+
+                        <!-- Toddler Home-Button Lock -->
+                        <label class="toggle-switch flex items-center justify-between p-2.5 rounded-2xl bg-slate-50 hover:bg-slate-100 border border-slate-200 cursor-pointer">
+                            <div class="pr-2 min-w-0">
+                                <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
+                                    <span>🔒</span><span>Toddler Home-Button Lock</span>
+                                </div>
+                                <div class="text-[11px] font-bold text-slate-500 leading-tight">Require double-tap on Home button to exit a game</div>
+                            </div>
+                            <input id="opt-hold-home" type="checkbox">
+                            <div class="toggle-slider"></div>
+                        </label>
+
+                        <!-- Minimize Home Screen Title Banner -->
+                        <label class="toggle-switch flex items-center justify-between p-2.5 rounded-2xl bg-slate-50 hover:bg-slate-100 border border-slate-200 cursor-pointer">
+                            <div class="pr-2 min-w-0">
+                                <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
+                                    <span>🏠</span><span>Minimize Home Screen Banner</span>
+                                </div>
+                                <div class="text-[11px] font-bold text-slate-500 leading-tight">Hide the top title banner to maximize card space</div>
+                            </div>
+                            <input id="opt-minimize-header" type="checkbox">
+                            <div class="toggle-slider"></div>
+                        </label>
+                    </div>
+                </details>
+            </div>
+
+            <!-- PER-GAME SUBMENU VIEW (Click Back to Main or Click Down Quick-Jump to Any Game) -->
+            <div id="settings-submenu-view" class="hidden flex flex-col gap-3">
+                <div id="settings-submenu-nav" class="flex items-center justify-between gap-2 bg-indigo-50/80 border border-indigo-200 p-2 rounded-2xl">
+                    <button id="settings-back-main-btn" type="button" class="px-3 py-1.5 rounded-xl bg-white hover:bg-indigo-100 text-indigo-800 border border-indigo-200 font-black text-xs squish-btn flex items-center gap-1 flex-shrink-0 shadow-sm">
+                        <span>←</span><span>Main Settings</span>
+                    </button>
+                    <select id="settings-submenu-select" aria-label="Switch Game Submenu" class="min-w-0 flex-1 max-w-[185px] sm:max-w-[240px] px-2.5 py-1.5 rounded-xl border-2 border-indigo-300 font-black text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none truncate">
+                        <option value="letters">🔤 Phonics A–Z</option>
+                        <option value="numbers">🔢 Tap &amp; Count</option>
+                        <option value="blocks">🧱 Number Blocks</option>
+                        <option value="quiz">🕵️ Look &amp; Find</option>
+                        <option value="shapes">🔺 2D Shapes</option>
+                        <option value="shapes3d">🧊 3D Shapes</option>
+                        <option value="colors">🎨 Colors &amp; Mix</option>
+                        <option value="animals">🦁 Animals</option>
+                        <option value="fruits">🍓 Yummy Foods</option>
+                        <option value="things">🚒 Vehicles &amp; Things</option>
+                        <option value="opposites">🐘 Opposites</option>
+                        <option value="solar">🪐 Solar System</option>
+                    </select>
                 </div>
 
-                <div class="grid grid-cols-1 gap-2">
-                    <!-- 1. Announce Game When Opened -->
-                    <label class="toggle-switch flex items-center justify-between p-2.5 rounded-2xl bg-indigo-50/70 hover:bg-indigo-50 border border-indigo-200 cursor-pointer">
-                        <div class="pr-2">
-                            <div class="text-xs font-black text-indigo-950 flex items-center gap-1.5">
-                                <span>📢</span><span>Announce Game When Opened</span>
-                            </div>
-                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Speak the game name & intro when opening a game</div>
+                <!-- 1. PHONICS A-Z SUBMENU -->
+                <div data-game-submenu="letters" class="game-submenu-panel hidden flex flex-col gap-2">
+                    <div class="flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80">
+                        <div class="flex flex-col min-w-0">
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5"><span>🗣️</span><span>Phonics Speech Style</span></div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Phonics detail when sounding out letters</div>
                         </div>
-                        <input id="opt-announce-open" type="checkbox">
-                        <div class="toggle-slider"></div>
-                    </label>
-
-                    <!-- 2. Voice & Speech (TTS) -->
-                    <label class="toggle-switch flex items-center justify-between p-2.5 rounded-2xl bg-slate-50 hover:bg-slate-100 border border-slate-200 cursor-pointer">
-                        <div class="pr-2">
-                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
-                                <span>🗣️</span><span>Voice & Speech (TTS)</span>
-                            </div>
-                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Read words, letters, numbers, and prompts aloud</div>
-                        </div>
-                        <input id="opt-voice-enabled" type="checkbox">
-                        <div class="toggle-slider"></div>
-                    </label>
-
-                    <!-- 3. Sound Effects (SFX) -->
-                    <label class="toggle-switch flex items-center justify-between p-2.5 rounded-2xl bg-slate-50 hover:bg-slate-100 border border-slate-200 cursor-pointer">
-                        <div class="pr-2">
-                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
-                                <span>🔊</span><span>Sound Effects (SFX)</span>
-                            </div>
-                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Play animal sounds, sirens, crunches, and chimes</div>
-                        </div>
-                        <input id="opt-sfx-enabled" type="checkbox">
-                        <div class="toggle-slider"></div>
-                    </label>
-
-                    <!-- iOS Silent Mode Bypass Active Badge -->
-                    <div class="flex items-center gap-2 p-2 rounded-xl bg-indigo-50 border border-indigo-200 text-indigo-900 text-xs font-extrabold">
-                        <span>🔔</span>
-                        <span>iOS Silent Mode Bypass: Active (Sound effects & Gemini Voice play even if iPhone silent switch is on)</span>
-                    </div>
-
-                    <!-- 4. Speech Speed -->
-                    <div class="flex items-center justify-between p-2.5 rounded-2xl bg-slate-50 border border-slate-200 gap-2">
-                        <div>
-                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
-                                <span>🐢</span><span>Speech Speed</span>
-                            </div>
-                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Pacing for spoken words and prompts</div>
-                        </div>
-                        <select id="opt-speech-rate" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0">
-                            <option value="slow">🐢 Slow (0.82x)</option>
-                            <option value="normal">🚶 Normal (0.96x)</option>
-                            <option value="fast">🐇 Fast (1.10x)</option>
+                        <select id="opt-phonics-detail" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0 max-w-[148px] sm:max-w-none truncate">
+                            <option value="full">Full Phonics (Sound + Cue + Word)</option>
+                            <option value="simple">Simple (Letter + Word)</option>
                         </select>
                     </div>
-
-                    <!-- 4a. Voice Volume -->
-                    <div class="flex items-center justify-between p-2.5 rounded-2xl bg-slate-50 border border-slate-200 gap-2">
-                        <div>
-                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
-                                <span>🔊</span><span>Voice Volume</span>
-                            </div>
-                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Loudness for spoken counting, words &amp; prompts</div>
+                    <div class="flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80">
+                        <div class="flex flex-col min-w-0">
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5"><span>🎮</span><span>Starting Mode</span></div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Open in Sound Studio or Pop Bubbles</div>
                         </div>
-                        <div class="flex items-center gap-2 flex-shrink-0">
-                            <input id="opt-voice-volume" type="range" min="0" max="1" step="0.05" value="1" class="w-24 accent-indigo-600 cursor-pointer">
-                            <span id="opt-voice-volume-label" class="text-[11px] font-black text-indigo-700 w-9 text-right">100%</span>
-                        </div>
-                    </div>
-
-                    <!-- 4b. Sound Effects Volume -->
-                    <div class="flex items-center justify-between p-2.5 rounded-2xl bg-slate-50 border border-slate-200 gap-2">
-                        <div>
-                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
-                                <span>🎵</span><span>Sound Effects Volume</span>
-                            </div>
-                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Loudness for chimes, pops, marimba &amp; fanfare</div>
-                        </div>
-                        <div class="flex items-center gap-2 flex-shrink-0">
-                            <input id="opt-sfx-volume" type="range" min="0" max="1" step="0.05" value="0.85" class="w-24 accent-indigo-600 cursor-pointer">
-                            <span id="opt-sfx-volume-label" class="text-[11px] font-black text-indigo-700 w-9 text-right">85%</span>
-                        </div>
-                    </div>
-
-                    <!-- Drag & Spin Speed (Upgrade 3) -->
-                    <div class="flex items-center justify-between p-2.5 rounded-2xl bg-slate-50 border border-slate-200 gap-2">
-                        <div>
-                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
-                                <span>🖐️</span><span>Drag & Spin Speed</span>
-                            </div>
-                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Press & hold (long-press) to drag items with 1 finger, or spin 3D</div>
-                        </div>
-                        <select id="opt-drag-speed" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0">
-                            <option value="slow">🐢 Slow (0.55x)</option>
-                            <option value="normal">🖐️ Normal (1.0x)</option>
-                            <option value="fast">⚡ Fast (1.75x)</option>
+                        <select id="opt-letters-default-mode" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0 max-w-[148px] sm:max-w-none truncate">
+                            <option value="studio">🔤 Sound Studio</option>
+                            <option value="bubbles">🫧 Pop Bubbles</option>
                         </select>
                     </div>
-
-                    <!-- 5. Counting Range -->
-                    <div class="flex items-center justify-between p-2.5 rounded-2xl bg-slate-50 border border-slate-200 gap-2">
-                        <div>
-                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
-                                <span>🔢</span><span>Counting Range</span>
-                            </div>
-                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Tap &amp; Count, Number Blocks, and Quiz counting pool</div>
+                    <div class="flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80">
+                        <div class="flex flex-col min-w-0">
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5"><span>🔠</span><span>Letter Case Display</span></div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Show Aa, uppercase only, or lowercase only</div>
                         </div>
-                        <select id="opt-max-number" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0">
+                        <select id="opt-letters-case" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0 max-w-[148px] sm:max-w-none truncate">
+                            <option value="both">Both (Aa)</option>
+                            <option value="upper">Uppercase (A)</option>
+                            <option value="lower">Lowercase (a)</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80">
+                        <div class="flex flex-col min-w-0">
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5"><span>🫧</span><span>Pop Bubbles Choices</span></div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">How many letter bubbles appear per round</div>
+                        </div>
+                        <select id="opt-letters-bubble-count" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0 max-w-[148px] sm:max-w-none truncate">
+                            <option value="2">2 Bubbles (Easy)</option>
+                            <option value="3">3 Bubbles (Default)</option>
+                            <option value="4">4 Bubbles (Challenge)</option>
+                        </select>
+                    </div>
+                    <label class="toggle-switch flex items-center justify-between gap-3 bg-slate-50 hover:bg-slate-100 px-3 py-2.5 rounded-2xl border border-slate-200/80 cursor-pointer">
+                        <div class="flex flex-col pr-2 min-w-0">
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5"><span>🧩</span><span>Show Sound-It-Out Blend Bar</span></div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Display letter + word formula when tapping picture cards</div>
+                        </div>
+                        <input id="opt-letters-blend-bar" type="checkbox">
+                        <div class="toggle-slider"></div>
+                    </label>
+                </div>
+
+                <!-- 2. TAP & COUNT SUBMENU -->
+                <div data-game-submenu="numbers" class="game-submenu-panel hidden flex flex-col gap-2">
+                    <div class="flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80">
+                        <div class="flex flex-col min-w-0">
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5"><span>🔢</span><span>Counting Range</span></div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Highest number shown in Tap &amp; Count</div>
+                        </div>
+                        <select id="opt-max-number" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0 max-w-[148px] sm:max-w-none truncate">
                             <option value="100">1 to 100 (Full)</option>
                             <option value="50">1 to 50</option>
                             <option value="30">1 to 30</option>
@@ -2456,320 +2815,616 @@
                             <option value="10">1 to 10 (Beginner)</option>
                         </select>
                     </div>
-
-                    <!-- 6. Phonics Style -->
-                    <div class="flex items-center justify-between p-2.5 rounded-2xl bg-slate-50 border border-slate-200 gap-2">
-                        <div>
-                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
-                                <span>🔤</span><span>Phonics Style</span>
-                            </div>
-                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Phonics detail when sounding out letters</div>
+                    <div class="flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80">
+                        <div class="flex flex-col min-w-0">
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5"><span>🎮</span><span>Starting Mode</span></div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Open in Tap to Count or Auto Count</div>
                         </div>
-                        <select id="opt-phonics-detail" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0">
-                            <option value="full">Full Phonics (Sound + Cue + Word)</option>
-                            <option value="simple">Simple (Letter + Word)</option>
+                        <select id="opt-numbers-default-mode" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0 max-w-[148px] sm:max-w-none truncate">
+                            <option value="touch">👆 Tap to Count</option>
+                            <option value="show">✨ Auto Count</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80">
+                        <div class="flex flex-col min-w-0">
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5"><span>⏱️</span><span>Auto-Count Pacing</span></div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Speed during sequential counting playback</div>
+                        </div>
+                        <select id="opt-numbers-auto-speed" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0 max-w-[148px] sm:max-w-none truncate">
+                            <option value="slow">🐢 Slow</option>
+                            <option value="normal">🚶 Normal</option>
+                            <option value="fast">🐇 Fast</option>
+                        </select>
+                    </div>
+                    <label class="toggle-switch flex items-center justify-between gap-3 bg-slate-50 hover:bg-slate-100 px-3 py-2.5 rounded-2xl border border-slate-200/80 cursor-pointer">
+                        <div class="flex flex-col pr-2 min-w-0">
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5"><span>🧮</span><span>Show Ten-Frame Progress Bar</span></div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Display visual ten-frames and tens pills below items</div>
+                        </div>
+                        <input id="opt-numbers-ten-frame" type="checkbox">
+                        <div class="toggle-slider"></div>
+                    </label>
+                    <label class="toggle-switch flex items-center justify-between gap-3 bg-slate-50 hover:bg-slate-100 px-3 py-2.5 rounded-2xl border border-slate-200/80 cursor-pointer">
+                        <div class="flex flex-col pr-2 min-w-0">
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5"><span>🧱</span><span>Show &quot;Build Block&quot; Shortcut</span></div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Jump straight from any number into Number Blocks</div>
+                        </div>
+                        <input id="opt-numbers-blocks-btn" type="checkbox">
+                        <div class="toggle-slider"></div>
+                    </label>
+                </div>
+
+                <!-- 3. NUMBER BLOCKS SUBMENU (#nb-options-section kept intact for compatibility) -->
+                <div id="nb-options-section" data-game-submenu="blocks" class="game-submenu-panel hidden flex flex-col gap-2">
+                    <!-- Addition & Building Cap -->
+                    <div class="flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80">
+                        <div class="flex flex-col min-w-0">
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
+                                <span>📈</span><span>Max Addition &amp; Building Target</span>
+                            </div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Control how high your child can add and count</div>
+                        </div>
+                        <select id="opt-nb-max-number" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0 max-w-[148px] sm:max-w-none truncate">
+                            <option value="100">Up to 100</option>
+                            <option value="50">Up to 50</option>
+                            <option value="30">Up to 30</option>
+                            <option value="20">Up to 20</option>
+                            <option value="10">Up to 10</option>
                         </select>
                     </div>
 
-                    <!-- 7. Confetti & Crumb Effects -->
-                    <label class="toggle-switch flex items-center justify-between p-2.5 rounded-2xl bg-slate-50 hover:bg-slate-100 border border-slate-200 cursor-pointer">
-                        <div class="pr-2">
+                    <!-- Dock Spawner Preset -->
+                    <div class="flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80">
+                        <div class="flex flex-col min-w-0">
                             <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
-                                <span>🎉</span><span>Confetti & Crumb Effects</span>
+                                <span>🧰</span><span>Dock Tray Numbers</span>
                             </div>
-                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Show celebratory confetti bursts and food crumbs</div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Choose which blocks appear in the bottom tray</div>
                         </div>
-                        <input id="opt-confetti-enabled" type="checkbox">
+                        <select id="opt-nb-dock-range" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0 max-w-[148px] sm:max-w-none truncate">
+                            <option value="1-10">1 to 10</option>
+                            <option value="place-value">1–9 + Tens (10–90)</option>
+                            <option value="tens-only">Tens Only (10–90)</option>
+                            <option value="1-5">1 to 5 (Starter)</option>
+                        </select>
+                    </div>
+
+                    <!-- Math Speech Announcements -->
+                    <div class="flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80">
+                        <div class="flex flex-col min-w-0">
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
+                                <span>🗣️</span><span>Math Voice Announcements</span>
+                            </div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">How additions and splits are spoken aloud</div>
+                        </div>
+                        <select id="opt-nb-speech-style" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0 max-w-[148px] sm:max-w-none truncate">
+                            <option value="math_and_fun">Equation + Fun Fact</option>
+                            <option value="math_only">Equation Only (2 + 3 = 5)</option>
+                            <option value="number_only">Result Number Only</option>
+                        </select>
+                    </div>
+
+                    <!-- Combine Snap Distance -->
+                    <div class="flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80">
+                        <div class="flex flex-col min-w-0">
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
+                                <span>🧲</span><span>Combine Magnet Range</span>
+                            </div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">How close blocks must be before they snap together</div>
+                        </div>
+                        <select id="opt-nb-snap-mode" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0 max-w-[148px] sm:max-w-none truncate">
+                            <option value="easy">Wide / Forgiving</option>
+                            <option value="normal">Balanced (Default)</option>
+                            <option value="close">Close Touch Only</option>
+                        </select>
+                    </div>
+
+                    <!-- Max Stage Blocks -->
+                    <div class="flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80">
+                        <div class="flex flex-col min-w-0">
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
+                                <span>🎭</span><span>Max Blocks on Stage</span>
+                            </div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Keep the play area uncluttered</div>
+                        </div>
+                        <select id="opt-nb-max-blocks" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0 max-w-[148px] sm:max-w-none truncate">
+                            <option value="6">6 Blocks</option>
+                            <option value="8">8 Blocks</option>
+                            <option value="10">10 Blocks</option>
+                            <option value="12">12 Blocks</option>
+                            <option value="16">16 Blocks</option>
+                        </select>
+                    </div>
+
+                    <!-- Combine When Falling on Top -->
+                    <label class="toggle-switch flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80 cursor-pointer">
+                        <div class="flex flex-col pr-2 min-w-0">
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
+                                <span>⬇️</span><span>Combine When Landing on Top</span>
+                            </div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">On: falling blocks add together. Off: stack towers without merging</div>
+                        </div>
+                        <input id="opt-nb-fall-combine" type="checkbox">
                         <div class="toggle-slider"></div>
                     </label>
 
-                    <!-- 8. Auto-Spin 3D Shapes & Planets -->
-                    <label class="toggle-switch flex items-center justify-between p-2.5 rounded-2xl bg-slate-50 hover:bg-slate-100 border border-slate-200 cursor-pointer">
-                        <div class="pr-2">
+                    <!-- True 1:1 Block Scale & Auto-Zoom -->
+                    <label class="toggle-switch flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80 cursor-pointer">
+                        <div class="flex flex-col pr-2 min-w-0">
                             <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
-                                <span>🌀</span><span>Auto-Spin 3D Shapes & Planets</span>
+                                <span>📐</span><span>True 1:1 Block Scale &amp; Auto-Zoom</span>
                             </div>
-                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Gently spin 3D models automatically</div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Keep every cube the same real size and smoothly zoom the camera to fit</div>
                         </div>
-                        <input id="opt-autospin-3d" type="checkbox">
+                        <input id="opt-nb-true-scale" type="checkbox">
                         <div class="toggle-slider"></div>
                     </label>
 
-                    <!-- 9. Toddler Home-Button Lock -->
-                    <label class="toggle-switch flex items-center justify-between p-2.5 rounded-2xl bg-slate-50 hover:bg-slate-100 border border-slate-200 cursor-pointer">
-                        <div class="pr-2">
+                    <!-- Show Big Floating Equations -->
+                    <label class="toggle-switch flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80 cursor-pointer">
+                        <div class="flex flex-col pr-2 min-w-0">
                             <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
-                                <span>🔒</span><span>Toddler Home-Button Lock</span>
+                                <span>➕</span><span>Show Equation Banners</span>
                             </div>
-                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Require double-tap on Home button to exit a game</div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Display animated 2 + 3 = 5 math pills when combining</div>
                         </div>
-                        <input id="opt-hold-home" type="checkbox">
+                        <input id="opt-nb-show-equations" type="checkbox">
                         <div class="toggle-slider"></div>
                     </label>
 
-                    <!-- 10. Minimize Home Screen Title Banner -->
-                    <label class="toggle-switch flex items-center justify-between p-2.5 rounded-2xl bg-slate-50 hover:bg-slate-100 border border-slate-200 cursor-pointer">
-                        <div class="pr-2">
+                    <!-- Auto-Space Idle Blocks -->
+                    <label class="toggle-switch flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80 cursor-pointer">
+                        <div class="flex flex-col pr-2 min-w-0">
                             <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
-                                <span>🏠</span><span>Minimize Home Screen Title Banner</span>
+                                <span>↔️</span><span>Gentle Auto-Space Blocks</span>
                             </div>
-                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Hide the top title banner to maximize card space</div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Nudge resting characters apart so none stay hidden behind others</div>
                         </div>
-                        <input id="opt-minimize-header" type="checkbox">
+                        <input id="opt-nb-auto-space" type="checkbox">
                         <div class="toggle-slider"></div>
                     </label>
 
-                    <!-- 11. Show NASA Image Source Credits (Item 4) -->
-                    <label class="toggle-switch flex items-center justify-between p-2.5 rounded-2xl bg-slate-50 hover:bg-slate-100 border border-slate-200 cursor-pointer">
-                        <div class="pr-2">
+                    <!-- Unlock All Dock Blocks -->
+                    <label class="toggle-switch flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80 cursor-pointer">
+                        <div class="flex flex-col pr-2 min-w-0">
                             <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
-                                <span>🔭</span><span>Show NASA Image Source Credits</span>
+                                <span>🔓</span><span>Unlock All Dock Numbers</span>
                             </div>
-                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Display telescope & mission source badge on Solar System photos</div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Let your child spawn any tray number right away</div>
+                        </div>
+                        <input id="opt-nb-unlock-all" type="checkbox">
+                        <div class="toggle-slider"></div>
+                    </label>
+                </div>
+
+                <!-- 4. LOOK & FIND (QUIZ) SUBMENU -->
+                <div data-game-submenu="quiz" class="game-submenu-panel hidden flex flex-col gap-2">
+                    <div class="flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80">
+                        <div class="flex flex-col min-w-0">
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5"><span>🃏</span><span>Answer Choices Per Question</span></div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Number of cards displayed on each question</div>
+                        </div>
+                        <select id="opt-quiz-choices" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0 max-w-[148px] sm:max-w-none truncate">
+                            <option value="2">2 Choices (Beginner)</option>
+                            <option value="3">3 Choices (Default)</option>
+                            <option value="4">4 Choices (Challenge)</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80">
+                        <div class="flex flex-col min-w-0">
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5"><span>🏷️</span><span>Starting Category</span></div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Category selected when opening Look &amp; Find</div>
+                        </div>
+                        <select id="opt-quiz-default-cat" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0 max-w-[148px] sm:max-w-none truncate">
+                            <option value="all">🌟 All Categories</option>
+                            <option value="letters">🔤 ABC Letters</option>
+                            <option value="numbers">🔢 123 Numbers</option>
+                            <option value="blocks">🧱 Number Blocks</option>
+                            <option value="animals">🦁 Animals</option>
+                            <option value="shapes">🔷 2D Shapes</option>
+                            <option value="solar">🪐 Space</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80">
+                        <div class="flex flex-col min-w-0">
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5"><span>🔢</span><span>Quiz Number &amp; Block Pool</span></div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Limit numbers &amp; blocks included in quiz rounds</div>
+                        </div>
+                        <select id="opt-quiz-max-number" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0 max-w-[148px] sm:max-w-none truncate">
+                            <option value="sync">Sync with Blocks Range</option>
+                            <option value="10">Up to 10</option>
+                            <option value="20">Up to 20</option>
+                            <option value="30">Up to 30</option>
+                            <option value="50">Up to 50</option>
+                            <option value="100">Up to 100</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80">
+                        <div class="flex flex-col min-w-0">
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5"><span>💡</span><span>Glow Hint After Wrong Taps</span></div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Gently highlight the answer after missed taps</div>
+                        </div>
+                        <select id="opt-quiz-hint-tries" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0 max-w-[148px] sm:max-w-none truncate">
+                            <option value="1">After 1 Wrong Tap</option>
+                            <option value="2">After 2 Wrong Taps (Default)</option>
+                            <option value="off">Off (No Glow Hint)</option>
+                        </select>
+                    </div>
+                    <label class="toggle-switch flex items-center justify-between gap-3 bg-slate-50 hover:bg-slate-100 px-3 py-2.5 rounded-2xl border border-slate-200/80 cursor-pointer">
+                        <div class="flex flex-col pr-2 min-w-0">
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5"><span>⏭️</span><span>Auto-Advance Next Question</span></div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Move automatically after finding the answer</div>
+                        </div>
+                        <input id="opt-quiz-auto-next" type="checkbox">
+                        <div class="toggle-slider"></div>
+                    </label>
+                </div>
+
+                <!-- 5. 2D SHAPES SUBMENU -->
+                <div data-game-submenu="shapes" class="game-submenu-panel hidden flex flex-col gap-2">
+                    <div class="flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80">
+                        <div class="flex flex-col min-w-0">
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5"><span>📐</span><span>Shape Tray Set</span></div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Show all 12 shapes or just the core 6 basics</div>
+                        </div>
+                        <select id="opt-shapes-set" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0 max-w-[148px] sm:max-w-none truncate">
+                            <option value="all">All 12 Shapes</option>
+                            <option value="starter">Starter 6 Basics</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80">
+                        <div class="flex flex-col min-w-0">
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5"><span>🗣️</span><span>Spoken Detail</span></div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Speak shape name only or include real-world objects</div>
+                        </div>
+                        <select id="opt-shapes-speech" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0 max-w-[148px] sm:max-w-none truncate">
+                            <option value="name_only">Name Only (Circle!)</option>
+                            <option value="with_examples">With Examples (Pizza, Clock)</option>
+                        </select>
+                    </div>
+                    <label class="toggle-switch flex items-center justify-between gap-3 bg-slate-50 hover:bg-slate-100 px-3 py-2.5 rounded-2xl border border-slate-200/80 cursor-pointer">
+                        <div class="flex flex-col pr-2 min-w-0">
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5"><span>🍕</span><span>Show Real-World Examples Badge</span></div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Display &quot;Looks like...&quot; badge under the shape</div>
+                        </div>
+                        <input id="opt-shapes-examples" type="checkbox">
+                        <div class="toggle-slider"></div>
+                    </label>
+                </div>
+
+                <!-- 6. 3D SHAPES SUBMENU -->
+                <div data-game-submenu="shapes3d" class="game-submenu-panel hidden flex flex-col gap-2">
+                    <div class="flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80">
+                        <div class="flex flex-col min-w-0">
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5"><span>🧊</span><span>3D Shape Tray Set</span></div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Show all 10 3D models or 5 starter shapes</div>
+                        </div>
+                        <select id="opt-shapes3d-set" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0 max-w-[148px] sm:max-w-none truncate">
+                            <option value="all">All 10 3D Shapes</option>
+                            <option value="starter">Starter 5 Solids</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80">
+                        <div class="flex flex-col min-w-0">
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5"><span>⚡</span><span>Idle Rotation Speed</span></div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">How quickly 3D models turn automatically</div>
+                        </div>
+                        <select id="opt-shapes3d-spin-speed" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0 max-w-[148px] sm:max-w-none truncate">
+                            <option value="slow">🐢 Gentle</option>
+                            <option value="normal">🚶 Normal</option>
+                            <option value="fast">🚀 Fast</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80">
+                        <div class="flex flex-col min-w-0">
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5"><span>🎁</span><span>Default Model on Select</span></div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Start with pure geometric shape or a real object</div>
+                        </div>
+                        <select id="opt-shapes3d-default-view" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0 max-w-[148px] sm:max-w-none truncate">
+                            <option value="pure">Pure 3D Shape</option>
+                            <option value="example">Fun Toy Example (Gift, Earth...)</option>
+                        </select>
+                    </div>
+                    <label class="toggle-switch flex items-center justify-between gap-3 bg-slate-50 hover:bg-slate-100 px-3 py-2.5 rounded-2xl border border-slate-200/80 cursor-pointer">
+                        <div class="flex flex-col pr-2 min-w-0">
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5"><span>🌀</span><span>Auto-Spin 3D Shapes</span></div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Gently rotate 3D shapes when not dragging</div>
+                        </div>
+                        <input id="opt-shapes3d-autospin" type="checkbox">
+                        <div class="toggle-slider"></div>
+                    </label>
+                    <label class="toggle-switch flex items-center justify-between gap-3 bg-slate-50 hover:bg-slate-100 px-3 py-2.5 rounded-2xl border border-slate-200/80 cursor-pointer">
+                        <div class="flex flex-col pr-2 min-w-0">
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5"><span>🏷️</span><span>Show Example Pills &amp; Description</span></div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Show top example switcher buttons and hint pill</div>
+                        </div>
+                        <input id="opt-shapes3d-examples" type="checkbox">
+                        <div class="toggle-slider"></div>
+                    </label>
+                </div>
+
+                <!-- 7. COLORS & MIX SUBMENU -->
+                <div data-game-submenu="colors" class="game-submenu-panel hidden flex flex-col gap-2">
+                    <div class="flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80">
+                        <div class="flex flex-col min-w-0">
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5"><span>🎮</span><span>Starting Mode</span></div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Open in Explore Colors or Mix 2 Colors</div>
+                        </div>
+                        <select id="opt-colors-default-mode" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0 max-w-[148px] sm:max-w-none truncate">
+                            <option value="explore">🎨 Explore Colors</option>
+                            <option value="mix">🧪 Mix 2 Colors!</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80">
+                        <div class="flex flex-col min-w-0">
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5"><span>🌈</span><span>Color Palette</span></div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Full 10 colors or 6 rainbow primaries &amp; secondaries</div>
+                        </div>
+                        <select id="opt-colors-set" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0 max-w-[148px] sm:max-w-none truncate">
+                            <option value="all">Full Palette (10 Colors)</option>
+                            <option value="rainbow">Rainbow 6 (Red–Purple)</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80">
+                        <div class="flex flex-col min-w-0">
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5"><span>🗣️</span><span>Explore Speech Detail</span></div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Speak color name only or include object examples</div>
+                        </div>
+                        <select id="opt-colors-speech" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0 max-w-[148px] sm:max-w-none truncate">
+                            <option value="name_only">Name Only (Red!)</option>
+                            <option value="with_examples">With Examples (Like apple...)</option>
+                        </select>
+                    </div>
+                    <label class="toggle-switch flex items-center justify-between gap-3 bg-slate-50 hover:bg-slate-100 px-3 py-2.5 rounded-2xl border border-slate-200/80 cursor-pointer">
+                        <div class="flex flex-col pr-2 min-w-0">
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5"><span>🍎</span><span>Show Example Emoji Card</span></div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Display white card with matching color emojis</div>
+                        </div>
+                        <input id="opt-colors-examples" type="checkbox">
+                        <div class="toggle-slider"></div>
+                    </label>
+                </div>
+
+                <!-- 8. ANIMALS SUBMENU -->
+                <div data-game-submenu="animals" class="game-submenu-panel hidden flex flex-col gap-2">
+                    <div class="flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80">
+                        <div class="flex flex-col min-w-0">
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5"><span>🐾</span><span>Animal Tray Set</span></div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">All 18 animals or 8 familiar farm &amp; pet friends</div>
+                        </div>
+                        <select id="opt-animals-set" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0 max-w-[148px] sm:max-w-none truncate">
+                            <option value="all">All 18 Animals</option>
+                            <option value="farm_pets">Farm &amp; Pets (8)</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80">
+                        <div class="flex flex-col min-w-0">
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5"><span>🗣️</span><span>Audio When Picking Animal</span></div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">What plays when tapping an animal in the bottom tray</div>
+                        </div>
+                        <select id="opt-animals-audio-mode" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0 max-w-[148px] sm:max-w-none truncate">
+                            <option value="name_then_sound">Name + Sound (Default)</option>
+                            <option value="name_only">Name Only</option>
+                            <option value="sound_only">Animal Sound Only</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80">
+                        <div class="flex flex-col min-w-0">
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5"><span>👆</span><span>Tapping Big Animal on Stage</span></div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Action when tapping the large animal emoji or sound button</div>
+                        </div>
+                        <select id="opt-animals-stage-tap" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0 max-w-[148px] sm:max-w-none truncate">
+                            <option value="sound_only">Animal Sound Only</option>
+                            <option value="name_and_sound">Name + Animal Sound</option>
+                        </select>
+                    </div>
+                    <label class="toggle-switch flex items-center justify-between gap-3 bg-slate-50 hover:bg-slate-100 px-3 py-2.5 rounded-2xl border border-slate-200/80 cursor-pointer">
+                        <div class="flex flex-col pr-2 min-w-0">
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5"><span>💬</span><span>Show Sound Text Bubble</span></div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Display spoken sound pill like &quot;Roar!&quot; on stage</div>
+                        </div>
+                        <input id="opt-animals-sound-pill" type="checkbox">
+                        <div class="toggle-slider"></div>
+                    </label>
+                </div>
+
+                <!-- 9. YUMMY FOODS SUBMENU -->
+                <div data-game-submenu="fruits" class="game-submenu-panel hidden flex flex-col gap-2">
+                    <div class="flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80">
+                        <div class="flex flex-col min-w-0">
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5"><span>😋</span><span>Bites Per Food</span></div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">How many taps/bites to finish each food</div>
+                        </div>
+                        <select id="opt-fruits-bites" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0 max-w-[148px] sm:max-w-none truncate">
+                            <option value="3">3 Bites (Quick)</option>
+                            <option value="5">5 Bites (Default)</option>
+                            <option value="8">8 Bites (Lots of Bites)</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80">
+                        <div class="flex flex-col min-w-0">
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5"><span>🥦</span><span>Food Tray Filter</span></div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Show all 14 foods or fruits &amp; veggies only</div>
+                        </div>
+                        <select id="opt-fruits-set" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0 max-w-[148px] sm:max-w-none truncate">
+                            <option value="all">All 14 Yummy Foods</option>
+                            <option value="produce">Fruits &amp; Veggies Only (11)</option>
+                        </select>
+                    </div>
+                    <label class="toggle-switch flex items-center justify-between gap-3 bg-slate-50 hover:bg-slate-100 px-3 py-2.5 rounded-2xl border border-slate-200/80 cursor-pointer">
+                        <div class="flex flex-col pr-2 min-w-0">
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5"><span>🗣️</span><span>Speak Cheer on Every Bite</span></div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Say &quot;Crunch! Delicious!&quot; on intermediate bites (final bite always cheers)</div>
+                        </div>
+                        <input id="opt-fruits-bite-speech" type="checkbox">
+                        <div class="toggle-slider"></div>
+                    </label>
+                    <label class="toggle-switch flex items-center justify-between gap-3 bg-slate-50 hover:bg-slate-100 px-3 py-2.5 rounded-2xl border border-slate-200/80 cursor-pointer">
+                        <div class="flex flex-col pr-2 min-w-0">
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5"><span>🍪</span><span>Flying Food Crumbs</span></div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Burst colorful crumb particles on every bite</div>
+                        </div>
+                        <input id="opt-fruits-crumbs" type="checkbox">
+                        <div class="toggle-slider"></div>
+                    </label>
+                </div>
+
+                <!-- 10. VEHICLES & THINGS SUBMENU -->
+                <div data-game-submenu="things" class="game-submenu-panel hidden flex flex-col gap-2">
+                    <div class="flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80">
+                        <div class="flex flex-col min-w-0">
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5"><span>🚒</span><span>Tray Items Filter</span></div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Show all 14 items or vehicles only (10)</div>
+                        </div>
+                        <select id="opt-things-set" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0 max-w-[148px] sm:max-w-none truncate">
+                            <option value="all">All 14 Things &amp; Vehicles</option>
+                            <option value="vehicles">Vehicles Only (10)</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80">
+                        <div class="flex flex-col min-w-0">
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5"><span>🗣️</span><span>Audio When Picking Item</span></div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">What plays when selecting a vehicle or object</div>
+                        </div>
+                        <select id="opt-things-audio-mode" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0 max-w-[148px] sm:max-w-none truncate">
+                            <option value="name_then_sound">Name + Sound (Default)</option>
+                            <option value="name_only">Name Only</option>
+                            <option value="sound_only">Effect Sound Only</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80">
+                        <div class="flex flex-col min-w-0">
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5"><span>👆</span><span>Tapping Stage Item</span></div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Action when tapping the big emoji or sound pill</div>
+                        </div>
+                        <select id="opt-things-stage-tap" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0 max-w-[148px] sm:max-w-none truncate">
+                            <option value="sound_only">Effect Sound Only</option>
+                            <option value="name_and_sound">Name + Effect Sound</option>
+                        </select>
+                    </div>
+                    <label class="toggle-switch flex items-center justify-between gap-3 bg-slate-50 hover:bg-slate-100 px-3 py-2.5 rounded-2xl border border-slate-200/80 cursor-pointer">
+                        <div class="flex flex-col pr-2 min-w-0">
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5"><span>💬</span><span>Show Sound Text Pill</span></div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Display text badge like &quot;Weee-oooo!&quot; below item</div>
+                        </div>
+                        <input id="opt-things-sound-pill" type="checkbox">
+                        <div class="toggle-slider"></div>
+                    </label>
+                </div>
+
+                <!-- 11. OPPOSITES SUBMENU -->
+                <div data-game-submenu="opposites" class="game-submenu-panel hidden flex flex-col gap-2">
+                    <div class="flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80">
+                        <div class="flex flex-col min-w-0">
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5"><span>🔄</span><span>Opposite Pairs Set</span></div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Show all 20 pairs or 8 starter opposites</div>
+                        </div>
+                        <select id="opt-opposites-set" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0 max-w-[148px] sm:max-w-none truncate">
+                            <option value="all">All 20 Opposite Pairs</option>
+                            <option value="starter">Starter 8 Basics</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80">
+                        <div class="flex flex-col min-w-0">
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5"><span>🗣️</span><span>Card Tap Speech</span></div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Speak just the tapped word or both opposites together</div>
+                        </div>
+                        <select id="opt-opposites-tap-mode" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0 max-w-[148px] sm:max-w-none truncate">
+                            <option value="single">Tapped Card Word Only</option>
+                            <option value="compare">Compare Both (Big, and Small!)</option>
+                        </select>
+                    </div>
+                    <label class="toggle-switch flex items-center justify-between gap-3 bg-slate-50 hover:bg-slate-100 px-3 py-2.5 rounded-2xl border border-slate-200/80 cursor-pointer">
+                        <div class="flex flex-col pr-2 min-w-0">
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5"><span>🐘</span><span>Dynamic Size Contrast</span></div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Make Big/Tall extra large &amp; Small/Short extra tiny</div>
+                        </div>
+                        <input id="opt-opposites-scale" type="checkbox">
+                        <div class="toggle-slider"></div>
+                    </label>
+                    <label class="toggle-switch flex items-center justify-between gap-3 bg-slate-50 hover:bg-slate-100 px-3 py-2.5 rounded-2xl border border-slate-200/80 cursor-pointer">
+                        <div class="flex flex-col pr-2 min-w-0">
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5"><span>🏷️</span><span>Show Comparison Title</span></div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Display &quot;Big vs. Small&quot; label below cards</div>
+                        </div>
+                        <input id="opt-opposites-title" type="checkbox">
+                        <div class="toggle-slider"></div>
+                    </label>
+                </div>
+
+                <!-- 12. SOLAR SYSTEM SUBMENU -->
+                <div data-game-submenu="solar" class="game-submenu-panel hidden flex flex-col gap-2">
+                    <div class="flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80">
+                        <div class="flex flex-col min-w-0">
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5"><span>🚀</span><span>Starting Mode</span></div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Default view when opening Solar System</div>
+                        </div>
+                        <select id="opt-solar-default-mode" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0 max-w-[148px] sm:max-w-none truncate">
+                            <option value="photo">📸 Space View (NASA)</option>
+                            <option value="planet">🪐 3D Planet Spin</option>
+                            <option value="orbit">☀️ Live 3D Orbit</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80">
+                        <div class="flex flex-col min-w-0">
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5"><span>🪐</span><span>Celestial Tray Set</span></div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Choose which space objects appear in the bottom tray</div>
+                        </div>
+                        <select id="opt-solar-set" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0 max-w-[148px] sm:max-w-none truncate">
+                            <option value="all">All 14 Space Objects</option>
+                            <option value="with_pluto">Sun + 8 Planets + Moon + Pluto (11)</option>
+                            <option value="planets_only">Sun + 8 Major Planets (9)</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80">
+                        <div class="flex flex-col min-w-0">
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5"><span>⚡</span><span>Default Orbit Speed</span></div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Initial planet motion speed in Orbit mode</div>
+                        </div>
+                        <select id="opt-solar-orbit-speed" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0 max-w-[148px] sm:max-w-none truncate">
+                            <option value="0.5">0.5x Gentle</option>
+                            <option value="1">1x Normal (Default)</option>
+                            <option value="2">2x Brisk</option>
+                            <option value="5">5x Fast</option>
+                        </select>
+                    </div>
+                    <label class="toggle-switch flex items-center justify-between gap-3 bg-slate-50 hover:bg-slate-100 px-3 py-2.5 rounded-2xl border border-slate-200/80 cursor-pointer">
+                        <div class="flex flex-col pr-2 min-w-0">
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5"><span>🌀</span><span>Auto-Spin 3D Planets</span></div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Gently rotate planets in 3D Spin view</div>
+                        </div>
+                        <input id="opt-solar-autospin" type="checkbox">
+                        <div class="toggle-slider"></div>
+                    </label>
+                    <label class="toggle-switch flex items-center justify-between gap-3 bg-slate-50 hover:bg-slate-100 px-3 py-2.5 rounded-2xl border border-slate-200/80 cursor-pointer">
+                        <div class="flex flex-col pr-2 min-w-0">
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5"><span>🔭</span><span>Show NASA Image Source Credits</span></div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Display telescope &amp; mission source badge on Space View photos</div>
                         </div>
                         <input id="opt-solar-credits" type="checkbox">
                         <div class="toggle-slider"></div>
                     </label>
+                    <label class="toggle-switch flex items-center justify-between gap-3 bg-slate-50 hover:bg-slate-100 px-3 py-2.5 rounded-2xl border border-slate-200/80 cursor-pointer">
+                        <div class="flex flex-col pr-2 min-w-0">
+                            <div class="text-xs font-black text-slate-800 flex items-center gap-1.5"><span>💬</span><span>Show Fun-Fact Banner</span></div>
+                            <div class="text-[11px] font-bold text-slate-500 leading-tight">Display planet fun facts below the stage</div>
+                        </div>
+                        <input id="opt-solar-fact-banner" type="checkbox">
+                        <div class="toggle-slider"></div>
+                    </label>
                 </div>
             </div>
 
-            <!-- Number Blocks Game Options Section -->
-            <div id="nb-options-section" class="border-t pt-3 mt-0.5 flex flex-col gap-2">
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-1.5">
-                        <span class="text-sm">🧱</span>
-                        <h3 class="text-xs font-black uppercase tracking-wider text-slate-700">Number Blocks Game Options</h3>
-                    </div>
-                    <span class="text-[11px] font-extrabold text-rose-600 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-100">Parent Controls</span>
-                </div>
-
-                <!-- Addition & Building Cap -->
-                <div class="flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80">
-                    <div class="flex flex-col">
-                        <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
-                            <span>📈</span><span>Max Addition &amp; Building Target</span>
-                        </div>
-                        <div class="text-[11px] font-bold text-slate-500 leading-tight">Control how high your child can add and count</div>
-                    </div>
-                    <select id="opt-nb-max-number" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0">
-                        <option value="100">Up to 100</option>
-                        <option value="50">Up to 50</option>
-                        <option value="30">Up to 30</option>
-                        <option value="20">Up to 20</option>
-                        <option value="10">Up to 10</option>
-                    </select>
-                </div>
-
-                <!-- Dock Spawner Preset -->
-                <div class="flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80">
-                    <div class="flex flex-col min-w-0">
-                        <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
-                            <span>🧰</span><span>Dock Tray Numbers</span>
-                        </div>
-                        <div class="text-[11px] font-bold text-slate-500 leading-tight">Choose which blocks appear in the bottom tray</div>
-                    </div>
-                    <select id="opt-nb-dock-range" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0 max-w-[148px] sm:max-w-none truncate">
-                        <option value="1-10">1 to 10</option>
-                        <option value="place-value">1–9 + Tens (10–90)</option>
-                        <option value="tens-only">Tens Only (10–90)</option>
-                        <option value="1-5">1 to 5 (Starter)</option>
-                    </select>
-                </div>
-
-                <!-- Math Speech Announcements -->
-                <div class="flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80">
-                    <div class="flex flex-col min-w-0">
-                        <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
-                            <span>🗣️</span><span>Math Voice Announcements</span>
-                        </div>
-                        <div class="text-[11px] font-bold text-slate-500 leading-tight">How additions and splits are spoken aloud</div>
-                    </div>
-                    <select id="opt-nb-speech-style" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0 max-w-[148px] sm:max-w-none truncate">
-                        <option value="math_and_fun">Equation + Fun Fact</option>
-                        <option value="math_only">Equation Only (2 + 3 = 5)</option>
-                        <option value="number_only">Result Number Only</option>
-                    </select>
-                </div>
-
-                <!-- Combine Snap Distance -->
-                <div class="flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80">
-                    <div class="flex flex-col min-w-0">
-                        <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
-                            <span>🧲</span><span>Combine Magnet Range</span>
-                        </div>
-                        <div class="text-[11px] font-bold text-slate-500 leading-tight">How close blocks must be before they snap together</div>
-                    </div>
-                    <select id="opt-nb-snap-mode" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0 max-w-[148px] sm:max-w-none truncate">
-                        <option value="easy">Wide / Forgiving</option>
-                        <option value="normal">Balanced (Default)</option>
-                        <option value="close">Close Touch Only</option>
-                    </select>
-                </div>
-
-                <!-- Max Stage Blocks -->
-                <div class="flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80">
-                    <div class="flex flex-col">
-                        <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
-                            <span>🎭</span><span>Max Blocks on Stage</span>
-                        </div>
-                        <div class="text-[11px] font-bold text-slate-500 leading-tight">Keep the play area uncluttered</div>
-                    </div>
-                    <select id="opt-nb-max-blocks" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-xs bg-white text-slate-800 focus:border-indigo-500 focus:outline-none flex-shrink-0">
-                        <option value="6">6 Blocks</option>
-                        <option value="8">8 Blocks</option>
-                        <option value="10">10 Blocks</option>
-                        <option value="12">12 Blocks</option>
-                        <option value="16">16 Blocks</option>
-                    </select>
-                </div>
-
-                <!-- Combine When Falling on Top -->
-                <label class="toggle-switch flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80 cursor-pointer">
-                    <div class="flex flex-col pr-2">
-                        <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
-                            <span>⬇️</span><span>Combine When Landing on Top</span>
-                        </div>
-                        <div class="text-[11px] font-bold text-slate-500 leading-tight">On: falling blocks add together. Off: stack towers without merging</div>
-                    </div>
-                    <input id="opt-nb-fall-combine" type="checkbox">
-                    <div class="toggle-slider"></div>
-                </label>
-
-                <!-- True 1:1 Block Scale & Auto-Zoom -->
-                <label class="toggle-switch flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80 cursor-pointer">
-                    <div class="flex flex-col pr-2">
-                        <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
-                            <span>📐</span><span>True 1:1 Block Scale &amp; Auto-Zoom</span>
-                        </div>
-                        <div class="text-[11px] font-bold text-slate-500 leading-tight">Keep every cube the same real size and smoothly zoom the camera to fit</div>
-                    </div>
-                    <input id="opt-nb-true-scale" type="checkbox">
-                    <div class="toggle-slider"></div>
-                </label>
-
-                <!-- Show Big Floating Equations -->
-                <label class="toggle-switch flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80 cursor-pointer">
-                    <div class="flex flex-col pr-2">
-                        <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
-                            <span>➕</span><span>Show Equation Banners</span>
-                        </div>
-                        <div class="text-[11px] font-bold text-slate-500 leading-tight">Display animated 2 + 3 = 5 math pills when combining</div>
-                    </div>
-                    <input id="opt-nb-show-equations" type="checkbox">
-                    <div class="toggle-slider"></div>
-                </label>
-
-                <!-- Auto-Space Idle Blocks -->
-                <label class="toggle-switch flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80 cursor-pointer">
-                    <div class="flex flex-col pr-2">
-                        <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
-                            <span>↔️</span><span>Gentle Auto-Space Blocks</span>
-                        </div>
-                        <div class="text-[11px] font-bold text-slate-500 leading-tight">Nudge resting characters apart so none stay hidden behind others</div>
-                    </div>
-                    <input id="opt-nb-auto-space" type="checkbox">
-                    <div class="toggle-slider"></div>
-                </label>
-
-                <!-- Unlock All Dock Blocks -->
-                <label class="toggle-switch flex items-center justify-between gap-3 bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200/80 cursor-pointer">
-                    <div class="flex flex-col pr-2">
-                        <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
-                            <span>🔓</span><span>Unlock All Dock Numbers</span>
-                        </div>
-                        <div class="text-[11px] font-bold text-slate-500 leading-tight">Let your child spawn any tray number right away</div>
-                    </div>
-                    <input id="opt-nb-unlock-all" type="checkbox">
-                    <div class="toggle-slider"></div>
-                </label>
-            </div>
-
-            <!-- Gemini Voice / Cloud TTS Section -->
-            <div class="border-t pt-3 mt-0.5 flex flex-col gap-3">
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-1.5">
-                        <span class="text-sm">🎙️</span>
-                        <h3 class="text-xs font-black uppercase tracking-wider text-slate-700">Gemini 3.8 Natural Voice & API Key</h3>
-                    </div>
-                    <span id="canvas-key-badge" class="text-[11px] font-extrabold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full border border-indigo-100">Canvas Key Auto-Detected</span>
-                </div>
-
-                <div class="flex flex-col gap-1.5">
-                    <input id="gemini-api-key-input" type="password" placeholder="AIzaSy... (Paste Gemini API Key)"
-                           class="w-full px-3.5 py-2.5 rounded-xl border-2 border-slate-300 font-mono text-sm focus:border-indigo-500 focus:outline-none bg-slate-50">
-                    <p class="text-[11px] text-slate-500 font-semibold leading-tight">
-                        💡 Optional: Gemini natural voices provide expressive storytelling. If left blank, natural device speech works 100% offline!
-                    </p>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div class="flex flex-col gap-1">
-                        <label class="text-xs font-black uppercase tracking-wider text-slate-700">TTS Model</label>
-                        <select id="gemini-tts-model-select" class="w-full px-3 py-2 rounded-xl border-2 border-slate-300 font-bold text-sm bg-slate-50 focus:border-indigo-500 focus:outline-none">
-                            <option value="gemini-3.8-flash-tts">gemini-3.8-flash-tts (Expressive Studio)</option>
-                            <option value="gemini-3.8-flash-lite-tts">gemini-3.8-flash-lite-tts (Low Latency)</option>
-                        </select>
-                    </div>
-
-                    <div class="flex flex-col gap-1">
-                        <label class="text-xs font-black uppercase tracking-wider text-slate-700">Voice Persona</label>
-                        <select id="gemini-tts-voice-select" class="w-full px-3 py-2 rounded-xl border-2 border-slate-300 font-bold text-sm bg-slate-50 focus:border-indigo-500 focus:outline-none">
-                            <option value="Kore">Kore (Warm Storyteller — Default)</option>
-                            <option value="Puck">Puck (Playful & Energetic Buddy)</option>
-                            <option value="Aoede">Aoede (Melodic Educator)</option>
-                            <option value="Leda">Leda (Bright & Cheerful)</option>
-                            <option value="Fenrir">Fenrir (Friendly Deep Voice)</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Pre-Cache Speed / API Tier Selector (Upgrade 1) -->
-                <div class="flex flex-col gap-1">
-                    <label class="text-xs font-black uppercase tracking-wider text-slate-700">Pre-Cache Speed / API Tier</label>
-                    <select id="precache-tier-select" class="w-full px-3 py-2 rounded-xl border-2 border-slate-300 font-bold text-xs sm:text-sm bg-slate-50 focus:border-indigo-500 focus:outline-none">
-                        <option value="tier2_turbo">🚀 Tier 2 Turbo (~90 RPM • 3x Parallel — Default)</option>
-                        <option value="tier2_max">⚡ Tier 2 Max (~180 RPM • 5x Parallel)</option>
-                        <option value="tier1_safe">🐢 Tier 1 Safe (~8 RPM • 1x Serial)</option>
-                    </select>
-                </div>
-
-                <div id="voice-test-status" class="hidden text-xs font-bold text-center py-2 px-3 rounded-xl transition-all duration-200"></div>
-                <div class="flex flex-wrap items-center gap-2 pt-1">
-                    <button id="voice-test-btn" class="flex-1 bg-indigo-100 hover:bg-indigo-200 text-indigo-800 font-black px-4 py-2.5 rounded-xl text-sm squish-btn flex items-center justify-center gap-1.5">
-                        <span>🔊</span><span>Test Voice Sample</span>
-                        <div class="audio-vis-pill" title="Audio Activity"><span class="vis-bar bar-1"></span><span class="vis-bar bar-2"></span><span class="vis-bar bar-3"></span><span class="vis-bar bar-4"></span></div>
-                    </button>
-                    <button id="voice-precache-btn" class="flex-1 bg-amber-100 hover:bg-amber-200 text-amber-900 font-black px-4 py-2.5 rounded-xl text-sm squish-btn flex items-center justify-center gap-1.5">
-                        <span>⚡</span><span id="voice-precache-label">Pre-cache Core Words</span>
-                        <div class="audio-vis-pill" title="Audio Activity"><span class="vis-bar bar-1"></span><span class="vis-bar bar-2"></span><span class="vis-bar bar-3"></span><span class="vis-bar bar-4"></span></div>
-                    </button>
-                </div>
-
-                <div id="precache-progress-box" class="hidden flex flex-col gap-1.5 bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-amber-900 font-bold">
-                    <div class="flex justify-between items-center">
-                        <span id="precache-progress-text">Pre-caching audio...</span>
-                        <span id="precache-progress-num">0%</span>
-                    </div>
-                    <div class="w-full bg-amber-200 rounded-full h-2.5 overflow-hidden">
-                        <div id="precache-progress-bar" class="bg-amber-600 h-full w-0 transition-all duration-150"></div>
-                    </div>
-                    <div class="flex items-center justify-between pt-1">
-                        <span id="precache-tier-sub" class="text-[10px] text-amber-800 font-medium">Tier 2 Turbo (~90 RPM • 3x Parallel) • Runs in background</span>
-                        <div class="flex items-center gap-1.5">
-                            <button id="precache-modal-pause-btn" type="button" class="px-2.5 py-1 bg-amber-200 hover:bg-amber-300 text-amber-900 rounded-lg text-[11px] font-black squish-btn">⏸️ Pause</button>
-                            <button id="precache-modal-cancel-btn" type="button" class="px-2.5 py-1 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-lg text-[11px] font-black squish-btn">Cancel</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Footer: Reset Defaults & Save Buttons -->
+            <!-- Footer: Context-Aware Reset & Save Buttons -->
             <div class="flex items-center justify-between gap-3 border-t pt-3 mt-1 flex-shrink-0">
-                <button id="opt-reset-defaults-btn" type="button" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-black px-4 py-2.5 rounded-xl text-sm squish-btn border border-slate-300">
-                    ↺ Reset Defaults
+                <button id="opt-reset-defaults-btn" type="button" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-black px-4 py-2.5 rounded-xl text-sm squish-btn border border-slate-300 flex-shrink-0">
+                    ↺ Reset All
+                </button>
+                <button id="opt-reset-game-btn" type="button" class="hidden bg-slate-100 hover:bg-slate-200 text-slate-700 font-black px-4 py-2.5 rounded-xl text-sm squish-btn border border-slate-300 flex-shrink-0">
+                    ↺ Reset Game
                 </button>
                 <button id="voice-modal-save-btn" type="button" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-black py-2.5 rounded-xl shadow-md squish-btn text-base">
-                    Save & Done
+                    Save &amp; Done
                 </button>
             </div>
         </div>
@@ -5584,20 +6239,35 @@ const soundFX = {
 };
 
 const DEFAULT_SETTINGS = {
+    // Global App & Main Audio Controls
     announceGameOnOpen: true, // Announce game title & intro when opening a game from Home menu
     voiceEnabled: true,       // Master toggle for spoken voice (TTS)
     sfxEnabled: true,         // Master toggle for sound effects (animals, vehicles, crunches, pops)
-    confettiEnabled: true,    // Celebratory confetti bursts & food crumbs
-    autoSpin3D: true,         // Auto-rotate 3D shapes & 3D planets when idle
+    confettiEnabled: true,    // Master switch for celebratory confetti bursts
     requireHoldHome: false,   // Toddler Lock: require double-tap on Home button to exit a game
     speechRate: 'normal',     // 'slow' (0.82), 'normal' (0.96), 'fast' (1.10)
-    maxNumber: 100,           // 10, 20, 30, 50, or 100
-    phonicsDetail: 'full',    // 'full' ("A! A says ah! ah, Apple!") or 'simple' ("A! Apple!")
     minimizeMenuHeader: false, // Minimize upper title banner on Main Menu to just show cards
-    showSolarCredits: false,  // Display NASA telescope & mission source badge on Solar System photos
-    dragSpeed: 'normal',      // 1-finger drag sensitivity for shapes, visuals & 3D models ('slow': 0.55x, 'normal': 1.0x, 'fast': 1.75x)
+    dragSpeed: 'normal',      // 1-finger drag sensitivity ('slow': 0.55x, 'normal': 1.0x, 'fast': 1.75x)
     voiceVolume: 1.0,         // Spoken voice / TTS volume (0.0 .. 1.0)
     sfxVolume: 0.85,          // Sound effects volume (0.0 .. 1.0)
+
+    // 1. Phonics A-Z ('letters')
+    phonicsDetail: 'full',    // 'full' ("A! A says ah! ah, Apple!") or 'simple' ("A! Apple!")
+    lettersDefaultMode: 'studio', // 'studio' | 'bubbles'
+    lettersCase: 'both',      // 'both' | 'upper' | 'lower'
+    lettersBubbleCount: 3,    // 2 | 3 | 4
+    lettersShowBlendBar: true,
+
+    // 2. Tap & Count ('numbers')
+    numbersMax: 100,          // 10, 20, 30, 50, or 100
+    _numbersMaxCustom: false, // True when customized independently from Number Blocks maxNumber
+    numbersDefaultMode: 'touch', // 'touch' | 'show'
+    numbersAutoSpeed: 'normal',  // 'slow' | 'normal' | 'fast'
+    numbersShowTenFrame: true,
+    numbersShowBlocksBtn: true,
+
+    // 3. Number Blocks ('blocks')
+    maxNumber: 100,           // 10, 20, 30, 50, or 100
     nbDockRange: '1-10',      // '1-10', 'place-value', 'tens-only', '1-5'
     nbUnlockAll: true,        // Unlock all dock spawner tiles by default
     nbSpeechStyle: 'math_and_fun', // 'math_and_fun', 'math_only', 'number_only'
@@ -5607,7 +6277,81 @@ const DEFAULT_SETTINGS = {
     nbShowEquations: true,    // Show floating animated equation pills (e.g. 2 + 3 = 5)
     nbAutoSpace: true,        // Gently nudge resting blocks apart horizontally
     nbMaxBlocks: 10,          // Maximum simultaneous characters on stage (6..16)
-    _nbV2Upgraded: true
+
+    // 4. Look & Find ('quiz')
+    quizChoices: 3,           // 2 | 3 | 4
+    quizDefaultCat: 'all',    // 'all' | 'letters' | 'numbers' | 'blocks' | 'animals' | 'shapes' | 'solar'
+    quizMaxNumber: 'sync',    // 'sync' | '10' | '20' | '30' | '50' | '100'
+    quizHintTries: '2',       // '1' | '2' | 'off'
+    quizAutoNext: true,
+
+    // 5. 2D Shapes ('shapes')
+    shapesSet: 'all',         // 'all' | 'starter'
+    shapesSpeech: 'name_only', // 'name_only' | 'with_examples'
+    shapesShowExamples: true,
+
+    // 6. 3D Shapes ('shapes3d')
+    shapes3dSet: 'all',       // 'all' | 'starter'
+    shapes3dSpinSpeed: 'normal', // 'slow' | 'normal' | 'fast'
+    shapes3dDefaultView: 'pure', // 'pure' | 'example'
+    shapes3dAutoSpin: true,
+    shapes3dShowExamples: true,
+
+    // 7. Colors & Mix ('colors')
+    colorsDefaultMode: 'explore', // 'explore' | 'mix'
+    colorsSet: 'all',         // 'all' | 'rainbow'
+    colorsSpeech: 'name_only', // 'name_only' | 'with_examples'
+    colorsShowExamples: true,
+
+    // 8. Animals ('animals')
+    animalsSet: 'all',        // 'all' | 'farm_pets'
+    animalsAudioMode: 'name_then_sound', // 'name_then_sound' | 'name_only' | 'sound_only'
+    animalsStageTap: 'sound_only', // 'sound_only' | 'name_and_sound'
+    animalsShowSoundPill: true,
+
+    // 9. Yummy Foods ('fruits')
+    fruitsBites: 5,           // 3 | 5 | 8
+    fruitsSet: 'all',         // 'all' | 'produce'
+    fruitsBiteSpeech: true,
+    fruitsCrumbs: true,
+
+    // 10. Vehicles & Things ('things')
+    thingsSet: 'all',         // 'all' | 'vehicles'
+    thingsAudioMode: 'name_then_sound', // 'name_then_sound' | 'name_only' | 'sound_only'
+    thingsStageTap: 'sound_only', // 'sound_only' | 'name_and_sound'
+    thingsShowSoundPill: true,
+
+    // 11. Opposites ('opposites')
+    oppositesSet: 'all',      // 'all' | 'starter'
+    oppositesTapMode: 'single', // 'single' | 'compare'
+    oppositesDynamicScale: true,
+    oppositesShowTitle: true,
+
+    // 12. Solar System ('solar')
+    solarDefaultMode: 'photo', // 'photo' | 'planet' | 'orbit'
+    solarSet: 'all',          // 'all' | 'with_pluto' | 'planets_only'
+    solarOrbitSpeed: 1,       // 0.5 | 1 | 2 | 5
+    solarAutoSpin: true,
+    showSolarCredits: false,  // Display NASA telescope & mission source badge on Solar System photos
+    solarShowFactBanner: true,
+
+    _nbV2Upgraded: true,
+    _submenusV1Upgraded: true
+};
+
+const GAME_SETTINGS_KEYS = {
+    letters: ['phonicsDetail', 'lettersDefaultMode', 'lettersCase', 'lettersBubbleCount', 'lettersShowBlendBar'],
+    numbers: ['numbersMax', '_numbersMaxCustom', 'numbersDefaultMode', 'numbersAutoSpeed', 'numbersShowTenFrame', 'numbersShowBlocksBtn'],
+    blocks: ['maxNumber', 'nbDockRange', 'nbUnlockAll', 'nbSpeechStyle', 'nbFallCombine', 'nbTrueScale', 'nbSnapMode', 'nbShowEquations', 'nbAutoSpace', 'nbMaxBlocks'],
+    quiz: ['quizChoices', 'quizDefaultCat', 'quizMaxNumber', 'quizHintTries', 'quizAutoNext'],
+    shapes: ['shapesSet', 'shapesSpeech', 'shapesShowExamples'],
+    shapes3d: ['shapes3dSet', 'shapes3dSpinSpeed', 'shapes3dDefaultView', 'shapes3dAutoSpin', 'shapes3dShowExamples'],
+    colors: ['colorsDefaultMode', 'colorsSet', 'colorsSpeech', 'colorsShowExamples'],
+    animals: ['animalsSet', 'animalsAudioMode', 'animalsStageTap', 'animalsShowSoundPill'],
+    fruits: ['fruitsBites', 'fruitsSet', 'fruitsBiteSpeech', 'fruitsCrumbs'],
+    things: ['thingsSet', 'thingsAudioMode', 'thingsStageTap', 'thingsShowSoundPill'],
+    opposites: ['oppositesSet', 'oppositesTapMode', 'oppositesDynamicScale', 'oppositesShowTitle'],
+    solar: ['solarDefaultMode', 'solarSet', 'solarOrbitSpeed', 'solarAutoSpin', 'showSolarCredits', 'solarShowFactBanner']
 };
 
 const GAME_OPEN_TITLES = {
@@ -5640,6 +6384,16 @@ const app = {
                 if (!parsed._nbV2Upgraded) {
                     if (!parsed.maxNumber || parsed.maxNumber <= 20) parsed.maxNumber = 100;
                     parsed._nbV2Upgraded = true;
+                }
+                if (!parsed._submenusV1Upgraded) {
+                    if (parsed.autoSpin3D === false) {
+                        if (parsed.shapes3dAutoSpin === undefined) parsed.shapes3dAutoSpin = false;
+                        if (parsed.solarAutoSpin === undefined) parsed.solarAutoSpin = false;
+                    }
+                    if (parsed.maxNumber && parsed.numbersMax === undefined) {
+                        parsed.numbersMax = parsed.maxNumber;
+                    }
+                    parsed._submenusV1Upgraded = true;
                 }
                 return Object.assign({}, DEFAULT_SETTINGS, parsed);
             }
@@ -5688,6 +6442,19 @@ const app = {
         if (optToggle) optToggle.checked = isMin;
     },
 
+    applyAllGameSettings() {
+        if (typeof phonicsGame !== 'undefined' && phonicsGame.applySettings) phonicsGame.applySettings();
+        if (typeof numberGame !== 'undefined' && numberGame.applyMaxNumberSetting) numberGame.applyMaxNumberSetting();
+        if (typeof shape2DGame !== 'undefined' && shape2DGame.applySettings) shape2DGame.applySettings();
+        if (typeof shapes3DGame !== 'undefined' && shapes3DGame.applySettings) shapes3DGame.applySettings();
+        if (typeof colorGame !== 'undefined' && colorGame.applySettings) colorGame.applySettings();
+        if (typeof animalGame !== 'undefined' && animalGame.applySettings) animalGame.applySettings();
+        if (typeof foodGame !== 'undefined' && foodGame.applySettings) foodGame.applySettings();
+        if (typeof thingsGame !== 'undefined' && thingsGame.applySettings) thingsGame.applySettings();
+        if (typeof oppositesGame !== 'undefined' && oppositesGame.applySettings) oppositesGame.applySettings();
+        if (typeof solarGame !== 'undefined' && solarGame.applySettings) solarGame.applySettings();
+    },
+
     saveSettings() {
         try {
             localStorage.setItem('tlh_isolated_v3_settings', JSON.stringify(this.settings));
@@ -5698,9 +6465,7 @@ const app = {
         if (typeof this.applySolarCreditsState === 'function') {
             this.applySolarCreditsState();
         }
-        if (typeof numberGame !== 'undefined' && numberGame.applyMaxNumberSetting) {
-            numberGame.applyMaxNumberSetting();
-        }
+        this.applyAllGameSettings();
         if (typeof updateVoiceStatusIndicator === 'function') {
             updateVoiceStatusIndicator();
         }
@@ -5824,13 +6589,13 @@ const app = {
         if (viewName === 'letters') phonicsGame.open();
         else if (viewName === 'numbers') numberGame.open();
         else if (viewName === 'quiz') quizGame.open();
-        else if (viewName === 'shapes') shape2DGame.select(GAMES.shapes[0], true);
-        else if (viewName === 'shapes3d') shapes3DGame.select(GAMES.shapes3d[0], true);
+        else if (viewName === 'shapes') shape2DGame.open();
+        else if (viewName === 'shapes3d') shapes3DGame.open();
         else if (viewName === 'colors') colorGame.open();
-        else if (viewName === 'animals') animalGame.select(GAMES.animals[0], true, false);
-        else if (viewName === 'fruits') foodGame.select(GAMES.fruits[0], true);
-        else if (viewName === 'things') thingsGame.select(GAMES.things[0], true);
-        else if (viewName === 'opposites') oppositesGame.select(GAMES.opposites[0], true);
+        else if (viewName === 'animals') animalGame.open();
+        else if (viewName === 'fruits') foodGame.open();
+        else if (viewName === 'things') thingsGame.open();
+        else if (viewName === 'opposites') oppositesGame.open();
         else if (viewName === 'solar') solarGame.open();
         else if (viewName === 'blocks' && window.NumberBlocks && window.NumberBlocks.Game) window.NumberBlocks.Game.open();
 
@@ -6560,10 +7325,43 @@ const solarGame = {
     dateAnimFrom: new Map(),
     dateAnimTo: new Map(),
 
+    getVisibleBodies() {
+        const set = (typeof app !== 'undefined' && app.settings && app.settings.solarSet) || 'all';
+        if (set === 'planets_only') {
+            const allowed = new Set(['The Sun', 'Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune']);
+            return GAMES.solar.filter(s => allowed.has(s.id));
+        }
+        if (set === 'with_pluto') {
+            const allowed = new Set(['The Sun', 'Mercury', 'Venus', 'Earth', "Earth's Moon", 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Pluto']);
+            return GAMES.solar.filter(s => allowed.has(s.id));
+        }
+        return GAMES.solar;
+    },
+
+    applySettings() {
+        const visible = this.getVisibleBodies();
+        const visibleIds = new Set(visible.map(s => s.id));
+        document.querySelectorAll('#solar-controls .tray-btn').forEach(btn => {
+            btn.style.display = visibleIds.has(btn.dataset.solarId) ? '' : 'none';
+        });
+        const factEl = document.getElementById('solar-fact');
+        if (factEl) {
+            factEl.classList.toggle('hidden', typeof app !== 'undefined' && app.settings && app.settings.solarShowFactBanner === false);
+        }
+        if (typeof app !== 'undefined' && app.applySolarCreditsState) {
+            app.applySolarCreditsState();
+        }
+        if (this.current && !visibleIds.has(this.current.id) && visible.length) {
+            this.select(visible[0], false);
+        }
+    },
+
     stepBody(delta) {
-        const idx = GAMES.solar.findIndex(s => s.id === this.current.id);
-        const nextIdx = (idx + delta + GAMES.solar.length) % GAMES.solar.length;
-        this.select(GAMES.solar[nextIdx], true);
+        const visible = this.getVisibleBodies();
+        if (!visible.length) return;
+        const idx = Math.max(0, visible.findIndex(s => s.id === this.current.id));
+        const nextIdx = (idx + delta + visible.length) % visible.length;
+        this.select(visible[nextIdx], true);
         const activeBtn = document.querySelector('#solar-controls .tray-btn.selected');
         if (activeBtn) {
             activeBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
@@ -6595,6 +7393,32 @@ const solarGame = {
     open() {
         document.getElementById('solar-orbit-drawer')?.classList.add('hidden');
         document.getElementById('solar-date-popover')?.classList.add('hidden');
+        const defaultSpeed = (typeof app !== 'undefined' && app.settings && parseFloat(app.settings.solarOrbitSpeed)) || 1.0;
+        this.setOrbitSpeed(defaultSpeed);
+        const defaultMode = (typeof app !== 'undefined' && app.settings && app.settings.solarDefaultMode) || 'photo';
+        this.applySettings();
+        this.mode = defaultMode;
+        if (typeof zoomController !== 'undefined') {
+            zoomController.resetZoom();
+        }
+        if (this.camera) {
+            this.camera.position.z = defaultMode === 'orbit' ? 12.5 : 7.4;
+            this.camera.updateProjectionMatrix();
+        }
+        const orbitControls = document.getElementById('solar-orbit-controls');
+        if (orbitControls) orbitControls.classList.toggle('hidden', defaultMode !== 'orbit');
+        const headerRow = document.getElementById('solar-header-row');
+        if (headerRow) headerRow.classList.toggle('hidden', defaultMode === 'orbit');
+        if (defaultMode === 'orbit') {
+            this.simDate = new Date();
+            this.isPlaying = true;
+            this.updateOrbitDateUI();
+        }
+        document.getElementById('solar-mode-photo')?.classList.toggle('active', defaultMode === 'photo');
+        document.getElementById('solar-mode-planet')?.classList.toggle('active', defaultMode === 'planet');
+        document.getElementById('solar-mode-orbit')?.classList.toggle('active', defaultMode === 'orbit');
+        const actionLbl = document.getElementById('solar-action-label');
+        if (actionLbl) actionLbl.textContent = defaultMode === 'orbit' ? '🚀 Turbo Orbit!' : '🔊 Fun Fact!';
         this.select(this.current, true);
     },
 
@@ -7278,7 +8102,7 @@ const solarGame = {
                         this.earthMoonPivot.rotation.y += 0.05 * (this.orbitSpeed || 1.0) * this.turboBoost;
                     }
                 } else if (!this.isDragging) {
-                    if (typeof app === 'undefined' || !app.settings || app.settings.autoSpin3D) {
+                    if (typeof app === 'undefined' || !app.settings || app.settings.solarAutoSpin !== false) {
                         this.rootGroup.rotateOnWorldAxis(worldY, this.velX);
                         this.rootGroup.rotateOnWorldAxis(worldX, this.velY);
                         this.velX = this.velX * 0.95 + 0.011 * 0.05;
@@ -7312,20 +8136,69 @@ const phonicsGame = {
     bubbleTimer: null,
     bubbleSubTimers: [],
 
+    formatCase(letter) {
+        const mode = (typeof app !== 'undefined' && app.settings && app.settings.lettersCase) || 'both';
+        if (mode === 'upper') return letter.toUpperCase();
+        if (mode === 'lower') return letter.toLowerCase();
+        return `${letter.toUpperCase()}${letter.toLowerCase()}`;
+    },
+
+    applyCaseDisplay(letter) {
+        const mode = (typeof app !== 'undefined' && app.settings && app.settings.lettersCase) || 'both';
+        const upperEl = document.getElementById('phonics-big-upper');
+        const lowerEl = document.getElementById('phonics-big-lower');
+        if (upperEl) {
+            upperEl.textContent = letter.toUpperCase();
+            upperEl.classList.toggle('hidden', mode === 'lower');
+        }
+        if (lowerEl) {
+            lowerEl.textContent = letter.toLowerCase();
+            lowerEl.classList.toggle('hidden', mode === 'upper');
+            if (mode === 'lower') {
+                lowerEl.className = 'text-7xl sm:text-8xl font-black text-blue-600 leading-none';
+            } else {
+                lowerEl.className = 'text-6xl sm:text-7xl font-black text-sky-500 leading-none';
+            }
+        }
+    },
+
+    applySettings() {
+        const item = GAMES.phonics[this.currentIndex] || GAMES.phonics[0];
+        this.applyCaseDisplay(item.letter);
+        document.querySelectorAll('#phonics-controls .tray-btn').forEach((btn, i) => {
+            const p = GAMES.phonics[i];
+            if (!p) return;
+            const labelSpan = btn.querySelector('span:first-child');
+            if (labelSpan) labelSpan.textContent = this.formatCase(p.letter);
+        });
+        if (typeof app !== 'undefined' && app.settings && app.settings.lettersShowBlendBar === false) {
+            document.getElementById('phonics-blend-bar')?.classList.add('hidden');
+        }
+        if (typeof app !== 'undefined' && app.currentView === 'letters' && this.mode === 'bubbles') {
+            this.startBubbles();
+        }
+    },
+
     open() {
         this.stopBubbles();
-        this.mode = 'studio';
+        this.applySettings();
+        const defaultMode = (typeof app !== 'undefined' && app.settings && app.settings.lettersDefaultMode) || 'studio';
+        this.mode = defaultMode;
         const pStudio = document.getElementById('phonics-mode-studio');
         const pBubbles = document.getElementById('phonics-mode-bubbles');
-        if (pStudio) pStudio.classList.add('active');
-        if (pBubbles) pBubbles.classList.remove('active');
+        if (pStudio) pStudio.classList.toggle('active', defaultMode === 'studio');
+        if (pBubbles) pBubbles.classList.toggle('active', defaultMode === 'bubbles');
         const sStage = document.getElementById('phonics-studio-stage');
         const bStage = document.getElementById('phonics-bubble-stage');
         const cDock = document.getElementById('phonics-controls-dock');
-        if (sStage) sStage.classList.remove('hidden');
-        if (bStage) bStage.classList.add('hidden');
-        if (cDock) cDock.classList.remove('hidden');
-        this.selectLetter(this.currentIndex, true);
+        if (sStage) sStage.classList.toggle('hidden', defaultMode !== 'studio');
+        if (bStage) bStage.classList.toggle('hidden', defaultMode !== 'bubbles');
+        if (cDock) cDock.classList.toggle('hidden', defaultMode !== 'studio');
+        if (defaultMode === 'bubbles') {
+            this.startBubbles();
+        } else {
+            this.selectLetter(this.currentIndex, true);
+        }
     },
 
     setMode(newMode) {
@@ -7349,8 +8222,7 @@ const phonicsGame = {
     selectLetter(idx, speakIt = true) {
         this.currentIndex = idx;
         const item = GAMES.phonics[idx];
-        document.getElementById('phonics-big-upper').textContent = item.letter;
-        document.getElementById('phonics-big-lower').textContent = item.letter.toLowerCase();
+        this.applyCaseDisplay(item.letter);
         document.getElementById('phonics-sound-pill').textContent = `🔊 "${item.soundSpell}" — ${item.cue}`;
         app.animatePop(document.getElementById('phonics-main-card'));
 
@@ -7382,17 +8254,22 @@ const phonicsGame = {
                 soundFX.playPop();
                 app.animatePop(wCard);
 
-                // Update sound-it-out blend bar
+                // Update sound-it-out blend bar if enabled
+                const showBlend = (typeof app === 'undefined' || !app.settings || app.settings.lettersShowBlendBar !== false);
                 if (blendBar && blendLetters) {
-                    blendBar.classList.remove('hidden');
-                    blendLetters.innerHTML = `
-                        <span class="bg-blue-200 text-blue-900 px-2 py-0.5 rounded-lg">${item.soundSpell}</span>
-                        <span>+</span>
-                        <span class="bg-blue-100 text-blue-800 px-2 py-0.5 rounded-lg">${wObj.w}</span>
-                        <span>=</span>
-                        <span class="bg-amber-100 text-amber-900 px-2.5 py-0.5 rounded-lg border border-amber-300">${wObj.w}!</span>
-                    `;
-                    app.animatePop(blendBar);
+                    if (showBlend) {
+                        blendBar.classList.remove('hidden');
+                        blendLetters.innerHTML = `
+                            <span class="bg-blue-200 text-blue-900 px-2 py-0.5 rounded-lg">${item.soundSpell}</span>
+                            <span>+</span>
+                            <span class="bg-blue-100 text-blue-800 px-2 py-0.5 rounded-lg">${wObj.w}</span>
+                            <span>=</span>
+                            <span class="bg-amber-100 text-amber-900 px-2.5 py-0.5 rounded-lg border border-amber-300">${wObj.w}!</span>
+                        `;
+                        app.animatePop(blendBar);
+                    } else {
+                        blendBar.classList.add('hidden');
+                    }
                 }
 
                 if (typeof app !== 'undefined' && app.settings && app.settings.phonicsDetail === 'simple') {
@@ -7444,25 +8321,32 @@ const phonicsGame = {
         document.getElementById('bubble-prompt-text').textContent = `Find "${targetData.letter}" (${targetData.soundSpell} for ${targetData.words[0].w})`;
         app.speak(`Pop ${targetData.letter}! ${targetData.cue} ${targetData.words[0].w}!`);
 
+        const bubbleCount = Math.max(2, Math.min(4, parseInt((typeof app !== 'undefined' && app.settings && app.settings.lettersBubbleCount) || 3, 10) || 3));
         const indices = [targetIdx];
-        while (indices.length < 3) {
+        while (indices.length < bubbleCount) {
             const r = Math.floor(Math.random() * GAMES.phonics.length);
             if (!indices.includes(r)) indices.push(r);
         }
         indices.sort(() => Math.random() - 0.5);
 
+        const layouts = {
+            2: [{ left: '18%', top: '26%' }, { left: '56%', top: '26%' }],
+            3: [{ left: '6%', top: '16%' }, { left: '38%', top: '44%' }, { left: '68%', top: '16%' }],
+            4: [{ left: '10%', top: '10%' }, { left: '56%', top: '10%' }, { left: '14%', top: '48%' }, { left: '58%', top: '48%' }]
+        };
+        const posLayout = layouts[bubbleCount] || layouts[3];
         const palette = ['#ef4444', '#3b82f6', '#10b981', '#f59e0b', '#ec4899', '#8b5cf6'];
         indices.forEach((idx, pos) => {
             const pData = GAMES.phonics[idx];
             const b = document.createElement('div');
             b.className = 'phonics-bubble float-anim';
-            const size = Math.min(window.innerWidth * 0.25, 112);
+            const size = bubbleCount === 4 ? Math.min(window.innerWidth * 0.22, 102) : Math.min(window.innerWidth * 0.25, 112);
             b.style.width = `${size}px`;
             b.style.height = `${size}px`;
             b.style.backgroundColor = palette[(idx + pos) % palette.length];
-            b.style.left = pos === 0 ? '6%' : pos === 1 ? '38%' : '68%';
-            b.style.top = pos === 1 ? '44%' : '16%';
-            b.innerHTML = `<span class="text-4xl sm:text-5xl leading-none">${pData.letter}${pData.letter.toLowerCase()}</span><span class="text-xl mt-0.5">${pData.words[0].e}</span>`;
+            b.style.left = posLayout[pos].left;
+            b.style.top = posLayout[pos].top;
+            b.innerHTML = `<span class="text-4xl sm:text-5xl leading-none">${this.formatCase(pData.letter)}</span><span class="text-xl mt-0.5">${pData.words[0].e}</span>`;
 
             b.addEventListener('click', () => {
                 const rect = b.getBoundingClientRect();
@@ -7495,17 +8379,23 @@ const numberGame = {
     countedSoFar: 0,
     autoTimers: [],
 
+    getEffectiveMax() {
+        const s = (typeof app !== 'undefined' && app.settings) ? app.settings : {};
+        return s._numbersMaxCustom ? (s.numbersMax || 100) : (s.maxNumber || 100);
+    },
+
     open() {
         this.clearAutoTimers();
-        this.mode = 'touch';
-        document.getElementById('num-mode-touch')?.classList.add('active');
-        document.getElementById('num-mode-show')?.classList.remove('active');
+        const defaultMode = (typeof app !== 'undefined' && app.settings && app.settings.numbersDefaultMode) || 'touch';
+        this.mode = defaultMode;
+        document.getElementById('num-mode-touch')?.classList.toggle('active', defaultMode === 'touch');
+        document.getElementById('num-mode-show')?.classList.toggle('active', defaultMode === 'show');
         this.applyMaxNumberSetting();
         this.select(this.currentData, true);
     },
 
     applyMaxNumberSetting() {
-        const max = (typeof app !== 'undefined' && app.settings && app.settings.maxNumber) ? app.settings.maxNumber : 100;
+        const max = this.getEffectiveMax();
         const badge = document.getElementById('menu-numbers-range-badge');
         if (badge) badge.textContent = `1 to ${max}`;
         document.querySelectorAll('#number-controls .tray-btn').forEach(btn => {
@@ -7516,6 +8406,14 @@ const numberGame = {
                 btn.style.display = '';
             }
         });
+        const tf = document.getElementById('number-ten-frame');
+        if (tf) {
+            tf.classList.toggle('hidden', typeof app !== 'undefined' && app.settings && app.settings.numbersShowTenFrame === false);
+        }
+        const blkBtn = document.getElementById('number-open-blocks-btn');
+        if (blkBtn) {
+            blkBtn.classList.toggle('hidden', typeof app !== 'undefined' && app.settings && app.settings.numbersShowBlocksBtn === false);
+        }
         if (this.currentData && this.currentData.num > max) {
             this.currentData = GAMES.numbers[0];
             if (typeof app !== 'undefined' && app.currentView === 'numbers') {
@@ -7761,7 +8659,10 @@ const numberGame = {
             if (instrEl) instrEl.textContent = `Counting: ${stepNum} of ${numData.num}`;
 
             const startTime = Date.now();
-            const minStepMs = numData.num > 60 ? 170 : (numData.num > 25 ? 270 : 550);
+            const baseStepMs = numData.num > 60 ? 170 : (numData.num > 25 ? 270 : 550);
+            const autoSpd = (typeof app !== 'undefined' && app.settings && app.settings.numbersAutoSpeed) || 'normal';
+            const speedMult = autoSpd === 'slow' ? 1.45 : (autoSpd === 'fast' ? 0.65 : 1.0);
+            const minStepMs = Math.round(baseStepMs * speedMult);
 
             const next = () => {
                 if (curSeqToken !== this.autoSeqToken || app.currentView !== 'numbers') return;
@@ -7849,6 +8750,11 @@ const quizGame = {
     speechFollowupTimer: null,
 
     open() {
+        const defaultCat = (typeof app !== 'undefined' && app.settings && app.settings.quizDefaultCat) || 'all';
+        this.category = defaultCat;
+        document.querySelectorAll('.quiz-cat-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.quizCat === defaultCat);
+        });
         this.nextQuestion(true);
     },
 
@@ -7872,7 +8778,9 @@ const quizGame = {
             sub: `${p.words[0].e} ${p.words[0].w}`,
             prompt: `Can you find the letter ${p.letter}?`
         }));
-        const maxNum = (typeof app !== 'undefined' && app.settings && app.settings.maxNumber) ? app.settings.maxNumber : 100;
+        const qSetting = (typeof app !== 'undefined' && app.settings) ? app.settings.quizMaxNumber : 'sync';
+        const fallbackMax = (typeof app !== 'undefined' && app.settings && app.settings.maxNumber) ? app.settings.maxNumber : 100;
+        const maxNum = (qSetting && qSetting !== 'sync') ? (parseInt(qSetting, 10) || fallbackMax) : fallbackMax;
         const numbersPool = GAMES.numbers.filter(n => n.num <= maxNum).map(n => ({
             cat: 'numbers',
             label: `Number ${n.num}`,
@@ -7948,6 +8856,9 @@ const quizGame = {
         this.answered = false;
         this.wrongAttempts = 0;
 
+        const nextBtn = document.getElementById('quiz-next-btn');
+        if (nextBtn) nextBtn.classList.remove('ring-4', 'ring-amber-300', 'animate-pulse');
+
         const pool = this.getPool();
         if (!pool || pool.length === 0) return;
 
@@ -7958,18 +8869,19 @@ const quizGame = {
         const winner = candidatePool[Math.floor(Math.random() * candidatePool.length)];
         this.currentAnswer = winner;
 
-        // 2. Pick 2 distractors from the SAME category as winner (prevents cross-category visual collisions)
+        // 2. Pick distractors from the SAME category as winner
+        const choiceCount = Math.max(2, Math.min(4, parseInt((typeof app !== 'undefined' && app.settings && app.settings.quizChoices) || 3, 10) || 3));
+        const neededDistractors = choiceCount - 1;
         const distractors = pool
             .filter(p => p.cat === winner.cat && p.label !== winner.label)
             .sort(() => Math.random() - 0.5)
-            .slice(0, 2);
+            .slice(0, neededDistractors);
 
-        // Fallback if not enough in same category (should not occur since each category has >= 10 items)
-        if (distractors.length < 2) {
+        if (distractors.length < neededDistractors) {
             const others = pool
                 .filter(p => p.label !== winner.label && !distractors.some(d => d.label === p.label))
                 .sort(() => Math.random() - 0.5)
-                .slice(0, 2 - distractors.length);
+                .slice(0, neededDistractors - distractors.length);
             distractors.push(...others);
         }
 
@@ -7981,11 +8893,15 @@ const quizGame = {
         app.speak(spoken);
 
         const grid = document.getElementById('quiz-choices-grid');
+        grid.className = choiceCount === 3
+            ? 'grid grid-cols-3 gap-2.5 sm:gap-4 w-full max-w-xl px-2'
+            : 'grid grid-cols-2 gap-3 sm:gap-4 w-full max-w-xl px-2';
         grid.innerHTML = '';
 
         choices.forEach(item => {
             const card = document.createElement('div');
-            card.className = 'bg-white rounded-3xl p-4 sm:p-6 shadow-md border-4 border-amber-200 flex flex-col items-center justify-center min-h-[145px] cursor-pointer squish-btn transition-all duration-200';
+            const minH = choiceCount === 4 ? 'min-h-[120px] sm:min-h-[140px] p-3 sm:p-5' : 'min-h-[145px] p-4 sm:p-6';
+            card.className = `bg-white rounded-3xl ${minH} shadow-md border-4 border-amber-200 flex flex-col items-center justify-center cursor-pointer squish-btn transition-all duration-200`;
             card.dataset.quizLabel = item.label;
 
             const visualContent = item.displayHtml
@@ -8011,7 +8927,12 @@ const quizGame = {
                         app.speak(`You found it! ${winner.label}!`);
                         this.speechFollowupTimer = null;
                     }, 350));
-                    this.nextTimer = setTimeout(() => this.nextQuestion(false), 1350);
+                    const autoNext = (typeof app === 'undefined' || !app.settings || app.settings.quizAutoNext !== false);
+                    if (autoNext) {
+                        this.nextTimer = setTimeout(() => this.nextQuestion(false), 1350);
+                    } else if (nextBtn) {
+                        nextBtn.classList.add('ring-4', 'ring-amber-300', 'animate-pulse');
+                    }
                 } else {
                     this.wrongAttempts++;
                     soundFX.playNote(220, 0.15, 'sine');
@@ -8019,8 +8940,9 @@ const quizGame = {
                     app.speak(`Try to find ${winner.label}!`);
                     setTimeout(() => card.classList.remove('shake-anim'), 350);
 
-                    // Scaffolding: if child tried wrong twice, highlight the winning card
-                    if (this.wrongAttempts >= 2) {
+                    const hintSetting = (typeof app !== 'undefined' && app.settings && app.settings.quizHintTries) || '2';
+                    const hintThreshold = hintSetting === 'off' ? Infinity : (parseInt(hintSetting, 10) || 2);
+                    if (this.wrongAttempts >= hintThreshold) {
                         grid.querySelectorAll('.squish-btn').forEach(btn => {
                             if (btn.dataset.quizLabel === winner.label) {
                                 btn.classList.add('ring-4', 'ring-amber-400', 'border-amber-400', 'animate-pulse');
@@ -8036,17 +8958,56 @@ const quizGame = {
 
 const shape2DGame = {
     current: GAMES.shapes[0],
+    getVisibleShapes() {
+        const set = (typeof app !== 'undefined' && app.settings && app.settings.shapesSet) || 'all';
+        if (set === 'starter') {
+            const allowed = new Set(['Circle', 'Square', 'Triangle', 'Rectangle', 'Star', 'Heart']);
+            return GAMES.shapes.filter(s => allowed.has(s.id));
+        }
+        return GAMES.shapes;
+    },
+    applySettings() {
+        const visible = this.getVisibleShapes();
+        const visibleIds = new Set(visible.map(s => s.id));
+        document.querySelectorAll('#shape-controls .tray-btn').forEach(b => {
+            b.style.display = visibleIds.has(b.dataset.shapeId) ? '' : 'none';
+        });
+        const realEl = document.getElementById('shape-realworld');
+        if (realEl) {
+            realEl.classList.toggle('hidden', typeof app !== 'undefined' && app.settings && app.settings.shapesShowExamples === false);
+        }
+        if (this.current && !visibleIds.has(this.current.id) && visible.length) {
+            this.select(visible[0], false);
+        }
+    },
+    open() {
+        this.applySettings();
+        const visible = this.getVisibleShapes();
+        const first = (this.current && visible.some(s => s.id === this.current.id)) ? this.current : (visible[0] || GAMES.shapes[0]);
+        this.select(first, true);
+    },
     select(s, speak = true) {
         this.current = s;
         const target = document.getElementById('shape-target');
         target.innerHTML = `<svg width="100%" height="100%" viewBox="0 0 100 100">${s.svg}</svg>`;
         document.getElementById('shape-text').textContent = s.id;
-        document.getElementById('shape-realworld').textContent = `Looks like: ${s.real}`;
+        const realEl = document.getElementById('shape-realworld');
+        if (realEl) {
+            realEl.textContent = `Looks like: ${s.real}`;
+            realEl.classList.toggle('hidden', typeof app !== 'undefined' && app.settings && app.settings.shapesShowExamples === false);
+        }
         document.querySelectorAll('#shape-controls .tray-btn').forEach(b => {
             b.classList.toggle('selected', b.dataset.shapeId === s.id);
         });
         app.animatePop(target);
-        if (speak) app.speak(`${s.id}!`);
+        if (speak) {
+            const detail = (typeof app !== 'undefined' && app.settings && app.settings.shapesSpeech) || 'name_only';
+            if (detail === 'with_examples') {
+                app.speak(`${s.id}! Looks like ${s.real.replace(/•/g, ',')}`);
+            } else {
+                app.speak(`${s.id}!`);
+            }
+        }
     }
 };
 
@@ -8741,18 +9702,63 @@ const shapes3DGame = {
         return group;
     },
 
-    select(item, speak = true, exampleId = 'pure') {
+    getVisibleShapes() {
+        const set = (typeof app !== 'undefined' && app.settings && app.settings.shapes3dSet) || 'all';
+        if (set === 'starter') {
+            const allowed = new Set(['Cube', 'Sphere', 'Cone', 'Cylinder', 'Donut (Torus)']);
+            return GAMES.shapes3d.filter(s => allowed.has(s.id));
+        }
+        return GAMES.shapes3d;
+    },
+
+    getDefaultExampleId(item) {
+        const pref = (typeof app !== 'undefined' && app.settings && app.settings.shapes3dDefaultView) || 'pure';
+        if (pref === 'example' && item && item.examples && item.examples.length > 1) {
+            return item.examples[1].id;
+        }
+        return 'pure';
+    },
+
+    applySettings() {
+        const visible = this.getVisibleShapes();
+        const visibleIds = new Set(visible.map(s => s.id));
+        document.querySelectorAll('#shape3d-controls .tray-btn').forEach(b => {
+            b.style.display = visibleIds.has(b.dataset.shape3dId) ? '' : 'none';
+        });
+        const showEx = (typeof app === 'undefined' || !app.settings || app.settings.shapes3dShowExamples !== false);
+        document.getElementById('shape3d-examples-bar')?.classList.toggle('hidden', !showEx);
+        document.getElementById('shape3d-realworld')?.classList.toggle('hidden', !showEx);
+        if (this.currentShape && !visibleIds.has(this.currentShape.id) && visible.length) {
+            const first = visible[0];
+            this.select(first, false, this.getDefaultExampleId(first));
+        }
+    },
+
+    open() {
+        this.applySettings();
+        const visible = this.getVisibleShapes();
+        const item = (this.currentShape && visible.some(s => s.id === this.currentShape.id)) ? this.currentShape : (visible[0] || GAMES.shapes3d[0]);
+        this.select(item, true, this.getDefaultExampleId(item));
+    },
+
+    select(item, speak = true, exampleId = null) {
+        if (!exampleId) exampleId = this.getDefaultExampleId(item);
         this.currentShape = item;
         this.currentExampleId = exampleId;
 
         document.getElementById('shape3d-text').textContent = item.id;
-        document.getElementById('shape3d-realworld').textContent = item.real;
+        const realEl = document.getElementById('shape3d-realworld');
+        if (realEl) realEl.textContent = item.real;
+
+        const showEx = (typeof app === 'undefined' || !app.settings || app.settings.shapes3dShowExamples !== false);
+        const exBar = document.getElementById('shape3d-examples-bar');
+        if (exBar) exBar.classList.toggle('hidden', !showEx);
+        if (realEl) realEl.classList.toggle('hidden', !showEx);
 
         document.querySelectorAll('#shape3d-controls .tray-btn').forEach(b => {
             b.classList.toggle('selected', b.dataset.shape3dId === item.id);
         });
 
-        const exBar = document.getElementById('shape3d-examples-bar');
         exBar.innerHTML = '';
         (item.examples || []).forEach(ex => {
             const pill = document.createElement('button');
@@ -8795,10 +9801,12 @@ const shapes3DGame = {
             if (document.hidden) return;
             this.time += 0.035;
             if (this.mesh && !this.isDragging) {
-                if (typeof app === 'undefined' || !app.settings || app.settings.autoSpin3D) {
+                if (typeof app === 'undefined' || !app.settings || app.settings.shapes3dAutoSpin !== false) {
+                    const spdKey = (typeof app !== 'undefined' && app.settings && app.settings.shapes3dSpinSpeed) || 'normal';
+                    const targetVelX = spdKey === 'slow' ? 0.0055 : (spdKey === 'fast' ? 0.022 : 0.011);
                     this.mesh.rotateOnWorldAxis(worldY, this.velX);
                     this.mesh.rotateOnWorldAxis(worldX, this.velY);
-                    this.velX = this.velX * 0.95 + 0.011 * 0.05;
+                    this.velX = this.velX * 0.95 + targetVelX * 0.05;
                     this.velY = this.velY * 0.94;
                     this.mesh.position.y = Math.sin(this.time) * 0.12;
                 }
@@ -8818,14 +9826,67 @@ const shapes3DGame = {
     }
 };
 
+const COLOR_EXAMPLE_WORDS = {
+    Red: 'apple, fire truck, and strawberry',
+    Blue: 'whale, blueberries, and car',
+    Yellow: 'sun, banana, and chick',
+    Green: 'frog, broccoli, and tree',
+    Orange: 'orange, carrot, and tiger',
+    Purple: 'grapes, eggplant, and unicorn',
+    Pink: 'flamingo, pig, and flower',
+    Brown: 'bear, cookie, and potato',
+    Black: 'penguin, spider, and hat',
+    White: 'snowman, sheep, and cloud'
+};
+
 const colorGame = {
     mode: 'explore',
     mixPick1: GAMES.colors[0],
     mixPick2: GAMES.colors[2],
     activeSlot: 1,
 
+    getVisibleColors() {
+        const set = (typeof app !== 'undefined' && app.settings && app.settings.colorsSet) || 'all';
+        if (set === 'rainbow') {
+            const allowed = new Set(['Red', 'Orange', 'Yellow', 'Green', 'Blue', 'Purple']);
+            return GAMES.colors.filter(c => allowed.has(c.id));
+        }
+        return GAMES.colors;
+    },
+
+    applySettings() {
+        const visible = this.getVisibleColors();
+        const visibleIds = new Set(visible.map(c => c.id));
+        document.querySelectorAll('#color-controls .tray-btn').forEach(b => {
+            b.style.display = visibleIds.has(b.dataset.colorId) ? '' : 'none';
+        });
+        const ex = document.getElementById('color-examples');
+        if (ex) {
+            ex.classList.toggle('hidden', typeof app !== 'undefined' && app.settings && app.settings.colorsShowExamples === false);
+        }
+    },
+
     open() {
-        this.select(GAMES.colors[0], true);
+        this.applySettings();
+        const defaultMode = (typeof app !== 'undefined' && app.settings && app.settings.colorsDefaultMode) || 'explore';
+        if (defaultMode === 'mix') {
+            this.mode = 'mix';
+            document.getElementById('color-mode-explore')?.classList.remove('active');
+            document.getElementById('color-mode-mix')?.classList.add('active');
+            document.getElementById('color-explore-box')?.classList.add('hidden');
+            document.getElementById('color-mix-box')?.classList.remove('hidden');
+            document.getElementById('color-mix-box')?.classList.add('flex');
+            this.setActiveSlot(1);
+            this.updateMixDisplay(true);
+        } else {
+            this.mode = 'explore';
+            document.getElementById('color-mode-explore')?.classList.add('active');
+            document.getElementById('color-mode-mix')?.classList.remove('active');
+            document.getElementById('color-explore-box')?.classList.remove('hidden');
+            document.getElementById('color-mix-box')?.classList.add('hidden');
+            document.getElementById('color-mix-box')?.classList.remove('flex');
+            this.select(GAMES.colors[0], true);
+        }
     },
 
     setMode(newMode) {
@@ -8907,8 +9968,16 @@ const colorGame = {
         }
 
         ex.innerHTML = cData.examples.map(e => `<span>${e}</span>`).join('');
+        ex.classList.toggle('hidden', typeof app !== 'undefined' && app.settings && app.settings.colorsShowExamples === false);
         app.animatePop(ex);
-        if (speak) app.speak(cData.id);
+        if (speak) {
+            const detail = (typeof app !== 'undefined' && app.settings && app.settings.colorsSpeech) || 'name_only';
+            if (detail === 'with_examples' && COLOR_EXAMPLE_WORDS[cData.id]) {
+                app.speak(`${cData.id}! Like ${COLOR_EXAMPLE_WORDS[cData.id]}!`);
+            } else {
+                app.speak(cData.id);
+            }
+        }
     },
 
     updateMixDisplay(speak = true) {
@@ -8997,14 +10066,47 @@ const colorGame = {
 const animalGame = {
     current: GAMES.animals[0],
     speechTimer: null,
-    select(a, playAudio = true, soundOnly = false) {
+    getVisibleAnimals() {
+        const set = (typeof app !== 'undefined' && app.settings && app.settings.animalsSet) || 'all';
+        if (set === 'farm_pets') {
+            const allowed = new Set(['Dog', 'Cat', 'Cow', 'Duck', 'Pig', 'Sheep', 'Horse', 'Frog']);
+            return GAMES.animals.filter(a => allowed.has(a.id));
+        }
+        return GAMES.animals;
+    },
+    applySettings() {
+        const visible = this.getVisibleAnimals();
+        const visibleIds = new Set(visible.map(a => a.id));
+        document.querySelectorAll('#animal-controls .tray-btn').forEach(b => {
+            b.style.display = visibleIds.has(b.dataset.animalId) ? '' : 'none';
+        });
+        const pill = document.getElementById('animal-sound-pill');
+        if (pill) {
+            pill.classList.toggle('hidden', typeof app !== 'undefined' && app.settings && app.settings.animalsShowSoundPill === false);
+        }
+        if (this.current && !visibleIds.has(this.current.id) && visible.length) {
+            this.select(visible[0], false, false);
+        }
+    },
+    open() {
+        this.applySettings();
+        const visible = this.getVisibleAnimals();
+        const first = (this.current && visible.some(a => a.id === this.current.id)) ? this.current : (visible[0] || GAMES.animals[0]);
+        this.select(first, true, false);
+    },
+    select(a, playAudio = true, isStageTap = false) {
         this.current = a;
         soundFX.stopAll();
         if (this.speechTimer) {
             clearTimeout(this.speechTimer);
             this.speechTimer = null;
         }
-        if (soundOnly || !playAudio) {
+        const s = (typeof app !== 'undefined' && app.settings) ? app.settings : {};
+        const audioMode = isStageTap
+            ? (s.animalsStageTap === 'name_and_sound' ? 'name_then_sound' : 'sound_only')
+            : (s.animalsAudioMode || 'name_then_sound');
+
+        if (!playAudio || audioMode === 'sound_only') {
             geminiTTS.stop();
             if ('speechSynthesis' in window && (window.speechSynthesis.speaking || window.speechSynthesis.pending)) {
                 try { window.speechSynthesis.cancel(); } catch (e) {}
@@ -9013,17 +10115,23 @@ const animalGame = {
         const t = document.getElementById('animal-target');
         t.textContent = a.emoji;
         document.getElementById('animal-text').textContent = a.id;
-        document.getElementById('animal-sound-pill').textContent = `🗣️ "${a.sound}"`;
+        const pill = document.getElementById('animal-sound-pill');
+        if (pill) {
+            pill.textContent = `🗣️ "${a.sound}"`;
+            pill.classList.toggle('hidden', s.animalsShowSoundPill === false);
+        }
         document.querySelectorAll('#animal-controls .tray-btn').forEach(b => {
             b.classList.toggle('selected', b.dataset.animalId === a.id);
         });
         app.animatePop(t);
         if (playAudio) {
-            if (app.isOpeningView && !app.settings.announceGameOnOpen) {
+            if (app.isOpeningView && !s.announceGameOnOpen) {
                 return;
             }
-            if (soundOnly) {
+            if (audioMode === 'sound_only') {
                 soundFX.playAnimalSound(a.id);
+            } else if (audioMode === 'name_only') {
+                app.speak(a.id);
             } else {
                 app.speak(a.id, null, () => {
                     this.speechTimer = soundFX.registerTimer(setTimeout(() => {
@@ -9041,9 +10149,44 @@ const foodGame = {
     biteList: [],
     maxBites: 5,
 
+    getVisibleFoods() {
+        const set = (typeof app !== 'undefined' && app.settings && app.settings.fruitsSet) || 'all';
+        if (set === 'produce') {
+            const excluded = new Set(['Cheese', 'Cookie', 'Pizza']);
+            return GAMES.fruits.filter(f => !excluded.has(f.id));
+        }
+        return GAMES.fruits;
+    },
+
+    applySettings() {
+        const bitesPref = (typeof app !== 'undefined' && app.settings && parseInt(app.settings.fruitsBites, 10)) || 5;
+        this.maxBites = Math.max(3, Math.min(8, bitesPref));
+        const visible = this.getVisibleFoods();
+        const visibleIds = new Set(visible.map(f => f.id));
+        document.querySelectorAll('#fruits-controls .tray-btn').forEach(b => {
+            b.style.display = visibleIds.has(b.dataset.foodId) ? '' : 'none';
+        });
+        if (this.current && !visibleIds.has(this.current.id) && visible.length) {
+            this.select(visible[0], false);
+            return;
+        }
+        if (this.biteList.length >= this.maxBites) {
+            this.biteList = [];
+            this.renderFoodCanvas();
+        }
+    },
+
+    open() {
+        this.applySettings();
+        const visible = this.getVisibleFoods();
+        const first = (this.current && visible.some(f => f.id === this.current.id)) ? this.current : (visible[0] || GAMES.fruits[0]);
+        this.select(first, true);
+    },
+
     select(f, speak = true) {
         this.current = f;
         this.biteList = [];
+        this.maxBites = (typeof app !== 'undefined' && app.settings && parseInt(app.settings.fruitsBites, 10)) || 5;
         document.getElementById('fruits-text').textContent = f.id;
         document.getElementById('fruits-desc').textContent = `${f.desc} Tap on it to take a bite!`;
         document.querySelectorAll('#fruits-controls .tray-btn').forEach(b => {
@@ -9100,7 +10243,7 @@ const foodGame = {
     },
 
     burstCrumbs(x, y) {
-        if (typeof app !== 'undefined' && app.settings && !app.settings.confettiEnabled) return;
+        if (typeof app !== 'undefined' && app.settings && (!app.settings.confettiEnabled || app.settings.fruitsCrumbs === false)) return;
         const color = this.current.crumbColor || '#ef4444';
         for (let i = 0; i < 9; i++) {
             const p = document.createElement('div');
@@ -9134,13 +10277,25 @@ const foodGame = {
         }
         app.speechToken++;
 
+        const maxBites = (typeof app !== 'undefined' && app.settings && parseInt(app.settings.fruitsBites, 10)) || 5;
+        this.maxBites = maxBites;
+
         // ALWAYS play crisp physical bite crunch!
         const crunchDur = soundFX.playCrunch() || 550;
 
         const canvas = document.getElementById('fruits-canvas');
         if (!canvas) return;
         const rect = canvas.getBoundingClientRect();
-        const preset = [
+        const preset = maxBites >= 8 ? [
+            { x: 168, y: 74 },
+            { x: 74, y: 78 },
+            { x: 174, y: 120 },
+            { x: 66, y: 122 },
+            { x: 165, y: 164 },
+            { x: 76, y: 166 },
+            { x: 120, y: 72 },
+            { x: 120, y: 120 }
+        ] : [
             { x: 165, y: 80 },
             { x: 75, y: 85 },
             { x: 168, y: 155 },
@@ -9165,7 +10320,8 @@ const foodGame = {
             cy = rect.top + (by / canvas.height) * rect.height;
         }
 
-        this.biteList.push({ x: bx, y: by, r: 34 + idx * 4, angle: idx * 0.9 });
+        const biteR = maxBites <= 3 ? (46 + idx * 5) : (maxBites >= 8 ? (26 + idx * 2.5) : (34 + idx * 4));
+        this.biteList.push({ x: bx, y: by, r: biteR, angle: idx * 0.9 });
         this.renderFoodCanvas();
         this.burstCrumbs(cx, cy);
         app.animatePop(document.getElementById('fruits-target'));
@@ -9175,12 +10331,14 @@ const foodGame = {
         if (this.biteList.length < this.maxBites) {
             const left = this.maxBites - this.biteList.length;
             document.getElementById('fruits-desc').textContent = `Yum! ${left} more bite${left > 1 ? 's' : ''} left! 😋`;
-            this.cheerTimer = soundFX.registerTimer(setTimeout(() => {
-                if (app.currentView === 'fruits') {
-                    app.speak(cheers[idx % cheers.length]);
-                }
-                this.cheerTimer = null;
-            }, crunchDur + 80));
+            if (typeof app === 'undefined' || !app.settings || app.settings.fruitsBiteSpeech !== false) {
+                this.cheerTimer = soundFX.registerTimer(setTimeout(() => {
+                    if (app.currentView === 'fruits') {
+                        app.speak(cheers[idx % cheers.length]);
+                    }
+                    this.cheerTimer = null;
+                }, crunchDur + 80));
+            }
         } else {
             const ctx = canvas.getContext('2d');
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -9213,14 +10371,47 @@ const foodGame = {
 const thingsGame = {
     current: GAMES.things[0],
     speechTimer: null,
-    select(item, speak = true, soundOnly = false) {
+    getVisibleThings() {
+        const set = (typeof app !== 'undefined' && app.settings && app.settings.thingsSet) || 'all';
+        if (set === 'vehicles') {
+            const allowed = new Set(['Fire Truck', 'Police Car', 'Train', 'Rocket Ship', 'Airplane', 'Helicopter', 'Tractor', 'School Bus', 'Sailboat', 'Bicycle']);
+            return GAMES.things.filter(t => allowed.has(t.id));
+        }
+        return GAMES.things;
+    },
+    applySettings() {
+        const visible = this.getVisibleThings();
+        const visibleIds = new Set(visible.map(t => t.id));
+        document.querySelectorAll('#things-controls .tray-btn').forEach(b => {
+            b.style.display = visibleIds.has(b.dataset.thingId) ? '' : 'none';
+        });
+        const pill = document.getElementById('things-sound');
+        if (pill) {
+            pill.classList.toggle('hidden', typeof app !== 'undefined' && app.settings && app.settings.thingsShowSoundPill === false);
+        }
+        if (this.current && !visibleIds.has(this.current.id) && visible.length) {
+            this.select(visible[0], false, false);
+        }
+    },
+    open() {
+        this.applySettings();
+        const visible = this.getVisibleThings();
+        const first = (this.current && visible.some(t => t.id === this.current.id)) ? this.current : (visible[0] || GAMES.things[0]);
+        this.select(first, true, false);
+    },
+    select(item, speak = true, isStageTap = false) {
         this.current = item;
         soundFX.stopAll();
         if (this.speechTimer) {
             clearTimeout(this.speechTimer);
             this.speechTimer = null;
         }
-        if (soundOnly || !speak) {
+        const s = (typeof app !== 'undefined' && app.settings) ? app.settings : {};
+        const audioMode = isStageTap
+            ? (s.thingsStageTap === 'name_and_sound' ? 'name_then_sound' : 'sound_only')
+            : (s.thingsAudioMode || 'name_then_sound');
+
+        if (!speak || audioMode === 'sound_only') {
             geminiTTS.stop();
             if ('speechSynthesis' in window && (window.speechSynthesis.speaking || window.speechSynthesis.pending)) {
                 try { window.speechSynthesis.cancel(); } catch (e) {}
@@ -9229,19 +10420,24 @@ const thingsGame = {
         const t = document.getElementById('things-target');
         t.textContent = item.emoji;
         document.getElementById('things-text').textContent = item.id;
-        document.getElementById('things-sound').textContent = `🔊 "${item.sound}"`;
+        const pill = document.getElementById('things-sound');
+        if (pill) {
+            pill.textContent = `🔊 "${item.sound}"`;
+            pill.classList.toggle('hidden', s.thingsShowSoundPill === false);
+        }
         document.querySelectorAll('#things-controls .tray-btn').forEach(b => {
             b.classList.toggle('selected', b.dataset.thingId === item.id);
         });
         app.animatePop(t);
-        if (soundOnly) {
-            soundFX.playThingSound(item.id);
+        if (!speak) return;
+        if (app.isOpeningView && !s.announceGameOnOpen) {
             return;
         }
-        if (speak) {
-            if (app.isOpeningView && !app.settings.announceGameOnOpen) {
-                return;
-            }
+        if (audioMode === 'sound_only') {
+            soundFX.playThingSound(item.id);
+        } else if (audioMode === 'name_only') {
+            app.speak(item.id);
+        } else {
             app.speak(item.id, null, () => {
                 this.speechTimer = soundFX.registerTimer(setTimeout(() => {
                     soundFX.playThingSound(item.id);
@@ -9254,13 +10450,50 @@ const thingsGame = {
 
 const oppositesGame = {
     current: GAMES.opposites[0],
+    getVisiblePairs() {
+        const set = (typeof app !== 'undefined' && app.settings && app.settings.oppositesSet) || 'all';
+        return set === 'starter' ? GAMES.opposites.slice(0, 8) : GAMES.opposites;
+    },
+    applySettings() {
+        const set = (typeof app !== 'undefined' && app.settings && app.settings.oppositesSet) || 'all';
+        const limit = set === 'starter' ? 8 : GAMES.opposites.length;
+        document.querySelectorAll('#opposites-controls .tray-btn').forEach((b, idx) => {
+            const pairIdx = b.dataset.oppIdx !== undefined ? parseInt(b.dataset.oppIdx, 10) : idx;
+            b.style.display = pairIdx < limit ? '' : 'none';
+        });
+        const titleEl = document.getElementById('opp-title');
+        if (titleEl) {
+            titleEl.classList.toggle('hidden', typeof app !== 'undefined' && app.settings && app.settings.oppositesShowTitle === false);
+        }
+        const visible = this.getVisiblePairs();
+        if (this.current && !visible.some(p => p.title === this.current.title) && visible.length) {
+            this.select(visible[0], false);
+        } else if (this.current) {
+            const dynScale = (typeof app === 'undefined' || !app.settings || app.settings.oppositesDynamicScale !== false);
+            const emojiA = document.getElementById('opp-emoji-a');
+            const emojiB = document.getElementById('opp-emoji-b');
+            if (emojiA) emojiA.className = dynScale ? `${this.current.a.scale} mb-2` : 'text-7xl sm:text-8xl mb-2';
+            if (emojiB) emojiB.className = dynScale ? `${this.current.b.scale} mb-2` : 'text-7xl sm:text-8xl mb-2';
+        }
+    },
+    open() {
+        this.applySettings();
+        const visible = this.getVisiblePairs();
+        const first = (this.current && visible.some(p => p.title === this.current.title)) ? this.current : (visible[0] || GAMES.opposites[0]);
+        this.select(first, true);
+    },
     select(pair, speak = true) {
         this.current = pair;
-        document.getElementById('opp-title').textContent = pair.title;
+        const titleEl = document.getElementById('opp-title');
+        if (titleEl) {
+            titleEl.textContent = pair.title;
+            titleEl.classList.toggle('hidden', typeof app !== 'undefined' && app.settings && app.settings.oppositesShowTitle === false);
+        }
         const emojiA = document.getElementById('opp-emoji-a');
         const emojiB = document.getElementById('opp-emoji-b');
-        emojiA.className = `${pair.a.scale} mb-2`;
-        emojiB.className = `${pair.b.scale} mb-2`;
+        const dynScale = (typeof app === 'undefined' || !app.settings || app.settings.oppositesDynamicScale !== false);
+        emojiA.className = dynScale ? `${pair.a.scale} mb-2` : 'text-7xl sm:text-8xl mb-2';
+        emojiB.className = dynScale ? `${pair.b.scale} mb-2` : 'text-7xl sm:text-8xl mb-2';
         emojiA.textContent = pair.a.emoji;
         emojiB.textContent = pair.b.emoji;
         document.getElementById('opp-label-a').textContent = pair.a.label;
@@ -9872,82 +11105,258 @@ window.addEventListener('DOMContentLoaded', () => {
         updateVoiceStatusIndicator();
     };
 
+    const GAME_SUBMENU_META = {
+        letters:   { icon: '🔤', title: 'Phonics A–Z Options',      shortTitle: 'Phonics A–Z',     subtitle: 'Phonics detail, case, mode & Pop Bubbles' },
+        numbers:   { icon: '🔢', title: 'Tap & Count Options',      shortTitle: 'Tap & Count',     subtitle: 'Max range, auto-count speed & ten frame' },
+        blocks:    { icon: '🧱', title: 'Number Blocks Options',    shortTitle: 'Number Blocks',   subtitle: 'Range, tray, speech, magnet & scale' },
+        quiz:      { icon: '🕵️', title: 'Look & Find Options',      shortTitle: 'Look & Find',     subtitle: 'Choices, category, pool max & hints' },
+        shapes:    { icon: '🔺', title: '2D Shapes Options',        shortTitle: '2D Shapes',       subtitle: 'Shape set, speech & example chips' },
+        shapes3d:  { icon: '🧊', title: '3D Shapes Options',        shortTitle: '3D Shapes',       subtitle: 'Shape set, auto-spin speed & view' },
+        colors:    { icon: '🎨', title: 'Colors & Mix Options',     shortTitle: 'Colors & Mix',    subtitle: 'Default mode, palette & examples' },
+        animals:   { icon: '🦁', title: 'Animal Friends Options',   shortTitle: 'Animals',         subtitle: 'Animal set, tap audio & sound pill' },
+        fruits:    { icon: '🍎', title: 'Yummy Foods Options',      shortTitle: 'Yummy Foods',     subtitle: 'Bites to finish, set & crumb effects' },
+        things:    { icon: '🚗', title: 'Vehicles & Things Options', shortTitle: 'Vehicles',       subtitle: 'Items set, tap audio & sound pill' },
+        opposites: { icon: '⚖️', title: 'Opposites Options',        shortTitle: 'Opposites',       subtitle: 'Pair set, card tap & dynamic scale' },
+        solar:     { icon: '🪐', title: 'Solar System Options',     shortTitle: 'Solar System',    subtitle: 'View mode, orbit speed & fact banner' }
+    };
+
+    let activeSettingsSubmenu = null;
+
+    const updateSubmenuSummaries = () => {
+        const s = app.settings;
+        const setTxt = (id, txt) => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = txt;
+        };
+        const caseLbl = s.lettersCase === 'upper' ? 'ABC' : (s.lettersCase === 'lower' ? 'abc' : 'Aa');
+        setTxt('submenu-summary-letters', `${s.phonicsDetail === 'simple' ? 'Simple' : 'Full'} • ${caseLbl} • ${s.lettersBubbleCount || 3} Bubbles`);
+        setTxt('submenu-summary-numbers', `1–${numberGame.getEffectiveMax()} • ${s.numbersDefaultMode === 'show' ? 'Auto' : 'Tap'}`);
+        const dockLbl = s.nbDockRange === '1-5' ? '1–5 Tray' : (s.nbDockRange === 'place-value' ? 'Place Value' : (s.nbDockRange === 'tens-only' ? 'Tens Only' : '1–10 Tray'));
+        setTxt('submenu-summary-blocks', `Max ${s.maxNumber || 100} • ${dockLbl}`);
+        const quizCatMap = { all: 'All Cats', letters: 'Phonics', numbers: 'Numbers', blocks: 'Blocks', animals: 'Animals', shapes: 'Shapes', solar: 'Solar' };
+        setTxt('submenu-summary-quiz', `${s.quizChoices || 3} Choices • ${quizCatMap[s.quizDefaultCat] || 'All Cats'}`);
+        setTxt('submenu-summary-shapes', `${s.shapesSet === 'starter' ? 'Starter 6' : 'All 12'} • ${s.shapesSpeech === 'with_examples' ? 'Examples' : 'Name'}`);
+        setTxt('submenu-summary-shapes3d', `${s.shapes3dSet === 'starter' ? 'Starter 5' : 'All 10'} • ${s.shapes3dAutoSpin !== false ? 'Auto-Spin' : 'Manual'}`);
+        setTxt('submenu-summary-colors', `${s.colorsDefaultMode === 'mix' ? 'Paint Mix' : 'Explore'} • ${s.colorsSet === 'rainbow' ? '6 Rainbow' : 'All 10'}`);
+        const aniAudio = s.animalsAudioMode === 'name_only' ? 'Name Only' : (s.animalsAudioMode === 'sound_only' ? 'Sound Only' : 'Name+Sound');
+        setTxt('submenu-summary-animals', `${s.animalsSet === 'farm_pets' ? 'Farm & Pets' : 'All 18'} • ${aniAudio}`);
+        setTxt('submenu-summary-fruits', `${s.fruitsBites || 5} Bites • ${s.fruitsSet === 'produce' ? '11 Produce' : 'All 14'}`);
+        const thAudio = s.thingsAudioMode === 'name_only' ? 'Name Only' : (s.thingsAudioMode === 'sound_only' ? 'Sound Only' : 'Name+Sound');
+        setTxt('submenu-summary-things', `${s.thingsSet === 'vehicles' ? '7 Vehicles' : 'All 14'} • ${thAudio}`);
+        setTxt('submenu-summary-opposites', `${s.oppositesSet === 'starter' ? 'Starter 8' : 'All 20'} • ${s.oppositesTapMode === 'compare' ? 'Compare' : 'Single Tap'}`);
+        const solSet = s.solarSet === 'planets_only' ? '8+Sun' : (s.solarSet === 'with_pluto' ? 'Pluto Set' : 'All 14');
+        setTxt('submenu-summary-solar', `${solSet} • ${s.solarOrbitSpeed || 1}×`);
+
+        document.querySelectorAll('.game-submenu-trigger').forEach(btn => {
+            btn.classList.toggle('is-current-game', btn.dataset.openSubmenu === app.currentView);
+        });
+    };
+
+    const showMainSettings = () => {
+        activeSettingsSubmenu = null;
+        document.getElementById('settings-main-view')?.classList.remove('hidden');
+        document.getElementById('settings-submenu-view')?.classList.add('hidden');
+        document.getElementById('opt-reset-defaults-btn')?.classList.remove('hidden');
+        document.getElementById('opt-reset-game-btn')?.classList.add('hidden');
+        const iconEl = document.getElementById('settings-modal-icon');
+        const titleEl = document.getElementById('settings-modal-title');
+        const subEl = document.getElementById('settings-modal-subtitle');
+        if (iconEl) iconEl.textContent = '⚙️';
+        if (titleEl) titleEl.textContent = 'Options & Voice Settings';
+        if (subEl) subEl.textContent = 'Main Audio, Gemini Speech & Per-Game Submenus';
+        updateSubmenuSummaries();
+        const card = document.getElementById('voice-settings-card');
+        if (card) card.scrollTop = 0;
+    };
+
+    const openSettingsSubmenu = (gameKey) => {
+        const meta = GAME_SUBMENU_META[gameKey];
+        if (!meta) {
+            showMainSettings();
+            return;
+        }
+        activeSettingsSubmenu = gameKey;
+        document.getElementById('settings-main-view')?.classList.add('hidden');
+        document.getElementById('settings-submenu-view')?.classList.remove('hidden');
+        document.getElementById('opt-reset-defaults-btn')?.classList.add('hidden');
+        const resetGameBtn = document.getElementById('opt-reset-game-btn');
+        if (resetGameBtn) {
+            resetGameBtn.classList.remove('hidden');
+            resetGameBtn.textContent = `↺ Reset ${meta.shortTitle}`;
+        }
+        document.querySelectorAll('.game-submenu-panel').forEach(panel => {
+            panel.classList.toggle('hidden', panel.dataset.gameSubmenu !== gameKey);
+        });
+        const sel = document.getElementById('settings-submenu-select');
+        if (sel) sel.value = gameKey;
+        const iconEl = document.getElementById('settings-modal-icon');
+        const titleEl = document.getElementById('settings-modal-title');
+        const subEl = document.getElementById('settings-modal-subtitle');
+        if (iconEl) iconEl.textContent = meta.icon;
+        if (titleEl) titleEl.textContent = meta.title;
+        if (subEl) subEl.textContent = meta.subtitle;
+        const card = document.getElementById('voice-settings-card');
+        if (card) card.scrollTop = 0;
+    };
+
     const syncSettingsToUI = () => {
         const s = app.settings;
-        const tierSel = document.getElementById('precache-tier-select');
-        if (tierSel) {
-            tierSel.value = safeGetStorage('tlh_precache_tier') || 'tier2_turbo';
-        }
-        const optAnnounce = document.getElementById('opt-announce-open');
-        if (optAnnounce) optAnnounce.checked = !!s.announceGameOnOpen;
-        const optVoice = document.getElementById('opt-voice-enabled');
-        if (optVoice) optVoice.checked = !!s.voiceEnabled;
-        const optSfx = document.getElementById('opt-sfx-enabled');
-        if (optSfx) optSfx.checked = !!s.sfxEnabled;
-        const optSpeechRate = document.getElementById('opt-speech-rate');
-        if (optSpeechRate) optSpeechRate.value = s.speechRate || 'normal';
+        const setVal = (id, val) => { const el = document.getElementById(id); if (el) el.value = String(val); };
+        const setChk = (id, val) => { const el = document.getElementById(id); if (el) el.checked = !!val; };
+
+        // Main Audio & App Controls
+        setVal('precache-tier-select', safeGetStorage('tlh_precache_tier') || 'tier2_turbo');
+        setChk('opt-announce-open', s.announceGameOnOpen);
+        setChk('opt-voice-enabled', s.voiceEnabled);
+        setChk('opt-sfx-enabled', s.sfxEnabled);
+        setVal('opt-speech-rate', s.speechRate || 'normal');
         const voiceVolVal = (typeof s.voiceVolume === 'number') ? Math.max(0, Math.min(1, s.voiceVolume)) : 1.0;
-        const optVoiceVol = document.getElementById('opt-voice-volume');
-        if (optVoiceVol) optVoiceVol.value = String(voiceVolVal);
+        setVal('opt-voice-volume', voiceVolVal);
         const optVoiceVolLbl = document.getElementById('opt-voice-volume-label');
         if (optVoiceVolLbl) optVoiceVolLbl.textContent = `${Math.round(voiceVolVal * 100)}%`;
         const sfxVolVal = (typeof s.sfxVolume === 'number') ? Math.max(0, Math.min(1, s.sfxVolume)) : 0.85;
-        const optSfxVol = document.getElementById('opt-sfx-volume');
-        if (optSfxVol) optSfxVol.value = String(sfxVolVal);
+        setVal('opt-sfx-volume', sfxVolVal);
         const optSfxVolLbl = document.getElementById('opt-sfx-volume-label');
         if (optSfxVolLbl) optSfxVolLbl.textContent = `${Math.round(sfxVolVal * 100)}%`;
-        const optDragSpeed = document.getElementById('opt-drag-speed');
-        if (optDragSpeed) optDragSpeed.value = s.dragSpeed || 'normal';
-        const optMaxNum = document.getElementById('opt-max-number');
-        if (optMaxNum) optMaxNum.value = String(s.maxNumber || 100);
-        const optNbMaxNum = document.getElementById('opt-nb-max-number');
-        if (optNbMaxNum) optNbMaxNum.value = String(s.maxNumber || 100);
-        const optNbDock = document.getElementById('opt-nb-dock-range');
-        if (optNbDock) optNbDock.value = s.nbDockRange || '1-10';
-        const optNbSpeech = document.getElementById('opt-nb-speech-style');
-        if (optNbSpeech) optNbSpeech.value = s.nbSpeechStyle || 'math_and_fun';
-        const optNbSnap = document.getElementById('opt-nb-snap-mode');
-        if (optNbSnap) optNbSnap.value = s.nbSnapMode || 'normal';
-        const optNbMaxBlocks = document.getElementById('opt-nb-max-blocks');
-        if (optNbMaxBlocks) optNbMaxBlocks.value = String(s.nbMaxBlocks || 10);
-        const optNbFall = document.getElementById('opt-nb-fall-combine');
-        if (optNbFall) optNbFall.checked = s.nbFallCombine !== false;
-        const optNbEq = document.getElementById('opt-nb-show-equations');
-        if (optNbEq) optNbEq.checked = s.nbShowEquations !== false;
-        const optNbSpace = document.getElementById('opt-nb-auto-space');
-        if (optNbSpace) optNbSpace.checked = s.nbAutoSpace !== false;
-        const optNbTrueScale = document.getElementById('opt-nb-true-scale');
-        if (optNbTrueScale) optNbTrueScale.checked = s.nbTrueScale !== false;
-        const optNbUnlock = document.getElementById('opt-nb-unlock-all');
-        if (optNbUnlock) optNbUnlock.checked = s.nbUnlockAll !== false;
-        const optPhonics = document.getElementById('opt-phonics-detail');
-        if (optPhonics) optPhonics.value = s.phonicsDetail || 'full';
-        const optConfetti = document.getElementById('opt-confetti-enabled');
-        if (optConfetti) optConfetti.checked = !!s.confettiEnabled;
-        const optAutoSpin = document.getElementById('opt-autospin-3d');
-        if (optAutoSpin) optAutoSpin.checked = !!s.autoSpin3D;
-        const optHoldHome = document.getElementById('opt-hold-home');
-        if (optHoldHome) optHoldHome.checked = !!s.requireHoldHome;
-        const optMinHeader = document.getElementById('opt-minimize-header');
-        if (optMinHeader) optMinHeader.checked = !!s.minimizeMenuHeader;
-        const optSolarCredits = document.getElementById('opt-solar-credits');
-        if (optSolarCredits) optSolarCredits.checked = !!s.showSolarCredits;
+        setVal('opt-drag-speed', s.dragSpeed || 'normal');
+        setChk('opt-confetti-enabled', s.confettiEnabled);
+        setChk('opt-hold-home', s.requireHoldHome);
+        setChk('opt-minimize-header', s.minimizeMenuHeader);
+
+        // 1. Phonics A-Z ('letters')
+        setVal('opt-phonics-detail', s.phonicsDetail || 'full');
+        setVal('opt-letters-default-mode', s.lettersDefaultMode || 'studio');
+        setVal('opt-letters-case', s.lettersCase || 'both');
+        setVal('opt-letters-bubble-count', s.lettersBubbleCount || 3);
+        setChk('opt-letters-blend-bar', s.lettersShowBlendBar !== false);
+
+        // 2. Tap & Count ('numbers')
+        setVal('opt-max-number', numberGame.getEffectiveMax());
+        setVal('opt-numbers-default-mode', s.numbersDefaultMode || 'touch');
+        setVal('opt-numbers-auto-speed', s.numbersAutoSpeed || 'normal');
+        setChk('opt-numbers-ten-frame', s.numbersShowTenFrame !== false);
+        setChk('opt-numbers-blocks-btn', s.numbersShowBlocksBtn !== false);
+
+        // 3. Number Blocks ('blocks')
+        setVal('opt-nb-max-number', s.maxNumber || 100);
+        setVal('opt-nb-dock-range', s.nbDockRange || '1-10');
+        setVal('opt-nb-speech-style', s.nbSpeechStyle || 'math_and_fun');
+        setVal('opt-nb-snap-mode', s.nbSnapMode || 'normal');
+        setVal('opt-nb-max-blocks', s.nbMaxBlocks || 10);
+        setChk('opt-nb-fall-combine', s.nbFallCombine !== false);
+        setChk('opt-nb-true-scale', s.nbTrueScale !== false);
+        setChk('opt-nb-show-equations', s.nbShowEquations !== false);
+        setChk('opt-nb-auto-space', s.nbAutoSpace !== false);
+        setChk('opt-nb-unlock-all', s.nbUnlockAll !== false);
+
+        // 4. Look & Find ('quiz')
+        setVal('opt-quiz-choices', s.quizChoices || 3);
+        setVal('opt-quiz-default-cat', s.quizDefaultCat || 'all');
+        setVal('opt-quiz-max-number', s.quizMaxNumber || 'sync');
+        setVal('opt-quiz-hint-tries', s.quizHintTries || '2');
+        setChk('opt-quiz-auto-next', s.quizAutoNext !== false);
+
+        // 5. 2D Shapes ('shapes')
+        setVal('opt-shapes-set', s.shapesSet || 'all');
+        setVal('opt-shapes-speech', s.shapesSpeech || 'name_only');
+        setChk('opt-shapes-examples', s.shapesShowExamples !== false);
+
+        // 6. 3D Shapes ('shapes3d')
+        setVal('opt-shapes3d-set', s.shapes3dSet || 'all');
+        setVal('opt-shapes3d-spin-speed', s.shapes3dSpinSpeed || 'normal');
+        setVal('opt-shapes3d-default-view', s.shapes3dDefaultView || 'pure');
+        setChk('opt-shapes3d-autospin', s.shapes3dAutoSpin !== false);
+        setChk('opt-shapes3d-examples', s.shapes3dShowExamples !== false);
+
+        // 7. Colors & Mix ('colors')
+        setVal('opt-colors-default-mode', s.colorsDefaultMode || 'explore');
+        setVal('opt-colors-set', s.colorsSet || 'all');
+        setVal('opt-colors-speech', s.colorsSpeech || 'name_only');
+        setChk('opt-colors-examples', s.colorsShowExamples !== false);
+
+        // 8. Animals ('animals')
+        setVal('opt-animals-set', s.animalsSet || 'all');
+        setVal('opt-animals-audio-mode', s.animalsAudioMode || 'name_then_sound');
+        setVal('opt-animals-stage-tap', s.animalsStageTap || 'sound_only');
+        setChk('opt-animals-sound-pill', s.animalsShowSoundPill !== false);
+
+        // 9. Yummy Foods ('fruits')
+        setVal('opt-fruits-bites', s.fruitsBites || 5);
+        setVal('opt-fruits-set', s.fruitsSet || 'all');
+        setChk('opt-fruits-bite-speech', s.fruitsBiteSpeech !== false);
+        setChk('opt-fruits-crumbs', s.fruitsCrumbs !== false);
+
+        // 10. Vehicles & Things ('things')
+        setVal('opt-things-set', s.thingsSet || 'all');
+        setVal('opt-things-audio-mode', s.thingsAudioMode || 'name_then_sound');
+        setVal('opt-things-stage-tap', s.thingsStageTap || 'sound_only');
+        setChk('opt-things-sound-pill', s.thingsShowSoundPill !== false);
+
+        // 11. Opposites ('opposites')
+        setVal('opt-opposites-set', s.oppositesSet || 'all');
+        setVal('opt-opposites-tap-mode', s.oppositesTapMode || 'single');
+        setChk('opt-opposites-scale', s.oppositesDynamicScale !== false);
+        setChk('opt-opposites-title', s.oppositesShowTitle !== false);
+
+        // 12. Solar System ('solar')
+        setVal('opt-solar-default-mode', s.solarDefaultMode || 'photo');
+        setVal('opt-solar-set', s.solarSet || 'all');
+        setVal('opt-solar-orbit-speed', s.solarOrbitSpeed || 1);
+        setChk('opt-solar-autospin', s.solarAutoSpin !== false);
+        setChk('opt-solar-credits', s.showSolarCredits);
+        setChk('opt-solar-fact-banner', s.solarShowFactBanner !== false);
+
+        updateSubmenuSummaries();
     };
 
-    const openVoiceModal = () => {
+    const refreshActiveGameAfterSettings = (gameKey, opts = {}) => {
+        const gk = gameKey;
+        if (!gk || app.currentView !== gk) return;
+        if (gk === 'letters') {
+            if (opts.modeChanged || opts.reset) {
+                phonicsGame.setMode(app.settings.lettersDefaultMode || 'studio');
+            }
+            if (app.settings.lettersShowBlendBar !== false) {
+                const blendTxt = document.getElementById('phonics-blend-letters')?.textContent.trim();
+                if (blendTxt) document.getElementById('phonics-blend-bar')?.classList.remove('hidden');
+            }
+        } else if (gk === 'numbers' && (opts.modeChanged || opts.reset)) {
+            numberGame.setMode(app.settings.numbersDefaultMode || 'touch');
+        } else if (gk === 'quiz') {
+            if (opts.catChanged || opts.reset) {
+                quizGame.setCategory(app.settings.quizDefaultCat || 'all');
+            } else if (opts.reloadQuestion) {
+                quizGame.nextQuestion(false);
+            }
+        } else if (gk === 'shapes3d' && (opts.viewChanged || opts.reset) && shapes3DGame.currentShape) {
+            shapes3DGame.select(shapes3DGame.currentShape, false, shapes3DGame.getDefaultExampleId(shapes3DGame.currentShape));
+        } else if (gk === 'colors' && (opts.modeChanged || opts.reset)) {
+            colorGame.setMode(app.settings.colorsDefaultMode || 'explore');
+        } else if (gk === 'solar') {
+            if (opts.speedChanged || opts.reset) {
+                solarGame.setOrbitSpeed(parseFloat(app.settings.solarOrbitSpeed) || 1);
+            }
+            if (opts.modeChanged || opts.reset) {
+                solarGame.setMode(app.settings.solarDefaultMode || 'photo');
+            }
+        }
+    };
+
+    const openVoiceModal = (preferredSubmenu = null) => {
+        const targetSubmenu = (typeof preferredSubmenu === 'string' && GAME_SUBMENU_META[preferredSubmenu]) ? preferredSubmenu : null;
         syncSettingsToUI();
         updateVoiceStatusIndicator();
         if (testStatus) {
             testStatus.classList.add('hidden');
             testStatus.textContent = '';
         }
+        if (targetSubmenu) {
+            openSettingsSubmenu(targetSubmenu);
+        } else {
+            showMainSettings();
+        }
         if (voiceModal) {
             voiceModal.classList.remove('hidden');
-            if (app.currentView === 'blocks') {
-                requestAnimationFrame(() => {
-                    document.getElementById('nb-options-section')?.scrollIntoView({ block: 'start', behavior: 'instant' });
-                });
-            }
         }
     };
     const closeVoiceModal = () => {
@@ -9955,32 +11364,54 @@ window.addEventListener('DOMContentLoaded', () => {
         if (voiceModal) voiceModal.classList.add('hidden');
     };
 
-    document.getElementById('voice-settings-btn')?.addEventListener('click', openVoiceModal);
+    document.getElementById('voice-settings-btn')?.addEventListener('click', () => openVoiceModal(null));
     document.querySelectorAll('.options-quick-btn').forEach(btn => {
-        btn.addEventListener('click', openVoiceModal);
+        btn.addEventListener('click', () => openVoiceModal(app.currentView));
+    });
+    document.querySelectorAll('.game-submenu-trigger').forEach(btn => {
+        btn.addEventListener('click', () => {
+            soundFX.playPop();
+            openSettingsSubmenu(btn.dataset.openSubmenu);
+        });
+    });
+    document.getElementById('settings-back-main-btn')?.addEventListener('click', () => {
+        soundFX.playPop();
+        showMainSettings();
+    });
+    document.getElementById('settings-submenu-select')?.addEventListener('change', (e) => {
+        soundFX.playPop();
+        openSettingsSubmenu(e.target.value);
     });
     document.getElementById('voice-modal-close-x')?.addEventListener('click', closeVoiceModal);
     voiceModal?.addEventListener('click', (e) => {
         if (e.target === voiceModal) closeVoiceModal();
     });
 
-    // Live option input listeners
-    document.getElementById('opt-announce-open')?.addEventListener('change', (e) => {
-        app.settings.announceGameOnOpen = e.target.checked;
-        app.saveSettings();
-    });
-    document.getElementById('opt-voice-enabled')?.addEventListener('change', (e) => {
-        app.settings.voiceEnabled = e.target.checked;
-        app.saveSettings();
-    });
-    document.getElementById('opt-sfx-enabled')?.addEventListener('change', (e) => {
-        app.settings.sfxEnabled = e.target.checked;
-        app.saveSettings();
-    });
-    document.getElementById('opt-speech-rate')?.addEventListener('change', (e) => {
-        app.settings.speechRate = e.target.value;
-        app.saveSettings();
-    });
+    // Live option input listeners (declarative binding helpers)
+    const bindSelectOpt = (id, key, transform = (v) => v, onChanged = null) => {
+        document.getElementById(id)?.addEventListener('change', (e) => {
+            const val = transform(e.target.value);
+            app.settings[key] = val;
+            app.saveSettings();
+            updateSubmenuSummaries();
+            if (onChanged) onChanged(val);
+        });
+    };
+    const bindCheckOpt = (id, key, onChanged = null) => {
+        document.getElementById(id)?.addEventListener('change', (e) => {
+            const val = e.target.checked;
+            app.settings[key] = val;
+            app.saveSettings();
+            updateSubmenuSummaries();
+            if (onChanged) onChanged(val);
+        });
+    };
+
+    // Main Audio & App Controls
+    bindCheckOpt('opt-announce-open', 'announceGameOnOpen');
+    bindCheckOpt('opt-voice-enabled', 'voiceEnabled');
+    bindCheckOpt('opt-sfx-enabled', 'sfxEnabled');
+    bindSelectOpt('opt-speech-rate', 'speechRate');
     ['input', 'change'].forEach((evtName) => {
         document.getElementById('opt-voice-volume')?.addEventListener(evtName, (e) => {
             const v = Math.max(0, Math.min(1, parseFloat(e.target.value)));
@@ -10002,92 +11433,132 @@ window.addEventListener('DOMContentLoaded', () => {
             if (evtName === 'change') app.saveSettings();
         });
     });
-    document.getElementById('opt-drag-speed')?.addEventListener('change', (e) => {
-        app.settings.dragSpeed = e.target.value;
-        app.saveSettings();
-    });
+    bindSelectOpt('opt-drag-speed', 'dragSpeed');
+    bindCheckOpt('opt-confetti-enabled', 'confettiEnabled');
+    bindCheckOpt('opt-hold-home', 'requireHoldHome');
+    bindCheckOpt('opt-minimize-header', 'minimizeMenuHeader');
+
+    // 1. Phonics A-Z ('letters')
+    bindSelectOpt('opt-phonics-detail', 'phonicsDetail');
+    bindSelectOpt('opt-letters-default-mode', 'lettersDefaultMode', v => v, () => refreshActiveGameAfterSettings('letters', { modeChanged: true }));
+    bindSelectOpt('opt-letters-case', 'lettersCase');
+    bindSelectOpt('opt-letters-bubble-count', 'lettersBubbleCount', v => parseInt(v, 10) || 3);
+    bindCheckOpt('opt-letters-blend-bar', 'lettersShowBlendBar', () => refreshActiveGameAfterSettings('letters'));
+
+    // 2. Tap & Count ('numbers')
     document.getElementById('opt-max-number')?.addEventListener('change', (e) => {
-        app.settings.maxNumber = parseInt(e.target.value, 10);
-        const nbMax = document.getElementById('opt-nb-max-number');
-        if (nbMax) nbMax.value = String(app.settings.maxNumber);
+        app.settings.numbersMax = parseInt(e.target.value, 10) || 100;
+        app.settings._numbersMaxCustom = true;
         app.saveSettings();
+        updateSubmenuSummaries();
     });
+    bindSelectOpt('opt-numbers-default-mode', 'numbersDefaultMode', v => v, () => refreshActiveGameAfterSettings('numbers', { modeChanged: true }));
+    bindSelectOpt('opt-numbers-auto-speed', 'numbersAutoSpeed');
+    bindCheckOpt('opt-numbers-ten-frame', 'numbersShowTenFrame');
+    bindCheckOpt('opt-numbers-blocks-btn', 'numbersShowBlocksBtn');
+
+    // 3. Number Blocks ('blocks')
     document.getElementById('opt-nb-max-number')?.addEventListener('change', (e) => {
-        app.settings.maxNumber = parseInt(e.target.value, 10);
-        const maxEl = document.getElementById('opt-max-number');
-        if (maxEl) maxEl.value = String(app.settings.maxNumber);
+        const val = parseInt(e.target.value, 10) || 100;
+        app.settings.maxNumber = val;
+        if (!app.settings._numbersMaxCustom) {
+            app.settings.numbersMax = val;
+            const numMaxEl = document.getElementById('opt-max-number');
+            if (numMaxEl) numMaxEl.value = String(val);
+        }
         app.saveSettings();
+        updateSubmenuSummaries();
     });
-    document.getElementById('opt-nb-dock-range')?.addEventListener('change', (e) => {
-        app.settings.nbDockRange = e.target.value;
+    bindSelectOpt('opt-nb-dock-range', 'nbDockRange');
+    bindSelectOpt('opt-nb-speech-style', 'nbSpeechStyle');
+    bindSelectOpt('opt-nb-snap-mode', 'nbSnapMode');
+    bindSelectOpt('opt-nb-max-blocks', 'nbMaxBlocks', v => parseInt(v, 10) || 10);
+    bindCheckOpt('opt-nb-fall-combine', 'nbFallCombine');
+    bindCheckOpt('opt-nb-true-scale', 'nbTrueScale');
+    bindCheckOpt('opt-nb-show-equations', 'nbShowEquations');
+    bindCheckOpt('opt-nb-auto-space', 'nbAutoSpace');
+    bindCheckOpt('opt-nb-unlock-all', 'nbUnlockAll');
+
+    // 4. Look & Find ('quiz')
+    bindSelectOpt('opt-quiz-choices', 'quizChoices', v => parseInt(v, 10) || 3, () => refreshActiveGameAfterSettings('quiz', { reloadQuestion: true }));
+    bindSelectOpt('opt-quiz-default-cat', 'quizDefaultCat', v => v, () => refreshActiveGameAfterSettings('quiz', { catChanged: true }));
+    bindSelectOpt('opt-quiz-max-number', 'quizMaxNumber', v => v, () => refreshActiveGameAfterSettings('quiz', { reloadQuestion: true }));
+    bindSelectOpt('opt-quiz-hint-tries', 'quizHintTries');
+    bindCheckOpt('opt-quiz-auto-next', 'quizAutoNext');
+
+    // 5. 2D Shapes ('shapes')
+    bindSelectOpt('opt-shapes-set', 'shapesSet');
+    bindSelectOpt('opt-shapes-speech', 'shapesSpeech');
+    bindCheckOpt('opt-shapes-examples', 'shapesShowExamples');
+
+    // 6. 3D Shapes ('shapes3d')
+    bindSelectOpt('opt-shapes3d-set', 'shapes3dSet');
+    bindSelectOpt('opt-shapes3d-spin-speed', 'shapes3dSpinSpeed');
+    bindSelectOpt('opt-shapes3d-default-view', 'shapes3dDefaultView', v => v, () => refreshActiveGameAfterSettings('shapes3d', { viewChanged: true }));
+    bindCheckOpt('opt-shapes3d-autospin', 'shapes3dAutoSpin');
+    bindCheckOpt('opt-shapes3d-examples', 'shapes3dShowExamples');
+
+    // 7. Colors & Mix ('colors')
+    bindSelectOpt('opt-colors-default-mode', 'colorsDefaultMode', v => v, () => refreshActiveGameAfterSettings('colors', { modeChanged: true }));
+    bindSelectOpt('opt-colors-set', 'colorsSet');
+    bindSelectOpt('opt-colors-speech', 'colorsSpeech');
+    bindCheckOpt('opt-colors-examples', 'colorsShowExamples');
+
+    // 8. Animals ('animals')
+    bindSelectOpt('opt-animals-set', 'animalsSet');
+    bindSelectOpt('opt-animals-audio-mode', 'animalsAudioMode');
+    bindSelectOpt('opt-animals-stage-tap', 'animalsStageTap');
+    bindCheckOpt('opt-animals-sound-pill', 'animalsShowSoundPill');
+
+    // 9. Yummy Foods ('fruits')
+    bindSelectOpt('opt-fruits-bites', 'fruitsBites', v => parseInt(v, 10) || 5);
+    bindSelectOpt('opt-fruits-set', 'fruitsSet');
+    bindCheckOpt('opt-fruits-bite-speech', 'fruitsBiteSpeech');
+    bindCheckOpt('opt-fruits-crumbs', 'fruitsCrumbs');
+
+    // 10. Vehicles & Things ('things')
+    bindSelectOpt('opt-things-set', 'thingsSet');
+    bindSelectOpt('opt-things-audio-mode', 'thingsAudioMode');
+    bindSelectOpt('opt-things-stage-tap', 'thingsStageTap');
+    bindCheckOpt('opt-things-sound-pill', 'thingsShowSoundPill');
+
+    // 11. Opposites ('opposites')
+    bindSelectOpt('opt-opposites-set', 'oppositesSet');
+    bindSelectOpt('opt-opposites-tap-mode', 'oppositesTapMode');
+    bindCheckOpt('opt-opposites-scale', 'oppositesDynamicScale');
+    bindCheckOpt('opt-opposites-title', 'oppositesShowTitle');
+
+    // 12. Solar System ('solar')
+    bindSelectOpt('opt-solar-default-mode', 'solarDefaultMode', v => v, () => refreshActiveGameAfterSettings('solar', { modeChanged: true }));
+    bindSelectOpt('opt-solar-set', 'solarSet');
+    bindSelectOpt('opt-solar-orbit-speed', 'solarOrbitSpeed', v => parseFloat(v) || 1, (v) => solarGame.setOrbitSpeed(v));
+    bindCheckOpt('opt-solar-autospin', 'solarAutoSpin');
+    bindCheckOpt('opt-solar-credits', 'showSolarCredits');
+    bindCheckOpt('opt-solar-fact-banner', 'solarShowFactBanner');
+
+    // Reset Current Game Submenu
+    document.getElementById('opt-reset-game-btn')?.addEventListener('click', () => {
+        const gk = activeSettingsSubmenu;
+        const keys = gk && GAME_SETTINGS_KEYS[gk];
+        if (!keys) return;
+        keys.forEach((k) => {
+            app.settings[k] = DEFAULT_SETTINGS[k];
+        });
+        if (gk === 'blocks' && !app.settings._numbersMaxCustom) {
+            app.settings.numbersMax = DEFAULT_SETTINGS.maxNumber;
+        }
         app.saveSettings();
-    });
-    document.getElementById('opt-nb-speech-style')?.addEventListener('change', (e) => {
-        app.settings.nbSpeechStyle = e.target.value;
-        app.saveSettings();
-    });
-    document.getElementById('opt-nb-snap-mode')?.addEventListener('change', (e) => {
-        app.settings.nbSnapMode = e.target.value;
-        app.saveSettings();
-    });
-    document.getElementById('opt-nb-max-blocks')?.addEventListener('change', (e) => {
-        app.settings.nbMaxBlocks = parseInt(e.target.value, 10) || 10;
-        app.saveSettings();
-    });
-    document.getElementById('opt-nb-fall-combine')?.addEventListener('change', (e) => {
-        app.settings.nbFallCombine = e.target.checked;
-        app.saveSettings();
-    });
-    document.getElementById('opt-nb-show-equations')?.addEventListener('change', (e) => {
-        app.settings.nbShowEquations = e.target.checked;
-        app.saveSettings();
-    });
-    document.getElementById('opt-nb-auto-space')?.addEventListener('change', (e) => {
-        app.settings.nbAutoSpace = e.target.checked;
-        app.saveSettings();
-    });
-    document.getElementById('opt-nb-true-scale')?.addEventListener('change', (e) => {
-        app.settings.nbTrueScale = e.target.checked;
-        app.saveSettings();
-    });
-    document.getElementById('opt-nb-unlock-all')?.addEventListener('change', (e) => {
-        app.settings.nbUnlockAll = e.target.checked;
-        app.saveSettings();
-    });
-    document.getElementById('opt-phonics-detail')?.addEventListener('change', (e) => {
-        app.settings.phonicsDetail = e.target.value;
-        app.saveSettings();
-    });
-    document.getElementById('opt-confetti-enabled')?.addEventListener('change', (e) => {
-        app.settings.confettiEnabled = e.target.checked;
-        app.saveSettings();
-    });
-    document.getElementById('opt-autospin-3d')?.addEventListener('change', (e) => {
-        app.settings.autoSpin3D = e.target.checked;
-        app.saveSettings();
-    });
-    document.getElementById('opt-hold-home')?.addEventListener('change', (e) => {
-        app.settings.requireHoldHome = e.target.checked;
-        app.saveSettings();
-    });
-    document.getElementById('opt-minimize-header')?.addEventListener('change', (e) => {
-        app.settings.minimizeMenuHeader = e.target.checked;
-        app.saveSettings();
-        app.applyMenuHeaderState();
-    app.applySolarCreditsState();
-    });
-    document.getElementById('opt-solar-credits')?.addEventListener('change', (e) => {
-        app.settings.showSolarCredits = e.target.checked;
-        app.saveSettings();
-        app.applySolarCreditsState();
+        syncSettingsToUI();
+        refreshActiveGameAfterSettings(gk, { reset: true });
+        soundFX.playPop();
     });
 
+    // Reset All Options & Games
     document.getElementById('opt-reset-defaults-btn')?.addEventListener('click', () => {
         app.settings = Object.assign({}, DEFAULT_SETTINGS);
         app.saveSettings();
         syncSettingsToUI();
-        app.applyMenuHeaderState();
-        app.applySolarCreditsState();
+        refreshActiveGameAfterSettings(app.currentView, { reset: true });
         soundFX.playPop();
     });
 
@@ -10353,6 +11824,7 @@ window.addEventListener('DOMContentLoaded', () => {
     GAMES.colors.forEach(c => {
         const btn = document.createElement('button');
         btn.className = 'tray-btn';
+        btn.dataset.colorId = c.id;
         btn.style.backgroundColor = c.hex;
         btn.style.borderColor = c.id === 'White' ? '#cbd5e1' : '#ffffff';
         btn.innerHTML = `<span class="text-xl">${c.examples[0]}</span>`;
@@ -10418,10 +11890,11 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // 13. Opposites Setup
     const oppTray = document.getElementById('opposites-controls');
-    GAMES.opposites.forEach(pair => {
+    GAMES.opposites.forEach((pair, idx) => {
         const btn = document.createElement('button');
         btn.className = 'tray-btn';
         btn.dataset.oppTitle = pair.title;
+        btn.dataset.oppIdx = String(idx);
         btn.innerHTML = `<span class="text-xl leading-none">${Array.from(pair.a.emoji)[0]}${Array.from(pair.b.emoji)[0]}</span><span class="text-[10px] font-black text-slate-600 mt-0.5">${pair.a.label}</span>`;
         btn.addEventListener('click', () => {
             soundFX.playPop();
@@ -10432,12 +11905,20 @@ window.addEventListener('DOMContentLoaded', () => {
     document.getElementById('opp-card-a').addEventListener('click', () => {
         soundFX.playNote(523.25, 0.14, 'triangle');
         app.animatePop(document.getElementById('opp-card-a'));
-        app.speak(oppositesGame.current.a.label);
+        if (app.settings.oppositesTapMode === 'compare') {
+            app.speak(`${oppositesGame.current.a.label} is the opposite of ${oppositesGame.current.b.label}!`);
+        } else {
+            app.speak(oppositesGame.current.a.label);
+        }
     });
     document.getElementById('opp-card-b').addEventListener('click', () => {
         soundFX.playNote(392.0, 0.14, 'triangle');
         app.animatePop(document.getElementById('opp-card-b'));
-        app.speak(oppositesGame.current.b.label);
+        if (app.settings.oppositesTapMode === 'compare') {
+            app.speak(`${oppositesGame.current.b.label} is the opposite of ${oppositesGame.current.a.label}!`);
+        } else {
+            app.speak(oppositesGame.current.b.label);
+        }
     });
 
     // 14. Solar System Setup with Fit-All 7x2 Planet Selection Tray
@@ -10632,6 +12113,13 @@ window.addEventListener('DOMContentLoaded', () => {
             } catch (e) {}
         }
     };
+    app.openSettingsSubmenu = openSettingsSubmenu;
+    app.showMainSettings = showMainSettings;
+    app.getActiveSettingsSubmenu = () => activeSettingsSubmenu;
+    app.applyAllGameSettings();
+    if (solarGame && solarGame.setOrbitSpeed) {
+        solarGame.setOrbitSpeed(parseFloat(app.settings.solarOrbitSpeed) || 1);
+    }
     unlockGestures.forEach(evt => window.addEventListener(evt, handleAudioGestureUnlock, { capture: true, passive: true }));
 });
 
@@ -10656,6 +12144,9 @@ window.ToddlerLearningHub = {
     oppositesGame,
     solarGame,
     precacheManager,
+    openSettingsSubmenu: (k) => app.openSettingsSubmenu && app.openSettingsSubmenu(k),
+    showMainSettings: () => app.showMainSettings && app.showMainSettings(),
+    getActiveSettingsSubmenu: () => (app.getActiveSettingsSubmenu ? app.getActiveSettingsSubmenu() : null),
     get numberBlocks() { return window.NumberBlocks; },
     get blocksGame() { return window.NumberBlocks && window.NumberBlocks.Game; }
 };
