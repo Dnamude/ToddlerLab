@@ -3983,7 +3983,7 @@ const GAMES = {
             svg: '<polygon points="50,6 60.6,35.4 91.8,36.4 67.1,55.6 75.9,85.6 50,68 24.1,85.6 32.9,55.6 8.2,36.4 39.4,35.4" fill="#f59e0b" stroke="#b45309" stroke-width="4" stroke-linejoin="round"/>',
             examples: [
                 { id: 'pure', label: 'Star', emoji: '' },
-                { id: 'nightstar', label: 'Night Star', emoji: '⭐' },
+                { id: 'nightstar', label: 'Night Star', emoji: '⭐', darkCard: true },
                 { id: 'badge', label: 'Sheriff Badge', emoji: '🌟' }
             ]
         },
@@ -4046,7 +4046,7 @@ const GAMES = {
             svg: '<path d="M 62 12 A 40 40 0 1 0 62 88 A 32 32 0 1 1 62 12 Z" fill="#eab308" stroke="#a16207" stroke-width="4" stroke-linejoin="round"/>',
             examples: [
                 { id: 'pure', label: 'Crescent', emoji: '' },
-                { id: 'moon', label: 'Crescent Moon', emoji: '🌙' },
+                { id: 'moon', label: 'Crescent Moon', emoji: '🌙', darkCard: true },
                 { id: 'banana', label: 'Banana', emoji: '🍌' }
             ]
         }
@@ -9735,6 +9735,21 @@ const shape2DGame = {
                 return shapeItem.svg;
         }
     },
+    preloadedImages: new Set(),
+    getExampleImagePath(exampleId) {
+        return `assets/shapes2d/${exampleId}.jpg`;
+    },
+    preloadShapeImages(s) {
+        if (!s || !s.examples) return;
+        s.examples.forEach(ex => {
+            if (!ex || ex.id === 'pure') return;
+            const src = this.getExampleImagePath(ex.id);
+            if (this.preloadedImages.has(src)) return;
+            this.preloadedImages.add(src);
+            const pre = new Image();
+            pre.src = src;
+        });
+    },
     applySettings() {
         const visible = this.getVisibleShapes();
         const visibleIds = new Set(visible.map(s => s.id));
@@ -9760,9 +9775,31 @@ const shape2DGame = {
         const resolvedId = hasMatch ? exampleId : 'pure';
         this.current = s;
         this.currentExampleId = resolvedId;
+        this.preloadShapeImages(s);
 
+        const exObj = examples.find(ex => ex.id === resolvedId);
         const target = document.getElementById('shape-target');
-        target.innerHTML = `<svg width="100%" height="100%" viewBox="0 0 100 100" class="drop-shadow-md">${this.buildExampleSvg(s, resolvedId)}</svg>`;
+        if (resolvedId === 'pure') {
+            target.innerHTML = `<svg width="100%" height="100%" viewBox="0 0 100 100" class="drop-shadow-md">${s.svg}</svg>`;
+        } else {
+            const isDark = Boolean(exObj && exObj.darkCard);
+            const cardClasses = isDark
+                ? 'w-full h-full rounded-[1.75rem] bg-slate-900 border-4 border-indigo-300 shadow-xl p-2 flex items-center justify-center overflow-hidden'
+                : 'w-full h-full rounded-[1.75rem] bg-white border-4 border-emerald-200 shadow-xl p-2 flex items-center justify-center overflow-hidden';
+            target.innerHTML = '';
+            const card = document.createElement('div');
+            card.className = cardClasses;
+            const img = document.createElement('img');
+            img.src = this.getExampleImagePath(resolvedId);
+            img.alt = exObj ? exObj.label : resolvedId;
+            img.className = 'w-full h-full object-contain rounded-2xl select-none pointer-events-none';
+            img.draggable = false;
+            img.addEventListener('error', () => {
+                card.innerHTML = `<svg width="100%" height="100%" viewBox="0 0 100 100" class="drop-shadow-sm">${this.buildExampleSvg(s, resolvedId)}</svg>`;
+            }, { once: true });
+            card.appendChild(img);
+            target.appendChild(card);
+        }
         document.getElementById('shape-text').textContent = s.id;
 
         const showEx = (typeof app === 'undefined' || !app.settings || app.settings.shapesShowExamples !== false);
@@ -9790,7 +9827,6 @@ const shape2DGame = {
             });
         }
 
-        const exObj = examples.find(ex => ex.id === resolvedId);
         const article = /^[AEIOU]/i.test(s.id) ? 'an' : 'a';
         if (realEl) {
             if (resolvedId !== 'pure' && exObj) {
